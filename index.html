@@ -16,6 +16,10 @@
     <!-- Leaflet GIS Map CDN for Indonesia Ash Dispersion -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- KaTeX CDN for Academic Theory & Formulations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
     <style>
       :root {
@@ -129,6 +133,31 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+
+      @media print {
+        body * {
+          visibility: hidden !important;
+        }
+        #printLabReportContainer,
+        #printLabReportContainer * {
+          visibility: visible !important;
+        }
+        #printLabReportContainer {
+          position: absolute !important;
+          left: 0 !important;
+          top: 0 !important;
+          width: 100% !important;
+          background: #ffffff !important;
+          color: #111827 !important;
+          display: block !important;
+          padding: 18px !important;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+        }
+        @page {
+          size: A4 portrait;
+          margin: 12mm;
+        }
+      }
     </style>
   </head>
   <body class="h-[100dvh] w-full overflow-hidden flex flex-col select-none relative">
@@ -192,12 +221,48 @@
       <!-- Action Tools -->
       <div class="flex items-center gap-1.5">
         <button
+          onclick="startGuidedTour()"
+          class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+          title="Tour Presentasi Interaktif 5 Langkah Erupsi Krakatau"
+        >
+          <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+          <span class="hidden xl:inline">Tour Erupsi</span>
+        </button>
+
+        <button
+          onclick="openNumericalAnalysisModal()"
+          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#81b29a] hover:text-[#f4ede4] hover:border-[#81b29a] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+          title="Uji Konvergensi Galat Numerik RK4 vs Euler"
+        >
+          <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+          <span class="hidden lg:inline">Galat RK4</span>
+        </button>
+
+        <button
+          onclick="openTheoryModal()"
+          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#38bdf8] hover:text-[#f4ede4] hover:border-[#38bdf8] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+          title="Buku Panduan Teori Fisika & Formulasi Matematika"
+        >
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">Teori &amp; Rumus</span>
+        </button>
+
+        <button
           onclick="openKinematicModal()"
           class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
           title="Buka Grafik Kinematika Fungsi Waktu"
         >
           <i data-lucide="line-chart" class="w-3.5 h-3.5"></i>
           <span class="hidden md:inline">Grafik Kinematika</span>
+        </button>
+
+        <button
+          onclick="printLabReport()"
+          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#f4ede4] hover:text-[#d4a373] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+          title="Cetak Lembar Kerja Hasil Praktikum (PDF Resmi FATISDA)"
+        >
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          <span class="hidden lg:inline">Laporan PDF</span>
         </button>
 
         <button id="globalMuteBtn" onclick="toggleMute()" class="p-1.5 sm:p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[#d4a373] hover:text-[#f4ede4] transition-all" title="Audio Erupsi">
@@ -245,6 +310,9 @@
             <button id="simTabBtn4" onclick="switchSimTab(4)" class="flex-1 min-w-[70px] py-3 flex justify-center items-center gap-1 text-[#8e9bb0] hover:text-[#f4ede4] transition-all hover:bg-[#252b37]">
               <i data-lucide="zap" class="w-3.5 h-3.5 text-[#e07a5f]"></i> Energi
             </button>
+            <button id="simTabBtn5" onclick="switchSimTab(5)" class="flex-1 min-w-[70px] py-3 flex justify-center items-center gap-1 text-[#8e9bb0] hover:text-[#f4ede4] transition-all hover:bg-[#252b37]">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-[#38bdf8]"></i> Abu &amp; Stasiun
+            </button>
           </div>
 
           <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar relative">
@@ -253,7 +321,8 @@
               <div>
                 <label class="text-[11px] font-bold text-[#8e9bb0] uppercase tracking-wider block mb-1">Preset Skenario Balistik</label>
                 <select id="presetSelect" onchange="applyPreset(this.value)" class="w-full bg-[#16181f] border border-[#343c4e] rounded-xl p-2.5 text-xs text-[#e2b083] focus:outline-none focus:border-[#d4a373] font-medium cursor-pointer">
-                  <option value="krakatau" selected>Bom Vulkanik Anak Krakatau (Studi Kasus)</option>
+                  <option value="krakatau" selected>Bom Vulkanik Anak Krakatau (Studi Kasus 2018)</option>
+                  <option value="erupsi_1883">Mega-Erupsi Krakatau 1883 (v₀=420 m/s, Kolom Plinian)</option>
                   <option value="cannon">Peluru Meriam Artileri (Massa Sedang, v₀ Tinggi)</option>
                   <option value="textbook">Soal Uji Fisika Dasar (m=1kg, Tanpa Gesek)</option>
                   <option value="heavy_drag">Bongkahan Ringan Drag Ekstrem</option>
@@ -324,6 +393,41 @@
                     </div>
                   </div>
                   <input type="range" id="param_y0" min="0" max="2000" step="5" value="157" oninput="syncParam('y0', this.value, 'range')" class="w-full cursor-pointer" />
+                </div>
+              </div>
+
+              <!-- Kartu Laboratorium Virtual: Pencari Sudut Optimum R_max -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-[#dda15e] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="target" class="w-3.5 h-3.5 text-[#dda15e]"></i>
+                    Sudut Optimum (R_max)
+                  </span>
+                  <button
+                    onclick="calculateOptimalAngle()"
+                    class="px-2 py-0.5 rounded-lg bg-[#dda15e]/20 border border-[#dda15e] text-[#dda15e] hover:bg-[#dda15e] hover:text-[#16181f] text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
+                    title="Cari sudut elevasi terjauh secara numerik"
+                  >
+                    <i data-lucide="sparkles" class="w-3 h-3"></i> Hitung R_max
+                  </button>
+                </div>
+                <div id="optimalAngleResult" class="hidden p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] text-xs font-mono space-y-1.5 animate-fadeIn">
+                  <div class="flex justify-between items-center">
+                    <span class="text-[#8e9bb0]">Optimum Riil:</span>
+                    <b id="optAngleVal" class="text-[#e2b083] text-sm">--</b>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-[#8e9bb0]">Teori Ruang Hampa:</span>
+                    <b id="optAngleVac" class="text-[#81b29a]">--</b>
+                  </div>
+                  <div class="flex justify-between items-center border-t border-[#2e3544] pt-1">
+                    <span class="text-[#8e9bb0]">Jangkauan Maksimum:</span>
+                    <b id="optAngleRange" class="text-white">--</b>
+                  </div>
+                  <p class="text-[10px] text-[#8e9bb0] font-sans leading-tight pt-0.5">*Di udara riil, sudut optimum lebih landai (&lt;45°) untuk memotong lapisan udara berhambatan tinggi.</p>
+                  <button id="btnApplyOptAngle" onclick="applyOptimalAngle()" class="w-full mt-1 py-1 rounded-lg bg-[#d4a373] text-[#16181f] font-bold text-xs hover:bg-[#e2b083] transition-all flex items-center justify-center gap-1">
+                    <i data-lucide="check" class="w-3 h-3"></i> Terapkan Sudut Ini
+                  </button>
                 </div>
               </div>
 
@@ -409,6 +513,85 @@
                   </div>
                   <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="param_rk4" checked onchange="updateVar('useRK4', this.checked)" class="sr-only peer" />
+                    <div class="w-10 h-5 bg-[#343c4e] rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-[#d4a373]"></div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Parameter Atmosfer, Geseran Angin & Buoyancy -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <span class="text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="wind" class="w-3.5 h-3.5 text-[#38bdf8]"></i>
+                  Atmosfer &amp; Geseran Angin Berlapis
+                </span>
+
+                <div>
+                  <div class="flex justify-between items-center text-xs mb-1">
+                    <label for="num_lowWind" class="text-[#f4ede4] font-medium">Angin Rendah y &lt; 3km (w_low)</label>
+                    <div class="flex items-center gap-1">
+                      <input
+                        type="number"
+                        id="num_lowWind"
+                        min="-40"
+                        max="60"
+                        step="1"
+                        value="5"
+                        oninput="syncParam('lowWind', this.value, 'num')"
+                        class="w-20 bg-[#222733] border border-[#343c4e] focus:border-[#d4a373] rounded-lg px-2 py-0.5 text-right font-mono text-[#38bdf8] font-bold text-xs focus:outline-none"
+                      />
+                      <span class="text-[#8e9bb0] font-mono text-[11px]">m/s</span>
+                    </div>
+                  </div>
+                  <input type="range" id="param_lowWind" min="-40" max="60" step="1" value="5" oninput="syncParam('lowWind', this.value, 'range')" class="w-full cursor-pointer" />
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center text-xs mb-1">
+                    <label for="num_highWind" class="text-[#f4ede4] font-medium">Angin Tinggi y &gt; 5km (w_high)</label>
+                    <div class="flex items-center gap-1">
+                      <input
+                        type="number"
+                        id="num_highWind"
+                        min="-40"
+                        max="80"
+                        step="1"
+                        value="18"
+                        oninput="syncParam('highWind', this.value, 'num')"
+                        class="w-20 bg-[#222733] border border-[#343c4e] focus:border-[#d4a373] rounded-lg px-2 py-0.5 text-right font-mono text-[#38bdf8] font-bold text-xs focus:outline-none"
+                      />
+                      <span class="text-[#8e9bb0] font-mono text-[11px]">m/s</span>
+                    </div>
+                  </div>
+                  <input type="range" id="param_highWind" min="-40" max="80" step="1" value="18" oninput="syncParam('highWind', this.value, 'range')" class="w-full cursor-pointer" />
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center text-xs mb-1">
+                    <label for="num_buoyancy" class="text-[#f4ede4] font-medium">Daya Apung Termal Abu (B₀)</label>
+                    <div class="flex items-center gap-1">
+                      <input
+                        type="number"
+                        id="num_buoyancy"
+                        min="0"
+                        max="35"
+                        step="1"
+                        value="12"
+                        oninput="syncParam('buoyancyForce', this.value, 'num')"
+                        class="w-20 bg-[#222733] border border-[#343c4e] focus:border-[#d4a373] rounded-lg px-2 py-0.5 text-right font-mono text-[#e2b083] font-bold text-xs focus:outline-none"
+                      />
+                      <span class="text-[#8e9bb0] font-mono text-[11px]">m/s²</span>
+                    </div>
+                  </div>
+                  <input type="range" id="param_buoyancy" min="0" max="35" step="1" value="12" oninput="syncParam('buoyancyForce', this.value, 'range')" class="w-full cursor-pointer" />
+                </div>
+
+                <div class="flex items-center justify-between pt-1 border-t border-[#2e3544]">
+                  <div>
+                    <div class="text-xs font-bold text-[#f4ede4]">Densitas Barometrik</div>
+                    <div class="text-[10px] text-[#8e9bb0]">Skala H = 8.500 m</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="param_barometric" checked onchange="updateVar('useBarometric', this.checked)" class="sr-only peer" />
                     <div class="w-10 h-5 bg-[#343c4e] rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-[#d4a373]"></div>
                   </label>
                 </div>
@@ -510,6 +693,138 @@
                 </div>
               </div>
             </div>
+
+            <!-- TAB 5: SEBARAN ABU & AKUMULASI STASIUN -->
+            <div id="simTabContent5" class="space-y-4 hidden">
+              <!-- Sistem Partikel 3D Instanced -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+                  <span class="text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="layers" class="w-4 h-4 text-[#38bdf8]"></i>
+                    Partikel 3D InstancedMesh
+                  </span>
+                  <span id="particleCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#81b29a] border border-[#343c4e]"> 2.000 Partikel (60 FPS) </span>
+                </div>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">Arsitektur rendering instanced WebGL berkinerja tinggi untuk ribuan partikel proyektil dan dispersi awan abu vulkanik dengan draw calls minimal.</p>
+
+                <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <div class="flex items-center gap-1 text-[10px] text-[#8e9bb0]"><span class="w-2 h-2 rounded-full bg-[#e07a5f]"></span> Bom Lava Pijar</div>
+                    <span id="labelLavaCount" class="font-bold text-[#e07a5f] text-sm">400 partikel</span>
+                    <div class="text-[9px] text-[#606d82]">m = 10-250 kg | Balistik RK4</div>
+                  </div>
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <div class="flex items-center gap-1 text-[10px] text-[#8e9bb0]"><span class="w-2 h-2 rounded-full bg-[#81b29a]"></span> Abu Vulkanik</div>
+                    <span id="labelAshCount" class="font-bold text-[#81b29a] text-sm">1.600 partikel</span>
+                    <div class="text-[9px] text-[#606d82]">Buoyancy + Wind Shear</div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between items-center text-xs mb-1">
+                    <label for="param_partCount" class="text-[#f4ede4] font-medium">Densitas Emisi Partikel</label>
+                    <span id="partCountLabel" class="font-mono text-[#e2b083] font-bold text-xs">2.000</span>
+                  </div>
+                  <input type="range" id="param_partCount" min="400" max="2000" step="100" value="2000" oninput="setParticleCount(+this.value)" class="w-full cursor-pointer" />
+                </div>
+
+                <div class="flex items-center justify-between pt-1 border-t border-[#2e3544]">
+                  <div>
+                    <div class="text-xs font-bold text-[#f4ede4]">Tampilkan Partikel 3D</div>
+                    <div id="particleActiveStatus" class="text-[10px] text-[#38bdf8]">Partikel Aktif di Viewport</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="toggleParticlesCheck" checked onchange="toggleInstancedParticles(this.checked)" class="sr-only peer" />
+                    <div class="w-10 h-5 bg-[#343c4e] rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-[#38bdf8]"></div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Akumulasi Tebal Abu Stasiun -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+                  <span class="text-xs font-bold text-[#e2b083] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="cloud-rain" class="w-4 h-4 text-[#e2b083]"></i>
+                    Akumulasi Deposit Abu (Fallout)
+                  </span>
+                  <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#d4a373] border border-[#343c4e]"> Model Suzuki &amp; Gauss </span>
+                </div>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">Estimasi tebal endapan abu vulkanik ($D_{\text{ash}}$ dalam mm) pada stasiun kaldera dan kawasan pesisir Selat Sunda berdasarkan kolom erupsi $H_c$ dan geseran angin.</p>
+
+                <!-- Container Kartu Stasiun Dinamis -->
+                <div id="stationAshCardsContainer" class="space-y-2">
+                  <!-- Diisi secara otomatis oleh updateStationAshUI() -->
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-[#222733]/80 border border-[#343c4e] text-[10px] font-mono text-[#8e9bb0] space-y-1">
+                  <div class="text-[#f4ede4] font-bold">Ambang Bahaya Abu (PVMBG / USGS):</div>
+                  <div class="grid grid-cols-2 gap-1 text-[9px]">
+                    <span class="text-[#81b29a]">&lt; 1 mm: Minimal / Aman</span>
+                    <span class="text-[#e2b083]">1 - 10 mm: Waspada ISPA</span>
+                    <span class="text-[#dda15e]">10 - 50 mm: Bahaya Jalan/Bandara</span>
+                    <span class="text-[#e07a5f]">&gt; 50 mm: Risiko Atap Roboh</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel Sub-Mesin Tsunami Selat Sunda 2018 -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+                  <span class="text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="waves" class="w-4 h-4 text-[#38bdf8]"></i>
+                    Tsunami Selat Sunda (22 Des 2018)
+                  </span>
+                  <span id="tsunamiStatusBadge" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#81b29a] border border-[#343c4e]"> Shallow Water Model </span>
+                </div>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">
+                  Estimasi waktu rambat gelombang akibat runtuhan lereng barat daya kaldera (0.22 km³) berbasis formula gelombang air dangkal $c = \sqrt{g \cdot h}$ dengan kedalaman rata-rata Selat Sunda $h \approx 150\text{ m}$.
+                </p>
+
+                <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Kecepatan Gelombang (c)</span>
+                    <span class="font-bold text-[#38bdf8] text-sm">38.4 m/s</span>
+                    <div class="text-[9px] text-[#606d82]">≈ 138.1 km/jam</div>
+                  </div>
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Volume Runtuhan Lereng</span>
+                    <span class="font-bold text-[#e07a5f] text-sm">0.22 km³</span>
+                    <div class="text-[9px] text-[#606d82]">Lereng Barat Daya</div>
+                  </div>
+                </div>
+
+                <div class="space-y-1.5 text-xs font-mono">
+                  <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] flex justify-between items-center">
+                    <div>
+                      <b class="text-[#f4ede4] block text-xs">Pulau Sertung (4.75 km)</b>
+                      <span class="text-[9px] text-[#8e9bb0]">Zona Hantam Proksimal</span>
+                    </div>
+                    <span class="text-[#e07a5f] font-bold text-xs">ETA: ~2.1 Menit</span>
+                  </div>
+                  <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] flex justify-between items-center">
+                    <div>
+                      <b class="text-[#f4ede4] block text-xs">Pantai Carita, Banten (49.5 km)</b>
+                      <span class="text-[9px] text-[#8e9bb0]">Pesisir Wisata Jawa Barat</span>
+                    </div>
+                    <span class="text-[#dda15e] font-bold text-xs">ETA: ~36.8 Menit</span>
+                  </div>
+                  <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] flex justify-between items-center">
+                    <div>
+                      <b class="text-[#f4ede4] block text-xs">Kalianda, Lampung (51.6 km)</b>
+                      <span class="text-[9px] text-[#8e9bb0]">Pesisir Rajabasa Lampung</span>
+                    </div>
+                    <span class="text-[#dda15e] font-bold text-xs">ETA: ~34.2 Menit</span>
+                  </div>
+                </div>
+
+                <div class="pt-1 flex justify-between items-center border-t border-[#2e3544]">
+                  <span class="text-xs text-[#f4ede4]">Visual Gelombang Laut 3D</span>
+                  <button onclick="toggleTsunamiSimulation()" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#38bdf8]/20 border border-[#38bdf8] text-[#38bdf8] hover:bg-[#38bdf8] hover:text-[#16181f] transition-all">
+                    Aktifkan Gelombang
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="p-4 border-t border-[#2e3544] bg-[#16181f]/95 space-y-2.5 flex-shrink-0">
@@ -551,6 +866,21 @@
                 </button>
               </div>
 
+              <!-- Presets Sudut Kamera 3D -->
+              <div id="camPresetsGroup" class="flex items-center p-0.5 bg-[#222733] rounded-lg border border-[#343c4e]">
+                <button id="camFreeBtn" onclick="setCameraPreset('free')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all bg-[#d4a373] text-[#16181f]" title="Orbit Bebas">
+                  <i data-lucide="video" class="w-3 h-3 inline"></i> Orbit
+                </button>
+                <button id="camFollowBtn" onclick="setCameraPreset('follow')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Ikuti Bom Lava (POV Peluru)">
+                  <i data-lucide="crosshair" class="w-3 h-3 inline text-[#e07a5f]"></i> POV
+                </button>
+                <button id="camCraterBtn" onclick="setCameraPreset('crater')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Pandangan Kawah">
+                  <i data-lucide="flame" class="w-3 h-3 inline text-[#dda15e]"></i> Kawah
+                </button>
+                <button id="camSideBtn" onclick="setCameraPreset('side')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Profil Samping Parabola">Profil</button>
+                <button id="camTopBtn" onclick="setCameraPreset('topdown')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Satelit Top-Down">Satelit</button>
+              </div>
+
               <button
                 id="btnToggleWater"
                 onclick="toggleWaterSurface()"
@@ -560,8 +890,19 @@
                 <span id="waterToggleText">Laut</span>
               </button>
 
+              <!-- Tombol Tsunami 2018 -->
+              <button
+                id="btnToggleTsunami"
+                onclick="toggleTsunamiSimulation()"
+                class="px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-[#38bdf8]"
+                title="Simulasi Gelombang Tsunami Runtuhan Lereng Barat Daya 2018 (c = √(g·h))"
+              >
+                <i data-lucide="activity" class="w-3 h-3 text-[#38bdf8]"></i>
+                <span id="tsunamiToggleText">Tsunami: Off</span>
+              </button>
+
               <button onclick="openKinematicModal()" class="px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#dda15e] hover:text-white">
-                <i data-lucide="activity" class="w-3 h-3"></i>
+                <i data-lucide="line-chart" class="w-3 h-3"></i>
                 <span>Plot Waktu</span>
               </button>
             </div>
@@ -581,7 +922,26 @@
           </div>
 
           <div class="flex-1 relative min-h-0 pt-10 sm:pt-12">
-            <div id="threeContainer" class="w-full h-full bg-[#16181f] cursor-grab active:cursor-grabbing overflow-hidden"></div>
+            <div id="threeContainer" class="w-full h-full bg-[#16181f] cursor-grab active:cursor-grabbing overflow-hidden relative">
+              <!-- Floating 3D Raycaster Probe Tooltip -->
+              <div
+                id="threeProbeTooltip"
+                class="absolute hidden bg-[#16181f]/95 border border-[#38bdf8] shadow-2xl p-2.5 rounded-xl text-[10px] font-mono text-[#f4ede4] pointer-events-none z-30 backdrop-blur-md max-w-xs transition-opacity duration-150"
+              >
+                <div class="text-[#38bdf8] font-bold border-b border-[#2e3544] pb-1 flex justify-between gap-3 items-center">
+                  <span id="threeProbeTitle" class="flex items-center gap-1"><i data-lucide="disc" class="w-3 h-3"></i> Probe Telemetri 3D</span>
+                  <span id="threeProbeTag" class="text-[9px] px-1.5 py-0.2 rounded bg-[#38bdf8]/20 text-[#38bdf8]">Aktif</span>
+                </div>
+                <div class="grid grid-cols-2 gap-x-3 gap-y-1 mt-1.5">
+                  <span>Target: <b id="tp_target" class="text-[#e2b083]">Bom Lava</b></span>
+                  <span>Posisi: <b id="tp_pos" class="text-white">0, 0, 0</b></span>
+                  <span>Ketinggian: <b id="tp_alt" class="text-[#e2b083]">0 m</b></span>
+                  <span>Kecepatan: <b id="tp_vel" class="text-[#81b29a]">0 m/s</b></span>
+                  <span>Tekanan q: <b id="tp_q" class="text-[#dda15e]">0 kPa</b></span>
+                  <span>Densitas ρ: <b id="tp_rho" class="text-[#f4ede4]">1.22 kg/m³</b></span>
+                </div>
+              </div>
+            </div>
 
             <div id="canvas2DContainer" class="w-full h-full bg-[#16181f] flex items-center justify-center p-2 sm:p-4 hidden relative">
               <div class="w-full h-full border border-[#2e3544] rounded-2xl bg-[#1b1e26] relative overflow-hidden flex items-center justify-center">
@@ -889,6 +1249,387 @@
       </div>
     </div>
 
+    <!-- ==================================================================== -->
+    <!-- MODAL BUKU PANDUAN TEORI FISIKA & FORMULASI MATEMATIKA               -->
+    <!-- ==================================================================== -->
+    <div id="theoryModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6 transition-opacity">
+      <div class="w-full max-w-4xl bg-[#1e222b] border border-[#343c4e] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+        <!-- Modal Header -->
+        <div class="p-4 border-b border-[#2e3544] flex items-center justify-between bg-[#16181f]">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-[#252b37] border border-[#3d4659] flex items-center justify-center text-[#38bdf8]">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-[#f4ede4]">Buku Panduan Formulasi &amp; Teori Fisika Komputasi</h3>
+              <p class="text-[10px] text-[#8e9bb0] font-mono">Landasan Fisis &amp; Model Numerik Modul Krakatau Pro - FATISDA UNS</p>
+            </div>
+          </div>
+          <button onclick="closeTheoryModal()" class="p-2 text-[#8e9bb0] hover:text-white rounded-xl hover:bg-[#252b37] transition-all">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-4 sm:p-6 flex-1 overflow-y-auto space-y-4 custom-scrollbar text-xs leading-relaxed text-[#f4ede4]">
+          <!-- Card 1: Persamaan Gerak & Drag -->
+          <div class="p-4 rounded-xl bg-[#16181f] border border-[#2e3544] space-y-2">
+            <div class="flex items-center gap-2 text-[#e2b083] font-bold text-sm">
+              <span class="w-6 h-6 rounded-lg bg-[#252b37] flex items-center justify-center text-xs font-mono">1</span>
+              Hukum II Newton &amp; Gaya Hambat Aerodinamis Kuadratik
+            </div>
+            <p class="text-[#8e9bb0]">
+              Persamaan gerak proyektil memperhitungkan percepatan gravitasi bumi $\vec{g} = [0, -9.81, 0]^T$ dan disipasi energi akibat hambatan udara fluida kuadratik terhadap kecepatan relatif fluida $\vec{v}_{\text{rel}} = \vec{v} -
+              \vec{w}(y)$:
+            </p>
+            <div class="p-3 rounded-lg bg-[#222733] font-mono text-[#dda15e] border border-[#343c4e]">
+              $\vec{F}_{\text{net}} = m \cdot \vec{a} = m \cdot \vec{g} + \vec{F}_{\text{drag}} + m \cdot \vec{a}_{\text{buoyancy}}$<br />
+              $\vec{F}_{\text{drag}} = -\frac{1}{2} \cdot \rho(y) \cdot C_d \cdot A \cdot |\vec{v}_{\text{rel}}| \cdot \vec{v}_{\text{rel}}$
+            </div>
+            <p class="text-[11px] text-[#8e9bb0]">Koefisien hambatan $C_d$ bernilai ~0.47 untuk bom lava sferis dan ~0.65 untuk fragmen abu vulkanik ireguler.</p>
+          </div>
+
+          <!-- Card 2: Atmosfer Barometrik & Wind Shear -->
+          <div class="p-4 rounded-xl bg-[#16181f] border border-[#2e3544] space-y-2">
+            <div class="flex items-center gap-2 text-[#38bdf8] font-bold text-sm">
+              <span class="w-6 h-6 rounded-lg bg-[#252b37] flex items-center justify-center text-xs font-mono">2</span>
+              Model Atmosfer Barometrik &amp; Geseran Angin Berlapis
+            </div>
+            <p class="text-[#8e9bb0]">Densitas udara atmosfer meluruh secara eksponensial terhadap ketinggian $y$ dengan ketinggian skala bumi $H = 8.500\text{ m}$:</p>
+            <div class="p-3 rounded-lg bg-[#222733] font-mono text-[#38bdf8] border border-[#343c4e]">
+              $\rho(y) = \rho_0 \cdot \exp\left(-\frac{\max(0, y)}{H}\right) \quad (\rho_0 = 1.225\text{ kg/m}^3)$<br /><br />
+              $w_x(y) = \begin{cases} w_{\text{low}} &amp; y &lt; 3000\text{ m} \\ w_{\text{low}} + (w_{\text{high}} - w_{\text{low}}) \cdot \frac{y - 3000}{2000} &amp; 3000 \le y \le 5000\text{ m} \\ w_{\text{high}} &amp; y &gt; 5000\text{
+              m} \end{cases}$
+            </div>
+          </div>
+
+          <!-- Card 3: Daya Apung Termal & Integrasi RK4 -->
+          <div class="p-4 rounded-xl bg-[#16181f] border border-[#2e3544] space-y-2">
+            <div class="flex items-center gap-2 text-[#81b29a] font-bold text-sm">
+              <span class="w-6 h-6 rounded-lg bg-[#252b37] flex items-center justify-center text-xs font-mono">3</span>
+              Daya Apung Termal Kolom Abu &amp; Algoritma Numerik RK4
+            </div>
+            <p class="text-[#8e9bb0]">Gas panas yang menyertai material piroklastik memberikan percepatan apung vertikal termal pada kolom erupsi:</p>
+            <div class="p-3 rounded-lg bg-[#222733] font-mono text-[#81b29a] border border-[#343c4e]">
+              $a_{\text{buoy}}(y) = B_0 \cdot \exp\left(-\frac{\max(0, y - y_{\text{crater}})}{4000}\right) \quad (\text{untuk } v_y &gt; -10\text{ m/s})$<br /><br />
+              $\vec{y}_{t+\Delta t} = \vec{y}_t + \frac{\Delta t}{6}(\vec{k}_1 + 2\vec{k}_2 + 2\vec{k}_3 + \vec{k}_4)$
+            </div>
+            <p class="text-[11px] text-[#8e9bb0]">Metode Runge-Kutta Orde-4 (RK4) memberikan galat pemotongan lokal $O(\Delta t^5)$ dan akumulasi global $O(\Delta t^4)$, jauh lebih stabil dibanding metode Euler $O(\Delta t)$.</p>
+          </div>
+
+          <!-- Card 4: Model Dispersi Abu Suzuki & Tsunami Selat Sunda -->
+          <div class="p-4 rounded-xl bg-[#16181f] border border-[#2e3544] space-y-2">
+            <div class="flex items-center gap-2 text-[#e07a5f] font-bold text-sm">
+              <span class="w-6 h-6 rounded-lg bg-[#252b37] flex items-center justify-center text-xs font-mono">4</span>
+              Model Dispersi Abu Suzuki &amp; Gelombang Tsunami Runtuhan Lereng
+            </div>
+            <p class="text-[#8e9bb0]">Sebaran akumulasi tebal abu di permukaan tanah $D(x, z)$ dan kecepatan rambat tsunami air dangkal Selat Sunda:</p>
+            <div class="p-3 rounded-lg bg-[#222733] font-mono text-[#e07a5f] border border-[#343c4e]">
+              $S(x, z) = \frac{M_{\text{ash}}}{2\pi \sigma_x \sigma_z} \exp\left(-\frac{(x - \bar{x})^2}{2\sigma_x^2} - \frac{z^2}{2\sigma_z^2}\right) \implies D_{\text{ash}} = \frac{S}{\rho_{\text{deposit}}}$<br /><br />
+              $c = \sqrt{g \cdot h} \approx \sqrt{9.81 \times 150} \approx 38.4\text{ m/s} \quad (\approx 138\text{ km/jam})$
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL ANALISIS GALAT NUMERIK & BENCHMARK SOLVER (RK4 VS EULER)       -->
+    <!-- ==================================================================== -->
+    <div id="numericalAnalysisModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6 transition-opacity">
+      <div class="w-full max-w-4xl bg-[#1e222b] border border-[#343c4e] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+        <!-- Header -->
+        <div class="p-4 border-b border-[#2e3544] flex items-center justify-between bg-[#16181f]">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-[#252b37] border border-[#3d4659] flex items-center justify-center text-[#81b29a]">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-[#f4ede4]">Analisis Kestabilan &amp; Galat Numerik (RK4 vs Euler)</h3>
+              <p class="text-[10px] text-[#8e9bb0] font-mono">Uji Konvergensi Integrator Persamaan Diferensial Non-Linear Drag - FATISDA UNS</p>
+            </div>
+          </div>
+          <button onclick="closeNumericalAnalysisModal()" class="p-2 text-[#8e9bb0] hover:text-white rounded-xl hover:bg-[#252b37] transition-all">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-4 sm:p-6 flex-1 overflow-y-auto space-y-4 custom-scrollbar text-xs text-[#f4ede4]">
+          <!-- Teori Singkat Galat -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-[11px]">
+            <div class="p-3 bg-[#16181f] border border-[#2e3544] rounded-xl space-y-1.5">
+              <div class="text-[#dda15e] font-bold flex items-center gap-1.5"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Metode Forward Euler</div>
+              <p class="text-[#8e9bb0] text-[10px]">
+                $\vec{y}_{t+\Delta t} = \vec{y}_t + \Delta t \cdot \vec{f}(t, \vec{y}_t)$<br />
+                Galat Pemotongan Lokal: $O(\Delta t^2)$<br />
+                Galat Akumulasi Global: $O(\Delta t)$<br />
+                <span class="text-[#e07a5f]">*Rentan instabilitas numerik pada gaya seret non-linear kaku.</span>
+              </p>
+            </div>
+            <div class="p-3 bg-[#16181f] border border-[#2e3544] rounded-xl space-y-1.5">
+              <div class="text-[#81b29a] font-bold flex items-center gap-1.5"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Runge-Kutta Orde-4 (RK4)</div>
+              <p class="text-[#8e9bb0] text-[10px]">
+                $\vec{y}_{t+\Delta t} = \vec{y}_t + \frac{\Delta t}{6}(\vec{k}_1 + 2\vec{k}_2 + 2\vec{k}_3 + \vec{k}_4)$<br />
+                Galat Pemotongan Lokal: $O(\Delta t^5)$<br />
+                Galat Akumulasi Global: $O(\Delta t^4)$<br />
+                <span class="text-[#81b29a]">*Presisi tinggi, mengoreksi kemiringan di 4 titik uji.</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Tabel Komparasi Parameter Saat Ini -->
+          <div class="p-3.5 bg-[#16181f] border border-[#2e3544] rounded-xl space-y-2">
+            <span class="text-xs font-bold text-[#e2b083] uppercase tracking-wider block"> 1. Komparasi Kinematika Real-Time (Δt = 0.02 detik) </span>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-mono text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-[#343c4e] text-[#8e9bb0]">
+                    <th class="py-1.5 px-2">Solver</th>
+                    <th class="py-1.5 px-2">Jangkauan (R)</th>
+                    <th class="py-1.5 px-2">Puncak (y_max)</th>
+                    <th class="py-1.5 px-2">Waktu Terbang (t_f)</th>
+                    <th class="py-1.5 px-2">Galat Relatif (ε_R)</th>
+                    <th class="py-1.5 px-2">Konservasi Energi (ΔEm)</th>
+                  </tr>
+                </thead>
+                <tbody id="solverComparisonTableBody">
+                  <!-- Diisi secara dinamis oleh updateNumericalAnalysisModal() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tabel Uji Konvergensi Step-Size -->
+          <div class="p-3.5 bg-[#16181f] border border-[#2e3544] rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-[#38bdf8] uppercase tracking-wider"> 2. Uji Konvergensi Ukuran Langkah Waktu (Step-Size Sensitivity Analysis) </span>
+              <span class="text-[10px] text-[#8e9bb0] font-mono">Sensitivitas Δt: 0.1s s/d 0.005s</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left font-mono text-[11px] border-collapse">
+                <thead>
+                  <tr class="border-b border-[#343c4e] text-[#8e9bb0]">
+                    <th class="py-1.5 px-2">Step Size (Δt)</th>
+                    <th class="py-1.5 px-2">Jangkauan RK4</th>
+                    <th class="py-1.5 px-2">Jangkauan Euler</th>
+                    <th class="py-1.5 px-2">Deviasi Absolut (|ΔR|)</th>
+                    <th class="py-1.5 px-2">Galat Relatif (%)</th>
+                    <th class="py-1.5 px-2">Status Kestabilan</th>
+                  </tr>
+                </thead>
+                <tbody id="stepSizeConvergenceTableBody">
+                  <!-- Diisi secara dinamis oleh runStepConvergenceAnalysis() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Canvas Perbandingan Trajektori Divergensi -->
+          <div class="p-3.5 bg-[#16181f] border border-[#2e3544] rounded-xl space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-[#dda15e] uppercase tracking-wider"> 3. Kurva Divergensi Trajektori: RK4 vs Euler </span>
+              <div class="flex items-center gap-3 text-[10px] font-mono">
+                <span class="flex items-center gap-1 text-[#81b29a]"><span class="w-3 h-0.5 bg-[#81b29a] inline-block mr-1"></span> RK4 (Acuan)</span>
+                <span class="flex items-center gap-1 text-[#e07a5f]"><span class="w-3 h-0.5 bg-[#e07a5f] inline-block mr-1"></span> Forward Euler</span>
+              </div>
+            </div>
+            <div class="w-full h-36 bg-[#1b1e26] border border-[#2e3544] rounded-xl relative overflow-hidden flex items-center justify-center">
+              <canvas id="convergencePlotCanvas" class="w-full h-full"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- FLOATING CONTROLLER: GUIDED ACADEMIC TOUR (MODE PRESENTASI 1-KLIK)    -->
+    <!-- ==================================================================== -->
+    <div
+      id="guidedTourCard"
+      class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-xl bg-[#1e222b]/95 border-2 border-[#d4a373] shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-md rounded-2xl p-4 hidden flex flex-col gap-2.5 transition-all"
+    >
+      <div class="flex items-center justify-between border-b border-[#2e3544] pb-2">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-[#d4a373] text-[#16181f] font-mono font-black text-xs flex items-center justify-center shadow-sm">
+            <span id="tourStepBadge">1</span>
+          </span>
+          <div>
+            <h4 id="tourStepTitle" class="text-xs sm:text-sm font-bold text-[#f4ede4]">Erupsi Bom Lava Anak Krakatau 2018</h4>
+            <span class="text-[9px] text-[#8e9bb0] font-mono">Langkah <b id="tourStepNum">1</b> dari 5 • Demonstrasi Fisika Komputasi</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button id="btnTourAutoPlay" onclick="toggleAutoTour()" class="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-[#252b37] border border-[#343c4e] text-[#81b29a] hover:text-white transition-all flex items-center gap-1">
+            <i data-lucide="play" class="w-3 h-3"></i> <span id="tourAutoText">Auto: Off</span>
+          </button>
+          <button onclick="closeGuidedTour()" class="p-1 text-[#8e9bb0] hover:text-white rounded-lg hover:bg-[#252b37] transition-all" title="Keluar Tour">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <p id="tourStepDesc" class="text-xs text-[#f4ede4] leading-relaxed">
+        Simulasi dimulai dengan letusan bom lava pijar Anak Krakatau 2018 (v0 = 180 m/s, theta = 55°). Kamera otomatis beralih ke mode POV mengejar proyektil secara sinematik.
+      </p>
+
+      <div class="flex items-center justify-between pt-1 border-t border-[#2e3544]">
+        <div class="flex items-center gap-1.5" id="tourActionPills">
+          <span class="text-[9px] px-2 py-0.5 rounded-md bg-[#e07a5f]/20 text-[#e07a5f] font-mono border border-[#e07a5f]/30">POV Follow Cam</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-md bg-[#81b29a]/20 text-[#81b29a] font-mono border border-[#81b29a]/30">RK4 Solver</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="btnTourPrev"
+            onclick="prevTourStep()"
+            class="px-3 py-1 rounded-xl text-xs font-bold bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-white transition-all flex items-center gap-1 disabled:opacity-40"
+            disabled
+          >
+            <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i> Prev
+          </button>
+          <button id="btnTourNext" onclick="nextTourStep()" class="px-3.5 py-1 rounded-xl text-xs font-bold bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all flex items-center gap-1 shadow-sm">
+            Next <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- DOKUMEN CETAK LAPORAN RESMI PRAKTIKUM (PRINT-READY PDF A4)           -->
+    <!-- ==================================================================== -->
+    <div id="printLabReportContainer" class="hidden">
+      <!-- Kop Surat Resmi FATISDA UNS -->
+      <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 16px">
+        <h4 style="font-size: 13px; font-weight: normal; margin: 0; text-transform: uppercase; letter-spacing: 0.5px">Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi</h4>
+        <h2 style="font-size: 17px; font-weight: bold; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px">Universitas Sebelas Maret (UNS)</h2>
+        <h3 style="font-size: 14px; font-weight: bold; margin: 2px 0">Fakultas Teknologi Informasi dan Sains Data (FATISDA)</h3>
+        <p style="font-size: 11px; margin: 2px 0; color: #333">Laboratorium Fisika Komputasi • Program Studi Informatika / Fisika</p>
+        <p style="font-size: 10px; margin: 0; color: #555">Jl. Ir. Sutami No. 36A, Jebres, Surakarta, Jawa Tengah 57126 • Laman: krakatau.izerworks.my.id</p>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 16px">
+        <h2 style="font-size: 15px; font-weight: bold; text-decoration: underline; text-transform: uppercase; margin: 0">Lembar Hasil Simulasi &amp; Praktikum Fisika Komputasi</h2>
+        <p style="font-size: 11px; font-style: italic; margin: 4px 0 0 0">Modul: Analisis Balistik Proyektil Gunung Krakatau &amp; Dispersi Abu Vulkanik Berbasis RK4</p>
+      </div>
+
+      <!-- Metadata Laporan -->
+      <table style="width: 100%; font-size: 11px; margin-bottom: 14px; border-collapse: collapse">
+        <tr>
+          <td style="width: 20%; font-weight: bold">Tanggal Pengujian</td>
+          <td style="width: 30%" id="print_date">--</td>
+          <td style="width: 20%; font-weight: bold">Metode Integrasi</td>
+          <td style="width: 30%" id="print_solver">Runge-Kutta Orde-4 (RK4)</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold">Skenario Erupsi</td>
+          <td id="print_scenario">Bom Vulkanik Anak Krakatau (2018)</td>
+          <td style="font-weight: bold">Atmosfer Barometrik</td>
+          <td id="print_barometric">Skala Ketinggian H = 8.500 m</td>
+        </tr>
+      </table>
+
+      <!-- Bagian 1: Parameter Masukan -->
+      <h4 style="font-size: 12px; font-weight: bold; margin: 10px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px">I. PARAMETER MASUKAN SIMULASI</h4>
+      <table style="width: 100%; font-size: 10.5px; border-collapse: collapse; margin-bottom: 12px" border="1" cellpadding="4">
+        <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
+          <td>Kecepatan v₀</td>
+          <td>Sudut Elevasi θ</td>
+          <td>Ketinggian y₀</td>
+          <td>Massa (m)</td>
+          <td>Koefisien Cd</td>
+          <td>Luas Penampang</td>
+          <td>Angin Rendah</td>
+          <td>Angin Tinggi</td>
+          <td>Gaya Apung B₀</td>
+        </tr>
+        <tr style="text-align: center">
+          <td id="pr_v0">--</td>
+          <td id="pr_angle">--</td>
+          <td id="pr_y0">--</td>
+          <td id="pr_m">--</td>
+          <td id="pr_cd">--</td>
+          <td id="pr_area">--</td>
+          <td id="pr_lowWind">--</td>
+          <td id="pr_highWind">--</td>
+          <td id="pr_buoy">--</td>
+        </tr>
+      </table>
+
+      <!-- Bagian 2: Hasil Kinematika -->
+      <h4 style="font-size: 12px; font-weight: bold; margin: 10px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px">II. HASIL TELEMETRI KINEMATIKA &amp; DISIPASI ENERGI</h4>
+      <table style="width: 100%; font-size: 10.5px; border-collapse: collapse; margin-bottom: 12px" border="1" cellpadding="4">
+        <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
+          <td>Parameter Kinematika</td>
+          <td>Kondisi Riil (RK4 + Drag)</td>
+          <td>Kondisi Ideal (Vakum Murni)</td>
+          <td>Deviasi Aerodinamis</td>
+        </tr>
+        <tr>
+          <td>Jangkauan Horizontal Maksimum (R)</td>
+          <td id="pr_range_real" style="text-align: center; font-weight: bold">--</td>
+          <td id="pr_range_vac" style="text-align: center">--</td>
+          <td id="pr_range_dev" style="text-align: center; color: #b91c1c">--</td>
+        </tr>
+        <tr>
+          <td>Ketinggian Puncak Maksimum (y_apex)</td>
+          <td id="pr_apex_real" style="text-align: center; font-weight: bold">--</td>
+          <td id="pr_apex_vac" style="text-align: center">--</td>
+          <td id="pr_apex_dev" style="text-align: center">--</td>
+        </tr>
+        <tr>
+          <td>Total Waktu Tempuh di Udara (t_flight)</td>
+          <td id="pr_time_real" style="text-align: center; font-weight: bold">--</td>
+          <td id="pr_time_vac" style="text-align: center">--</td>
+          <td id="pr_time_dev" style="text-align: center">--</td>
+        </tr>
+        <tr>
+          <td>Kecepatan Sesaat Saat Impak Laut</td>
+          <td id="pr_v_impact" style="text-align: center; font-weight: bold">--</td>
+          <td id="pr_v_impact_vac" style="text-align: center">--</td>
+          <td id="pr_v_impact_dev" style="text-align: center">--</td>
+        </tr>
+        <tr>
+          <td>Total Energi Mekanik Terdipasi (W_drag)</td>
+          <td id="pr_w_drag" colspan="3" style="text-align: center; font-weight: bold">--</td>
+        </tr>
+      </table>
+
+      <!-- Bagian 3: Tabel Sebaran Abu -->
+      <h4 style="font-size: 12px; font-weight: bold; margin: 10px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px">III. ESTIMASI AKUMULASI ABU VULKANIK DI STASIUN PEMANTAU</h4>
+      <table style="width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 14px" border="1" cellpadding="4">
+        <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
+          <td>Stasiun Pemantau</td>
+          <td>Jarak Geografis</td>
+          <td>Wilayah Administrasi</td>
+          <td>Estimasi Tebal Abu</td>
+          <td>Tingkat Bahaya (PVMBG/USGS)</td>
+          <td>Rekomendasi Tindakan Mitigasi</td>
+        </tr>
+        <tbody id="pr_stations_body">
+          <!-- Diisi otomatis oleh printLabReport() -->
+        </tbody>
+      </table>
+
+      <!-- Kolom Tanda Tangan Pengesahan -->
+      <table style="width: 100%; font-size: 11px; margin-top: 24px; border-collapse: collapse">
+        <tr>
+          <td style="width: 50%; text-align: center">
+            Mengetahui,<br />
+            Dosen Pengampu / Asisten Laboratorium<br /><br /><br /><br />
+            (.........................................................)<br />
+            NIP.
+          </td>
+          <td style="width: 50%; text-align: center">
+            Surakarta, <span id="pr_sign_date">--</span><br />
+            Praktikan / Mahasiswa Penguji<br /><br /><br /><br />
+            (.........................................................)<br />
+            NIM.
+          </td>
+        </tr>
+      </table>
+    </div>
+
     <script>
       const CONSTANTS = {
         G: 9.80665,
@@ -897,10 +1638,11 @@
       };
 
       const PRESETS = {
-        krakatau: { v0: 180, angle: 55, y0: 157, m: 250, cd: 0.47, area: 0.8, g: 9.81, wind: 0, useRK4: true, useBarometric: true },
-        cannon: { v0: 320, angle: 45, y0: 10, m: 45, cd: 0.2, area: 0.05, g: 9.81, wind: 0, useRK4: true, useBarometric: true },
-        textbook: { v0: 100, angle: 45, y0: 0, m: 1, cd: 0.0, area: 0.01, g: 9.81, wind: 0, useRK4: true, useBarometric: false },
-        heavy_drag: { v0: 150, angle: 60, y0: 50, m: 10, cd: 1.2, area: 2.5, g: 9.81, wind: 0, useRK4: true, useBarometric: true },
+        krakatau: { v0: 180, angle: 55, y0: 157, m: 250, cd: 0.47, area: 0.8, g: 9.81, wind: 5, lowWind: 5, highWind: 18, buoyancyForce: 12, useRK4: true, useBarometric: true },
+        erupsi_1883: { v0: 420, angle: 72, y0: 813, m: 350, cd: 0.35, area: 1.2, g: 9.81, wind: 15, lowWind: 15, highWind: 48, buoyancyForce: 26, useRK4: true, useBarometric: true },
+        cannon: { v0: 320, angle: 45, y0: 10, m: 45, cd: 0.2, area: 0.05, g: 9.81, wind: 0, lowWind: 0, highWind: 6, buoyancyForce: 0, useRK4: true, useBarometric: true },
+        textbook: { v0: 100, angle: 45, y0: 0, m: 1, cd: 0.0, area: 0.01, g: 9.81, wind: 0, lowWind: 0, highWind: 0, buoyancyForce: 0, useRK4: true, useBarometric: false },
+        heavy_drag: { v0: 150, angle: 60, y0: 50, m: 10, cd: 1.2, area: 2.5, g: 9.81, wind: 10, lowWind: 10, highWind: 32, buoyancyForce: 8, useRK4: true, useBarometric: true },
       };
 
       let currentParams = { ...PRESETS.krakatau };
@@ -921,6 +1663,120 @@
       let impactRipple2D = { active: false, x: 0, y: 0, radius: 0, opacity: 0 };
 
       const GHOST_COLORS = ["#38bdf8", "#ec4899", "#a855f7", "#81b29a"];
+
+      // --- MODEL GESERAN ANGIN BERLAPIS (STRATIFIED WIND SHEAR) ---
+      function getWindShearAt(y, lowW, highW) {
+        if (y < 3000) return lowW;
+        if (y > 5000) return highW;
+        return lowW + (highW - lowW) * ((y - 3000) / 2000);
+      }
+
+      // --- DATA STASIUN PEMANTAUAN AKUMULASI ABU (ASH FALLOUT STATIONS) ---
+      const ASH_MONITORING_STATIONS = [
+        {
+          id: "sertung",
+          name: "Pulau Sertung (Barat Laut)",
+          distanceKm: 4.75,
+          x: -4400,
+          z: 1800,
+          region: "Kaldera Krakatau",
+          desc: "Zona proksimal kaldera; terpapar bom balistik dan jatuhan tephra sangat tebal.",
+        },
+        {
+          id: "panjang",
+          name: "Pulau Panjang (Timur Laut)",
+          distanceKm: 3.8,
+          x: 3600,
+          z: 1200,
+          region: "Kaldera Krakatau",
+          desc: "Pos terdekat di timur kawah aktif; akumulasi langsung jika angin monsun bertiup ke timur.",
+        },
+        {
+          id: "carita",
+          name: "Pesisir Carita / Anyer (Banten)",
+          distanceKm: 49.5,
+          x: 48000,
+          z: -12000,
+          region: "Pantai Barat Jawa",
+          desc: "Kawasan padat penduduk, pariwisata, dan koridor jalan nasional Anyer-Carita.",
+        },
+        {
+          id: "kalianda",
+          name: "Kota Kalianda (Lampung Selatan)",
+          distanceKm: 51.6,
+          x: -42000,
+          z: 30000,
+          region: "Pesisir Lampung",
+          desc: "Pusat pemerintahan & simpul logistik strategis Jalan Lintas Sumatera (Jalinsum).",
+        },
+      ];
+
+      // --- MODEL KALKULASI DEPOSIT ABU SUZUKI & GAUSS ---
+      function computeAshFalloutStations(columnHeight, lowW, highW) {
+        const Hc = Math.max(800, columnHeight || 2500);
+        const normH = Hc / 3000;
+        const massAsh = 1.2e7 * Math.pow(normH, 3.2); // Massa total abu halus terejeksi (kg)
+
+        const meanWind = (lowW + highW) / 2;
+        const vSettle = 2.2; // Kecepatan pengendapan terminal rata-rata (m/s)
+        const xCenter = meanWind * (Hc / vSettle) * 0.65; // Pergeseran titik pusat sebaran abu
+
+        return ASH_MONITORING_STATIONS.map((st) => {
+          const dx = st.x - xCenter;
+          const dz = st.z;
+          const distTotal = Math.sqrt(st.x * st.x + st.z * st.z);
+
+          const sigmaX = 2800 + 0.25 * Math.abs(dx) + 120 * Math.abs(meanWind);
+          const sigmaZ = 2200 + 0.16 * distTotal;
+
+          const exponent = -((dx * dx) / (2 * sigmaX * sigmaX) + (dz * dz) / (2 * sigmaZ * sigmaZ));
+          const S = (massAsh / (2 * Math.PI * sigmaX * sigmaZ)) * Math.exp(Math.max(-40, exponent));
+
+          let depthMm = S;
+          if (st.distanceKm < 6.0) {
+            // Koreksi jatuhan tephra proksimal kaldera
+            depthMm += (1600 / (st.distanceKm * 1000)) * Math.pow(normH, 2.0);
+          }
+
+          let hazardLevel = "MINIMAL / AMAN";
+          let badgeClass = "bg-[#81b29a]/20 text-[#81b29a] border-[#81b29a]/50";
+          let recommendation = "Lapisan tipis (mikron). Aktivitas normal, cuci permukaan buah & sayur.";
+
+          if (depthMm >= 50) {
+            hazardLevel = "BAHAYA KRITIS";
+            badgeClass = "bg-[#e07a5f]/20 text-[#e07a5f] border-[#e07a5f]/60";
+            recommendation = "Ancaman keruntuhan atap bangunan. Pemadaman listrik. Evakuasi zona rawan.";
+          } else if (depthMm >= 10) {
+            hazardLevel = "BAHAYA SEDANG";
+            badgeClass = "bg-[#dda15e]/20 text-[#dda15e] border-[#dda15e]/60";
+            recommendation = "Jalan sangat licin. Tutup operasional bandara. Wajib pelindung mata & N95.";
+          } else if (depthMm >= 1.0) {
+            hazardLevel = "WASPADA";
+            badgeClass = "bg-[#e2b083]/20 text-[#e2b083] border-[#e2b083]/50";
+            recommendation = "Iritasi ISPA & mata. Wajib masker pernapasan N95 saat berada di luar.";
+          }
+
+          return {
+            ...st,
+            depthMm: Math.max(0.01, depthMm),
+            hazardLevel,
+            badgeClass,
+            recommendation,
+          };
+        });
+      }
+
+      // --- VARIABEL SISTEM PARTIKEL 3D INSTANCEDMESH ---
+      const MAX_LAVA_BOMBS = 400;
+      const MAX_ASH_PARTICLES = 1600;
+      let totalTargetParticles = 2000;
+      let showInstancedParticles = true;
+      let lavaBombsMesh = null;
+      let volcanicAshMesh = null;
+      let stationBeaconsGroup = null;
+      let lavaParticles = [];
+      let ashParticles = [];
+      const dummyObj = new THREE.Object3D();
 
       class AudioEngine {
         constructor() {
@@ -959,17 +1815,19 @@
       function computeTrajectories(params) {
         const dt = 0.02;
         const maxTime = 1200;
-        const { v0, angle, y0, m, cd, area, g, wind, useRK4, useBarometric } = params;
+        const { v0, angle, y0, m, cd, area, g, wind, lowWind, highWind, useRK4, useBarometric } = params;
         const theta = (angle * Math.PI) / 180;
         const currentG = g || 9.81;
-        const currentWind = wind || 0;
+        const effLowW = lowWind !== undefined ? lowWind : wind || 0;
+        const effHighW = highWind !== undefined ? highWind : effLowW;
         const initState = [0, y0, v0 * Math.cos(theta), v0 * Math.sin(theta)];
 
         const getDerivs = (s, isVacuum = false) => {
           const [x, y, vx, vy] = s;
           if (y < 0) return [0, 0, 0, 0];
 
-          const vrx = isVacuum ? vx : vx - currentWind;
+          const curWind = useBarometric ? getWindShearAt(y, effLowW, effHighW) : effLowW;
+          const vrx = isVacuum ? vx : vx - curWind;
           const vry = vy;
           const vRel = Math.sqrt(vrx * vrx + vry * vry);
 
@@ -1019,7 +1877,8 @@
             const v = Math.sqrt(vx * vx + vy * vy);
             const deriv = getDerivs(s, isVacuum);
             const rho = useBarometric ? CONSTANTS.RHO_0 * Math.exp(-s[1] / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
-            const vrx = isVacuum ? vx : vx - currentWind;
+            const curWind = useBarometric ? getWindShearAt(s[1], effLowW, effHighW) : effLowW;
+            const vrx = isVacuum ? vx : vx - curWind;
             const vRel = Math.sqrt(vrx * vrx + vy * vy);
             const fDrag = isVacuum ? 0 : 0.5 * rho * cd * area * vRel * vRel;
 
@@ -1180,6 +2039,574 @@
       function closeKinematicModal() {
         const modal = document.getElementById("kinematicPlotsModal");
         modal.classList.add("hidden");
+      }
+
+      function openTheoryModal() {
+        const modal = document.getElementById("theoryModal");
+        if (!modal) return;
+        modal.classList.remove("hidden");
+        if (window.renderMathInElement) {
+          try {
+            window.renderMathInElement(modal, {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+              ],
+              throwOnError: false,
+            });
+          } catch (err) {
+            console.warn("KaTeX render error:", err);
+          }
+        }
+        lucide.createIcons();
+      }
+
+      function closeTheoryModal() {
+        const modal = document.getElementById("theoryModal");
+        if (modal) modal.classList.add("hidden");
+      }
+
+      // --- FITUR UNGGULAN: LABORATORIUM VIRTUAL SUDUT OPTIMUM ---
+      let bestOptimalAngle = 45;
+      function calculateOptimalAngle() {
+        const p = { ...currentParams };
+        const currentG = p.g || 9.81;
+        const y0 = p.y0 || 0;
+        const v0 = p.v0 || 180;
+        const m = p.m || 250;
+        const cd = p.cd || 0.47;
+        const area = p.area || 0.8;
+        const effLowW = p.lowWind !== undefined ? p.lowWind : p.wind || 0;
+        const effHighW = p.highWind !== undefined ? p.highWind : effLowW;
+        const useBaro = p.useBarometric !== undefined ? p.useBarometric : true;
+
+        const optRadVac = Math.asin(1 / Math.sqrt(2 + (2 * currentG * y0) / (v0 * v0)));
+        const optAngleVac = (optRadVac * 180) / Math.PI;
+
+        let maxR = -1;
+        let bestAngle = 45;
+
+        for (let ang = 15; ang <= 75; ang += 0.5) {
+          const rad = (ang * Math.PI) / 180;
+          let s = [0, y0, v0 * Math.cos(rad), v0 * Math.sin(rad)];
+          let t = 0;
+          const dt = 0.05;
+
+          while (s[1] >= 0 && t < 600) {
+            const vx = s[2],
+              vy = s[3];
+            const curWind = useBaro ? getWindShearAt(s[1], effLowW, effHighW) : effLowW;
+            const vrx = vx - curWind;
+            const vRel = Math.sqrt(vrx * vrx + vy * vy);
+            let ax = 0,
+              ay = -currentG;
+            if (vRel > 0 && cd > 0 && area > 0) {
+              const rho = useBaro ? CONSTANTS.RHO_0 * Math.exp(-s[1] / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
+              const dragF = 0.5 * rho * cd * area * vRel;
+              ax -= (dragF * vrx) / m;
+              ay -= (dragF * vy) / m;
+            }
+            s[0] += s[2] * dt;
+            s[1] += s[3] * dt;
+            s[2] += ax * dt;
+            s[3] += ay * dt;
+            t += dt;
+          }
+
+          if (s[0] > maxR) {
+            maxR = s[0];
+            bestAngle = ang;
+          }
+        }
+
+        bestOptimalAngle = bestAngle;
+
+        const resDiv = document.getElementById("optimalAngleResult");
+        if (resDiv) {
+          resDiv.classList.remove("hidden");
+          document.getElementById("optAngleVal").innerText = `${bestAngle.toFixed(1)}°`;
+          document.getElementById("optAngleVac").innerText = `${optAngleVac.toFixed(1)}°`;
+          document.getElementById("optAngleRange").innerText = `${maxR.toFixed(1)} m`;
+          const btnApply = document.getElementById("btnApplyOptAngle");
+          if (btnApply) {
+            btnApply.innerHTML = `<i data-lucide="check" class="w-3 h-3"></i> Terapkan Sudut (${bestAngle.toFixed(1)}°)`;
+          }
+          lucide.createIcons();
+        }
+      }
+
+      function applyOptimalAngle() {
+        if (!bestOptimalAngle) return;
+        syncParam("angle", bestOptimalAngle, "num");
+        recalculateSimulation(true);
+      }
+
+      // --- FITUR UNGGULAN: ANALISIS GALAT NUMERIK & BENCHMARK SOLVER (RK4 VS EULER) ---
+      function openNumericalAnalysisModal() {
+        const modal = document.getElementById("numericalAnalysisModal");
+        if (!modal) return;
+        modal.classList.remove("hidden");
+        updateNumericalAnalysisModal();
+        runStepConvergenceAnalysis();
+        setTimeout(() => {
+          drawConvergencePlot();
+        }, 60);
+        if (window.renderMathInElement) {
+          try {
+            window.renderMathInElement(modal, {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+              ],
+              throwOnError: false,
+            });
+          } catch (e) {}
+        }
+        lucide.createIcons();
+      }
+
+      function closeNumericalAnalysisModal() {
+        const modal = document.getElementById("numericalAnalysisModal");
+        if (modal) modal.classList.add("hidden");
+      }
+
+      function solveTrajectoryCustom(params, useRK4Solver, dtCustom = 0.02) {
+        const maxTime = 1200;
+        const { v0, angle, y0, m, cd, area, g, lowWind, highWind, wind, useBarometric } = params;
+        const theta = (angle * Math.PI) / 180;
+        const currentG = g || 9.81;
+        const effLowW = lowWind !== undefined ? lowWind : wind || 0;
+        const effHighW = highWind !== undefined ? highWind : effLowW;
+        let s = [0, y0, v0 * Math.cos(theta), v0 * Math.sin(theta)];
+        const data = [];
+        let t = 0;
+        let apex = { x: 0, y: y0 };
+        let prevVy = s[3];
+        const e0 = 0.5 * m * v0 * v0 + m * currentG * y0;
+
+        const getDerivs = (state) => {
+          const [x, y, vx, vy] = state;
+          if (y < 0) return [0, 0, 0, 0];
+          const curWind = useBarometric ? getWindShearAt(y, effLowW, effHighW) : effLowW;
+          const vrx = vx - curWind;
+          const vRel = Math.sqrt(vrx * vrx + vy * vy);
+          let ax = 0,
+            ay = -currentG;
+          if (vRel > 0 && cd > 0 && area > 0) {
+            const rho = useBarometric ? CONSTANTS.RHO_0 * Math.exp(-y / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
+            const dragConst = 0.5 * rho * cd * area;
+            ax -= (dragConst * vRel * vrx) / m;
+            ay -= (dragConst * vRel * vy) / m;
+          }
+          return [vx, vy, ax, ay];
+        };
+
+        while (s[1] >= 0 && t < maxTime) {
+          data.push({ x: s[0], y: s[1], vx: s[2], vy: s[3], t });
+          if (prevVy >= 0 && s[3] <= 0) {
+            apex = { x: s[0], y: s[1] };
+          }
+          prevVy = s[3];
+
+          if (!useRK4Solver) {
+            const d = getDerivs(s);
+            s[0] += d[0] * dtCustom;
+            s[1] += d[1] * dtCustom;
+            s[2] += d[2] * dtCustom;
+            s[3] += d[3] * dtCustom;
+          } else {
+            const k1 = getDerivs(s);
+            const s2 = s.map((v, i) => v + 0.5 * dtCustom * k1[i]);
+            const k2 = getDerivs(s2);
+            const s3 = s.map((v, i) => v + 0.5 * dtCustom * k2[i]);
+            const k3 = getDerivs(s3);
+            const s4 = s.map((v, i) => v + dtCustom * k3[i]);
+            const k4 = getDerivs(s4);
+            s = s.map((v, i) => v + (dtCustom / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
+          }
+          t += dtCustom;
+        }
+
+        const vFinal = Math.sqrt(s[2] * s[2] + s[3] * s[3]);
+        const ef = 0.5 * m * vFinal * vFinal;
+        return { range: s[0], apex, flightTime: t, finalSpeed: vFinal, data, e0, ef };
+      }
+
+      function updateNumericalAnalysisModal() {
+        const tbody = document.getElementById("solverComparisonTableBody");
+        if (!tbody) return;
+
+        const rk4Res = solveTrajectoryCustom(currentParams, true, 0.02);
+        const eulerRes = solveTrajectoryCustom(currentParams, false, 0.02);
+        const vacRes = trajectories ? trajectories.vacuum : { range: 0, apex: { y: 0 }, flightTime: 0 };
+
+        const relErrRange = rk4Res.range > 0 ? (Math.abs(rk4Res.range - eulerRes.range) / rk4Res.range) * 100 : 0;
+        const rk4EmLoss = ((rk4Res.e0 - rk4Res.ef) / rk4Res.e0) * 100;
+        const eulerEmLoss = ((eulerRes.e0 - eulerRes.ef) / eulerRes.e0) * 100;
+
+        tbody.innerHTML = `
+          <tr class="border-b border-[#2e3544] hover:bg-[#252b37] transition-all">
+            <td class="py-2 px-2 font-bold text-[#81b29a] flex items-center gap-1.5">
+              <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-[#81b29a]"></i> Runge-Kutta Orde-4 (Acuan)
+            </td>
+            <td class="py-2 px-2 font-bold text-[#f4ede4]">${rk4Res.range.toFixed(2)} m</td>
+            <td class="py-2 px-2 text-[#e2b083]">${rk4Res.apex.y.toFixed(2)} m</td>
+            <td class="py-2 px-2 text-[#dda15e]">${rk4Res.flightTime.toFixed(2)} s</td>
+            <td class="py-2 px-2 text-[#81b29a] font-bold">0.00% (Basis)</td>
+            <td class="py-2 px-2 text-[#8e9bb0]">${rk4EmLoss.toFixed(1)}% disipasi drag</td>
+          </tr>
+          <tr class="border-b border-[#2e3544] hover:bg-[#252b37] transition-all">
+            <td class="py-2 px-2 font-bold text-[#e07a5f] flex items-center gap-1.5">
+              <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-[#e07a5f]"></i> Forward Euler (O(Δt))
+            </td>
+            <td class="py-2 px-2 font-bold text-[#f4ede4]">${eulerRes.range.toFixed(2)} m</td>
+            <td class="py-2 px-2 text-[#e2b083]">${eulerRes.apex.y.toFixed(2)} m</td>
+            <td class="py-2 px-2 text-[#dda15e]">${eulerRes.flightTime.toFixed(2)} s</td>
+            <td class="py-2 px-2 text-[#e07a5f] font-bold">${relErrRange.toFixed(2)}%</td>
+            <td class="py-2 px-2 text-[#8e9bb0]">${eulerEmLoss.toFixed(1)}% disipasi drag</td>
+          </tr>
+          <tr class="hover:bg-[#252b37] transition-all text-[#8e9bb0]">
+            <td class="py-2 px-2 flex items-center gap-1.5">
+              <i data-lucide="minimize-2" class="w-3.5 h-3.5 text-[#606d82]"></i> Parabola Ideal (Vakum)
+            </td>
+            <td class="py-2 px-2">${vacRes.range.toFixed(2)} m</td>
+            <td class="py-2 px-2">${(vacRes.apex ? vacRes.apex.y : 0).toFixed(2)} m</td>
+            <td class="py-2 px-2">${vacRes.flightTime.toFixed(2)} s</td>
+            <td class="py-2 px-2 text-[#606d82]">N/A (Tanpa Hambatan)</td>
+            <td class="py-2 px-2 text-[#81b29a]">0.0% (Konservasi Murni)</td>
+          </tr>
+        `;
+      }
+
+      function runStepConvergenceAnalysis() {
+        const tbody = document.getElementById("stepSizeConvergenceTableBody");
+        if (!tbody) return;
+
+        const dtList = [0.1, 0.05, 0.02, 0.01, 0.005];
+        let html = "";
+
+        dtList.forEach((dt) => {
+          const rk4 = solveTrajectoryCustom(currentParams, true, dt);
+          const euler = solveTrajectoryCustom(currentParams, false, dt);
+          const diff = Math.abs(rk4.range - euler.range);
+          const errPct = rk4.range > 0 ? (diff / rk4.range) * 100 : 0;
+          const isStable = errPct < 2.5;
+
+          html += `
+            <tr class="border-b border-[#2e3544] hover:bg-[#252b37] transition-all">
+              <td class="py-1.5 px-2 font-bold text-[#dda15e]">${dt.toFixed(3)} s</td>
+              <td class="py-1.5 px-2 text-[#81b29a] font-bold">${rk4.range.toFixed(2)} m</td>
+              <td class="py-1.5 px-2 text-[#f4ede4]">${euler.range.toFixed(2)} m</td>
+              <td class="py-1.5 px-2 text-[#e2b083]">${diff.toFixed(2)} m</td>
+              <td class="py-1.5 px-2 font-bold ${errPct > 5 ? "text-[#e07a5f]" : errPct > 2 ? "text-[#dda15e]" : "text-[#81b29a]"}">
+                ${errPct.toFixed(2)}%
+              </td>
+              <td class="py-1.5 px-2 font-bold">
+                <span class="px-2 py-0.5 rounded text-[9px] ${isStable ? "bg-[#81b29a]/20 text-[#81b29a] border border-[#81b29a]/30" : "bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/30"}">
+                  ${isStable ? "Stabil Konvergen" : "Divergensi Signifikan"}
+                </span>
+              </td>
+            </tr>
+          `;
+        });
+
+        tbody.innerHTML = html;
+      }
+
+      function drawConvergencePlot() {
+        const canvas = document.getElementById("convergencePlotCanvas");
+        if (!canvas) return;
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const rk4 = solveTrajectoryCustom(currentParams, true, 0.05);
+        const euler = solveTrajectoryCustom(currentParams, false, 0.05);
+
+        const maxR = Math.max(rk4.range, euler.range, 100);
+        const maxH = Math.max(rk4.apex.y, euler.apex.y, 50);
+
+        const padX = 35;
+        const padY = 22;
+
+        ctx.strokeStyle = "#2e3544";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padX, h - padY);
+        ctx.lineTo(w - padX, h - padY);
+        ctx.moveTo(padX, padY);
+        ctx.lineTo(padX, h - padY);
+        ctx.stroke();
+
+        const toScreenX = (x) => padX + (x / (maxR * 1.05)) * (w - 2 * padX);
+        const toScreenY = (y) => h - padY - (y / (maxH * 1.15)) * (h - 2 * padY);
+
+        // Forward Euler curve
+        ctx.strokeStyle = "#e07a5f";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        euler.data.forEach((pt, i) => {
+          const sx = toScreenX(pt.x);
+          const sy = toScreenY(pt.y);
+          if (i === 0) ctx.moveTo(sx, sy);
+          else ctx.lineTo(sx, sy);
+        });
+        ctx.stroke();
+
+        // RK4 curve
+        ctx.strokeStyle = "#81b29a";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        rk4.data.forEach((pt, i) => {
+          const sx = toScreenX(pt.x);
+          const sy = toScreenY(pt.y);
+          if (i === 0) ctx.moveTo(sx, sy);
+          else ctx.lineTo(sx, sy);
+        });
+        ctx.stroke();
+      }
+
+      // --- FITUR UNGGULAN: GUIDED ACADEMIC TOUR (MODE PRESENTASI 1-KLIK) ---
+      let tourCurrentStep = 1;
+      let tourAutoInterval = null;
+      let isTourAutoPlaying = false;
+
+      const TOUR_STEPS = [
+        {
+          step: 1,
+          title: "1. Letusan Bom Lava Pijar Anak Krakatau (2018)",
+          desc: "Simulasi dimulai dengan pemodelan letusan bom lava Anak Krakatau 2018 (v₀ = 180 m/s, θ = 55°, y₀ = 157 m). Kamera otomatis beralih ke mode POV mengikuti proyektil secara sinematik.",
+          pills: [
+            { text: "POV Follow Cam", class: "bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/30" },
+            { text: "RK4 Solver", class: "bg-[#81b29a]/20 text-[#81b29a] border border-[#81b29a]/30" },
+          ],
+          action: () => {
+            applyPreset("krakatau");
+            isPlaying = true;
+            setCameraPreset("follow");
+          },
+        },
+        {
+          step: 2,
+          title: "2. Disipasi Gaya Hambat Udara Aerodinamis Kuadratik",
+          desc: "Kamera beralih ke profil samping parabola (Z = 0). Perhatikan garis putus-putus abu-abu (ruang hampa ideal) vs kurva oranye padat (kondisi riil atmosfer). Hambatan kuadratik mendisipasi energi kinetik dan memotong jangkauan hingga >40%.",
+          pills: [
+            { text: "Profil Samping", class: "bg-[#dda15e]/20 text-[#dda15e] border border-[#dda15e]/30" },
+            { text: "Drag Kuadratik", class: "bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/30" },
+          ],
+          action: () => {
+            setCameraPreset("side");
+          },
+        },
+        {
+          step: 3,
+          title: "3. Dinamika Geseran Angin Berlapis (Wind Shear)",
+          desc: "Model atmosfer barometrik membagi angin menjadi 3 lapisan ketinggian (troposfer bawah w_low, zona geser 3-5 km, dan stratosfer w_high). Bersama daya apung termal kawah, kolom abu vulkanik berbelok ke arah timur menuju pesisir Banten.",
+          pills: [
+            { text: "Geseran Angin", class: "bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/30" },
+            { text: "Buoyancy Termal", class: "bg-[#81b29a]/20 text-[#81b29a] border border-[#81b29a]/30" },
+          ],
+          action: () => {
+            switchSimTab(2);
+            currentParams.lowWind = 6;
+            currentParams.highWind = 24;
+            syncParam("lowWind", 6, "num");
+            syncParam("highWind", 24, "num");
+            recalculateSimulation(false);
+            setCameraPreset("crater");
+          },
+        },
+        {
+          step: 4,
+          title: "4. Propagasi Gelombang Tsunami Selat Sunda 2018",
+          desc: "Keruntuhan lereng barat daya 2018 (0.22 km³) memicu tsunami air dangkal c = √(g·h) ≈ 38.4 m/s. Terlihat gelombang radial menjalar melintasi kaldera ke Pulau Sertung (ETA ~2.1 menit) dan pesisir Carita Banten (ETA ~36.8 menit).",
+          pills: [
+            { text: "Tsunami Aktif", class: "bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/30" },
+            { text: "Hukum Green", class: "bg-[#dda15e]/20 text-[#dda15e] border border-[#dda15e]/30" },
+          ],
+          action: () => {
+            switchSimTab(5);
+            if (!isTsunamiActive) toggleTsunamiSimulation();
+            setCameraPreset("topdown");
+          },
+        },
+        {
+          step: 5,
+          title: "5. Evaluasi Kestabilan Numerik RK4 vs Euler & Buku Teori",
+          desc: "Integrator Runge-Kutta Orde-4 memberikan kestabilan tinggi dengan galat pemotongan O(Δt⁴) dibandingkan Euler O(Δt), membuktikan keunggulan komputasi saintifik FATISDA Universitas Sebelas Maret.",
+          pills: [
+            { text: "Uji Konvergensi", class: "bg-[#81b29a]/20 text-[#81b29a] border border-[#81b29a]/30" },
+            { text: "FATISDA UNS", class: "bg-[#d4a373]/20 text-[#d4a373] border border-[#d4a373]/30" },
+          ],
+          action: () => {
+            openNumericalAnalysisModal();
+          },
+        },
+      ];
+
+      function startGuidedTour() {
+        tourCurrentStep = 1;
+        const card = document.getElementById("guidedTourCard");
+        if (card) card.classList.remove("hidden");
+        applyTourStep(1);
+      }
+
+      function closeGuidedTour() {
+        if (tourAutoInterval) {
+          clearInterval(tourAutoInterval);
+          tourAutoInterval = null;
+          isTourAutoPlaying = false;
+        }
+        const card = document.getElementById("guidedTourCard");
+        if (card) card.classList.add("hidden");
+      }
+
+      function applyTourStep(idx) {
+        tourCurrentStep = idx;
+        const item = TOUR_STEPS[idx - 1];
+        if (!item) return;
+
+        document.getElementById("tourStepBadge").innerText = item.step;
+        document.getElementById("tourStepNum").innerText = item.step;
+        document.getElementById("tourStepTitle").innerText = item.title;
+        document.getElementById("tourStepDesc").innerText = item.desc;
+
+        const btnPrev = document.getElementById("btnTourPrev");
+        const btnNext = document.getElementById("btnTourNext");
+        if (btnPrev) btnPrev.disabled = idx === 1;
+        if (btnNext) {
+          btnNext.innerHTML = idx === 5 ? `Selesai <i data-lucide="check" class="w-3.5 h-3.5"></i>` : `Next <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>`;
+        }
+
+        const pillsContainer = document.getElementById("tourActionPills");
+        if (pillsContainer) {
+          pillsContainer.innerHTML = item.pills.map((p) => `<span class="text-[9px] px-2 py-0.5 rounded-md font-mono ${p.class}">${p.text}</span>`).join("");
+        }
+
+        item.action();
+        lucide.createIcons();
+      }
+
+      function nextTourStep() {
+        if (tourCurrentStep < 5) {
+          applyTourStep(tourCurrentStep + 1);
+        } else {
+          closeGuidedTour();
+        }
+      }
+
+      function prevTourStep() {
+        if (tourCurrentStep > 1) {
+          applyTourStep(tourCurrentStep - 1);
+        }
+      }
+
+      function toggleAutoTour() {
+        isTourAutoPlaying = !isTourAutoPlaying;
+        const btnTxt = document.getElementById("tourAutoText");
+        const btn = document.getElementById("btnTourAutoPlay");
+        if (isTourAutoPlaying) {
+          if (btnTxt) btnTxt.innerText = "Auto: On (5s)";
+          if (btn) btn.className = "px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-[#81b29a]/20 border border-[#81b29a] text-[#81b29a] transition-all flex items-center gap-1 animate-pulse";
+          tourAutoInterval = setInterval(() => {
+            if (tourCurrentStep < 5) {
+              nextTourStep();
+            } else {
+              closeGuidedTour();
+            }
+          }, 5000);
+        } else {
+          if (btnTxt) btnTxt.innerText = "Auto: Off";
+          if (btn) btn.className = "px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-[#252b37] border border-[#343c4e] text-[#81b29a] hover:text-white transition-all flex items-center gap-1";
+          if (tourAutoInterval) {
+            clearInterval(tourAutoInterval);
+            tourAutoInterval = null;
+          }
+        }
+        lucide.createIcons();
+      }
+
+      // --- FITUR UNGGULAN: CETAK LAPORAN RESMI PRAKTIKUM (PRINT-READY PDF) ---
+      function printLabReport() {
+        if (!trajectories) return;
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString("id-ID", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+        document.getElementById("print_date").innerText = `${dateStr}, ${now.toLocaleTimeString("id-ID")} WIB`;
+        document.getElementById("pr_sign_date").innerText = dateStr;
+
+        const scenarioNames = {
+          krakatau: "Bom Vulkanik Anak Krakatau (Studi Kasus 2018)",
+          erupsi_1883: "Mega-Erupsi Krakatau 1883 (v₀=420 m/s, Kolom Plinian)",
+          cannon: "Meriam Balistik Standar (Studi Komparasi)",
+          textbook: "Fisika Dasar Buku Teks (Ruang Hampa Ideal)",
+          heavy_drag: "Hambatan Udara Ekstrem (Studi Turbulensi)",
+        };
+        const scKey = document.getElementById("presetSelect") ? document.getElementById("presetSelect").value : "krakatau";
+        document.getElementById("print_scenario").innerText = scenarioNames[scKey] || "Kustom Pengguna";
+
+        // Section 1: Inputs
+        document.getElementById("pr_v0").innerText = `${currentParams.v0} m/s`;
+        document.getElementById("pr_angle").innerText = `${currentParams.angle}°`;
+        document.getElementById("pr_y0").innerText = `${currentParams.y0} m`;
+        document.getElementById("pr_m").innerText = `${currentParams.m} kg`;
+        document.getElementById("pr_cd").innerText = `${currentParams.cd}`;
+        document.getElementById("pr_area").innerText = `${currentParams.area} m²`;
+        document.getElementById("pr_lowWind").innerText = `${currentParams.lowWind || 0} m/s`;
+        document.getElementById("pr_highWind").innerText = `${currentParams.highWind || 0} m/s`;
+        document.getElementById("pr_buoy").innerText = `${currentParams.buoyancyForce || 0} m/s²`;
+
+        // Section 2: Kinematics
+        const rReal = trajectories.real.range;
+        const rVac = trajectories.vacuum.range;
+        document.getElementById("pr_range_real").innerText = `${rReal.toFixed(1)} m`;
+        document.getElementById("pr_range_vac").innerText = `${rVac.toFixed(1)} m`;
+        document.getElementById("pr_range_dev").innerText = `-${(((rVac - rReal) / (rVac || 1)) * 100).toFixed(1)}%`;
+
+        const apexReal = trajectories.real.apex ? trajectories.real.apex.y : 0;
+        const apexVac = trajectories.vacuum.apex ? trajectories.vacuum.apex.y : 0;
+        document.getElementById("pr_apex_real").innerText = `${apexReal.toFixed(1)} m`;
+        document.getElementById("pr_apex_vac").innerText = `${apexVac.toFixed(1)} m`;
+        document.getElementById("pr_apex_dev").innerText = `${(((apexReal - apexVac) / (apexVac || 1)) * 100).toFixed(1)}%`;
+
+        const tfReal = trajectories.real.flightTime;
+        const tfVac = trajectories.vacuum.flightTime;
+        document.getElementById("pr_time_real").innerText = `${tfReal.toFixed(2)} s`;
+        document.getElementById("pr_time_vac").innerText = `${tfVac.toFixed(2)} s`;
+        document.getElementById("pr_time_dev").innerText = `${(((tfReal - tfVac) / (tfVac || 1)) * 100).toFixed(1)}%`;
+
+        document.getElementById("pr_v_impact").innerText = `${trajectories.real.finalSpeed.toFixed(1)} m/s`;
+        document.getElementById("pr_v_impact_vac").innerText = `${trajectories.vacuum.finalSpeed.toFixed(1)} m/s`;
+        document.getElementById("pr_v_impact_dev").innerText = `-${(((trajectories.vacuum.finalSpeed - trajectories.real.finalSpeed) / (trajectories.vacuum.finalSpeed || 1)) * 100).toFixed(1)}%`;
+
+        document.getElementById("pr_w_drag").innerText = `${trajectories.audit.wDrag.toLocaleString("id-ID", { maximumFractionDigits: 0 })} Joule (${trajectories.audit.eLossPercent.toFixed(1)}% energi mekanik terdisipasi)`;
+
+        // Section 3: Ash Fallout Stations
+        const Hc = trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
+        const stations = computeAshFalloutStations(Hc, currentParams.lowWind || 0, currentParams.highWind || 0);
+        const stTbody = document.getElementById("pr_stations_body");
+        if (stTbody) {
+          stTbody.innerHTML = stations
+            .map(
+              (st) => `
+            <tr>
+              <td style="font-weight: bold;">${st.name}</td>
+              <td style="text-align: center;">${st.distanceKm} km</td>
+              <td>${st.region}</td>
+              <td style="text-align: center; font-weight: bold;">${st.depthMm.toFixed(2)} mm</td>
+              <td style="text-align: center;">${st.hazardLevel}</td>
+              <td>${st.recommendation}</td>
+            </tr>
+          `,
+            )
+            .join("");
+        }
+
+        window.print();
       }
 
       function switchPlotTab(tab) {
@@ -1344,12 +2771,18 @@
 
       // --- 3D SCENE & ENGINE ---
       let scene, camera, renderer;
-      let calderaArchipelagoGroup, volcanoGroup, projectileMesh;
+      let calderaArchipelagoGroup, volcanoGroup, projectileMesh, eruptionPlumeMesh;
       let oceanSurfaceMesh;
       let arrowV, arrowW, arrowDrag;
       let trajectoryLines = [];
       let ghostLines3D = [];
       let apexMarkerMesh;
+      let currentCamPreset = "free";
+      let isTsunamiActive = false;
+      let tsunamiClock = 0;
+      let tsunamiWasActive = false;
+      let probeRaycaster = null;
+      const probeMouse = new THREE.Vector2();
 
       const camState = { radius: 2400, theta: 0.25, phi: 1.3 };
       const targetCam = { ...camState };
@@ -1463,6 +2896,7 @@
           });
           const islandMesh = new THREE.Mesh(coneGeo, coneMat);
           islandMesh.position.set(isl.x, isl.height / 2, isl.z);
+          islandMesh.userData = { ...isl };
           calderaArchipelagoGroup.add(islandMesh);
         });
         scene.add(calderaArchipelagoGroup);
@@ -1473,6 +2907,7 @@
         const vConeMat = new THREE.MeshStandardMaterial({ color: 0x242a35, roughness: 0.92, flatShading: true });
         const volcano = new THREE.Mesh(vConeGeo, vConeMat);
         volcano.position.y = vH / 2;
+        volcano.userData = { isVolcano: true, name: "Gunung Anak Krakatau" };
         volcanoGroup.add(volcano);
 
         const craterGeo = new THREE.CircleGeometry(35, 32);
@@ -1480,9 +2915,25 @@
         const crater = new THREE.Mesh(craterGeo, craterMat);
         crater.rotation.x = -Math.PI / 2;
         crater.position.y = vH + 0.5;
+        crater.userData = { isCrater: true, name: "Ventilasi Kawah Anak Krakatau" };
         volcanoGroup.add(crater);
 
         scene.add(volcanoGroup);
+
+        // Kolom Semburan Piroklastik Vertikal 3D (Eruption Plume Column)
+        const plumeH = 3200;
+        const plumeGeo = new THREE.CylinderGeometry(260, 32, plumeH, 24, 8, true);
+        const plumeMat = new THREE.MeshLambertMaterial({
+          color: 0x475569,
+          emissive: 0x221105,
+          transparent: true,
+          opacity: 0.32,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        });
+        eruptionPlumeMesh = new THREE.Mesh(plumeGeo, plumeMat);
+        eruptionPlumeMesh.position.set(0, vH + plumeH / 2, 0);
+        scene.add(eruptionPlumeMesh);
 
         const pGeo = new THREE.SphereGeometry(14, 24, 24);
         const pMat = new THREE.MeshStandardMaterial({
@@ -1492,6 +2943,7 @@
           roughness: 0.3,
         });
         projectileMesh = new THREE.Mesh(pGeo, pMat);
+        projectileMesh.userData = { isProjectile: true, name: "Bom Lava Piroklastik" };
         scene.add(projectileMesh);
 
         const apexGeo = new THREE.SphereGeometry(16, 16, 16);
@@ -1515,9 +2967,375 @@
         scene.add(arrowW);
         scene.add(arrowDrag);
 
+        initInstancedParticleSystem();
+        initStationBeacons3D();
+
         setup3DControls(renderer.domElement);
+        setup3DProbe(container);
         animate3D();
         window.addEventListener("resize", onResize);
+      }
+
+      // --- ENGINE PARTIKEL 3D BERKINERJA TINGGI (THREE.InstancedMesh) ---
+      function initInstancedParticleSystem() {
+        if (lavaBombsMesh) scene.remove(lavaBombsMesh);
+        if (volcanicAshMesh) scene.remove(volcanicAshMesh);
+
+        // 1. Bom Lava Pijar Instanced Mesh (Sphere, red-orange emissive)
+        const lavaGeo = new THREE.SphereGeometry(6, 8, 8);
+        const lavaMat = new THREE.MeshStandardMaterial({
+          color: 0xff4500,
+          emissive: 0xff2200,
+          emissiveIntensity: 0.85,
+          roughness: 0.4,
+          metalness: 0.1,
+        });
+        lavaBombsMesh = new THREE.InstancedMesh(lavaGeo, lavaMat, MAX_LAVA_BOMBS);
+        lavaBombsMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+        const colorHot1 = new THREE.Color(0xff7700);
+        const colorHot2 = new THREE.Color(0xff3300);
+        const colorDark = new THREE.Color(0xcc2200);
+        for (let i = 0; i < MAX_LAVA_BOMBS; i++) {
+          const rnd = Math.random();
+          const col = rnd > 0.6 ? colorHot1 : rnd > 0.3 ? colorHot2 : colorDark;
+          lavaBombsMesh.setColorAt(i, col);
+        }
+        if (lavaBombsMesh.instanceColor) lavaBombsMesh.instanceColor.needsUpdate = true;
+        scene.add(lavaBombsMesh);
+
+        // 2. Awan Abu Vulkanik Instanced Mesh (Dodecahedron, semi-transparent ash gray)
+        const ashGeo = new THREE.DodecahedronGeometry(7, 0);
+        const ashMat = new THREE.MeshLambertMaterial({
+          color: 0x758092,
+          transparent: true,
+          opacity: 0.6,
+          depthWrite: false,
+        });
+        volcanicAshMesh = new THREE.InstancedMesh(ashGeo, ashMat, MAX_ASH_PARTICLES);
+        volcanicAshMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+        const colorAsh1 = new THREE.Color(0x525b6a);
+        const colorAsh2 = new THREE.Color(0x848e9c);
+        const colorAsh3 = new THREE.Color(0x9ca8b8);
+        for (let j = 0; j < MAX_ASH_PARTICLES; j++) {
+          const rnd = Math.random();
+          const col = rnd > 0.65 ? colorAsh1 : rnd > 0.3 ? colorAsh2 : colorAsh3;
+          volcanicAshMesh.setColorAt(j, col);
+        }
+        if (volcanicAshMesh.instanceColor) volcanicAshMesh.instanceColor.needsUpdate = true;
+        scene.add(volcanicAshMesh);
+
+        resetParticleSystem();
+      }
+
+      function initStationBeacons3D() {
+        if (stationBeaconsGroup) scene.remove(stationBeaconsGroup);
+        stationBeaconsGroup = new THREE.Group();
+
+        ASH_MONITORING_STATIONS.forEach((st) => {
+          const poleH = 220;
+          const poleGeo = new THREE.CylinderGeometry(8, 8, poleH, 12);
+          const poleMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85 });
+          const pole = new THREE.Mesh(poleGeo, poleMat);
+          pole.position.set(st.x, poleH / 2, st.z);
+          pole.userData = { station: st };
+          stationBeaconsGroup.add(pole);
+
+          const ringGeo = new THREE.RingGeometry(25, 60, 24);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
+          const ring = new THREE.Mesh(ringGeo, ringMat);
+          ring.rotation.x = -Math.PI / 2;
+          ring.position.set(st.x, 3, st.z);
+          ring.userData = { station: st };
+          stationBeaconsGroup.add(ring);
+
+          const topGeo = new THREE.SphereGeometry(22, 16, 16);
+          const topMat = new THREE.MeshBasicMaterial({ color: 0xe2b083 });
+          const topSphere = new THREE.Mesh(topGeo, topMat);
+          topSphere.position.set(st.x, poleH + 15, st.z);
+          topSphere.userData = { station: st };
+          stationBeaconsGroup.add(topSphere);
+        });
+
+        scene.add(stationBeaconsGroup);
+      }
+
+      function resetParticleSystem() {
+        if (!lavaBombsMesh || !volcanicAshMesh) return;
+
+        const ventY = Math.max(1, currentParams.y0 || 1);
+        const v0 = currentParams.v0 || 180;
+        const baseAngle = currentParams.angle || 55;
+        const lowW = currentParams.lowWind !== undefined ? currentParams.lowWind : currentParams.wind || 0;
+        const highW = currentParams.highWind !== undefined ? currentParams.highWind : lowW * 2.2;
+        const B0 = currentParams.buoyancyForce !== undefined ? currentParams.buoyancyForce : 12;
+
+        lavaParticles = [];
+        for (let i = 0; i < MAX_LAVA_BOMBS; i++) {
+          const spreadTheta = (Math.random() - 0.5) * 0.45;
+          const theta = (baseAngle * Math.PI) / 180 + spreadTheta;
+          const psi = (Math.random() - 0.5) * 1.5;
+          const speed = v0 * (0.65 + Math.random() * 0.65);
+
+          lavaParticles.push({
+            x: (Math.random() - 0.5) * 25,
+            y: ventY + 4,
+            z: (Math.random() - 0.5) * 25,
+            vx: speed * Math.cos(theta) * Math.cos(psi),
+            vy: speed * Math.sin(theta),
+            vz: speed * Math.cos(theta) * Math.sin(psi),
+            m: 10 + Math.random() * 240,
+            cd: 0.04 + Math.random() * 0.43,
+            area: 0.1 + Math.random() * 0.7,
+            scale: 0.7 + Math.random() * 0.9,
+            impacted: false,
+            age: 0,
+          });
+
+          dummyObj.position.set(0, -9999, 0);
+          dummyObj.scale.set(0, 0, 0);
+          dummyObj.updateMatrix();
+          lavaBombsMesh.setMatrixAt(i, dummyObj.matrix);
+        }
+        lavaBombsMesh.instanceMatrix.needsUpdate = true;
+
+        ashParticles = [];
+        for (let j = 0; j < MAX_ASH_PARTICLES; j++) {
+          const ejectionSpeed = v0 * (0.35 + Math.random() * 0.55);
+          const radAngle = Math.random() * Math.PI * 2;
+          const radSpeed = 8 + Math.random() * 38;
+
+          ashParticles.push({
+            x: (Math.random() - 0.5) * 35,
+            y: ventY + 6,
+            z: (Math.random() - 0.5) * 35,
+            vx: Math.cos(radAngle) * radSpeed,
+            vy: ejectionSpeed,
+            vz: Math.sin(radAngle) * radSpeed,
+            m: 0.02 + Math.random() * 0.45,
+            cd: 0.65,
+            area: 0.02 + Math.random() * 0.1,
+            baseScale: 0.6 + Math.random() * 0.8,
+            scale: 0.6,
+            buoyancy: B0,
+            age: 0,
+            impacted: false,
+          });
+
+          dummyObj.position.set(0, -9999, 0);
+          dummyObj.scale.set(0, 0, 0);
+          dummyObj.updateMatrix();
+          volcanicAshMesh.setMatrixAt(j, dummyObj.matrix);
+        }
+        volcanicAshMesh.instanceMatrix.needsUpdate = true;
+      }
+
+      function stepInstancedParticles(dt) {
+        if (!lavaBombsMesh || !volcanicAshMesh || !showInstancedParticles) return;
+
+        const ventY = Math.max(1, currentParams.y0 || 1);
+        const lowW = currentParams.lowWind !== undefined ? currentParams.lowWind : currentParams.wind || 0;
+        const highW = currentParams.highWind !== undefined ? currentParams.highWind : lowW * 2.2;
+        const B0 = currentParams.buoyancyForce !== undefined ? currentParams.buoyancyForce : 12;
+        const g = currentParams.g || 9.81;
+        const useBaro = currentParams.useBarometric !== false;
+
+        const activeLavaCount = Math.min(MAX_LAVA_BOMBS, Math.round(totalTargetParticles * 0.2));
+        const activeAshCount = Math.min(MAX_ASH_PARTICLES, Math.round(totalTargetParticles * 0.8));
+
+        // Update Bom Lava
+        for (let i = 0; i < MAX_LAVA_BOMBS; i++) {
+          if (i >= activeLavaCount) {
+            dummyObj.position.set(0, -9999, 0);
+            dummyObj.updateMatrix();
+            lavaBombsMesh.setMatrixAt(i, dummyObj.matrix);
+            continue;
+          }
+
+          const p = lavaParticles[i];
+          if (!p) continue;
+          p.age += dt;
+
+          if (p.impacted) {
+            dummyObj.position.set(p.x, 0.5, p.z);
+            dummyObj.scale.set(p.scale * 0.75, 0.15, p.scale * 0.75);
+            dummyObj.updateMatrix();
+            lavaBombsMesh.setMatrixAt(i, dummyObj.matrix);
+            continue;
+          }
+
+          const wx = getWindShearAt(p.y, lowW, highW);
+          const vrx = p.vx - wx;
+          const vry = p.vy;
+          const vrz = p.vz;
+          const vRel = Math.sqrt(vrx * vrx + vry * vry + vrz * vrz);
+          const rho = useBaro ? CONSTANTS.RHO_0 * Math.exp(-Math.max(0, p.y) / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
+          const dragConst = (0.5 * rho * p.cd * p.area) / p.m;
+
+          const ax = -dragConst * vRel * vrx;
+          const ay = -g - dragConst * vRel * vry;
+          const az = -dragConst * vRel * vrz;
+
+          p.vx += ax * dt;
+          p.vy += ay * dt;
+          p.vz += az * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.z += p.vz * dt;
+
+          if (p.y <= 0) {
+            p.y = 0;
+            p.impacted = true;
+            p.vx = 0;
+            p.vy = 0;
+            p.vz = 0;
+          }
+
+          dummyObj.position.set(p.x, p.y, p.z);
+          dummyObj.scale.setScalar(p.scale);
+          dummyObj.updateMatrix();
+          lavaBombsMesh.setMatrixAt(i, dummyObj.matrix);
+        }
+        lavaBombsMesh.instanceMatrix.needsUpdate = true;
+
+        // Update Awan Abu
+        for (let j = 0; j < MAX_ASH_PARTICLES; j++) {
+          if (j >= activeAshCount) {
+            dummyObj.position.set(0, -9999, 0);
+            dummyObj.updateMatrix();
+            volcanicAshMesh.setMatrixAt(j, dummyObj.matrix);
+            continue;
+          }
+
+          const p = ashParticles[j];
+          if (!p) continue;
+          p.age += dt;
+
+          let aBuoy = 0;
+          if (p.vy > -10) {
+            aBuoy = B0 * Math.exp(-Math.max(0, p.y - ventY) / 4000);
+          }
+
+          const wx = getWindShearAt(p.y, lowW, highW);
+          const vrx = p.vx - wx;
+          const vry = p.vy;
+          const vrz = p.vz;
+          const vRel = Math.sqrt(vrx * vrx + vry * vry + vrz * vrz);
+          const rho = useBaro ? CONSTANTS.RHO_0 * Math.exp(-Math.max(0, p.y) / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
+          const dragConst = (0.5 * rho * p.cd * p.area) / p.m;
+
+          const ax = -dragConst * vRel * vrx;
+          const ay = -g + aBuoy - dragConst * vRel * vry;
+          const az = -dragConst * vRel * vrz;
+
+          p.vx += ax * dt;
+          p.vy += ay * dt;
+          p.vz += az * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.z += p.vz * dt;
+
+          p.scale = p.baseScale * (1.0 + Math.min(3.5, p.age * 0.14));
+
+          if (p.y <= 0) {
+            p.y = 0;
+            p.vy = 0;
+            p.impacted = true;
+          }
+
+          dummyObj.position.set(p.x, p.y, p.z);
+          dummyObj.scale.setScalar(p.scale);
+          dummyObj.updateMatrix();
+          volcanicAshMesh.setMatrixAt(j, dummyObj.matrix);
+        }
+        volcanicAshMesh.instanceMatrix.needsUpdate = true;
+      }
+
+      function focusCameraOnStation(stX, stZ) {
+        if (!targetCam) return;
+        targetCam.theta = Math.atan2(stX, stZ);
+        targetCam.phi = 1.05;
+        const dist = Math.sqrt(stX * stX + stZ * stZ);
+        targetCam.radius = Math.min(42000, Math.max(6500, dist * 1.15));
+      }
+
+      function updateStationAshUI() {
+        const container = document.getElementById("stationAshCardsContainer");
+        if (!container) return;
+
+        const Hc = trajectories && trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
+        const lowW = currentParams.lowWind !== undefined ? currentParams.lowWind : currentParams.wind || 0;
+        const highW = currentParams.highWind !== undefined ? currentParams.highWind : lowW * 2.2;
+
+        const stations = computeAshFalloutStations(Hc, lowW, highW);
+
+        container.innerHTML = stations
+          .map(
+            (st) => `
+          <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] hover:border-[#d4a373] transition-all space-y-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <b class="text-xs text-[#f4ede4]">${st.name}</b>
+                <span class="text-[9px] text-[#8e9bb0] block font-mono">Jarak: ${st.distanceKm} km | ${st.region}</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[8px] font-bold font-mono border ${st.badgeClass}">
+                ${st.hazardLevel}
+              </span>
+            </div>
+            <div class="flex items-baseline justify-between border-t border-[#2e3544] pt-1">
+              <span class="text-[10px] text-[#8e9bb0]">Tebal Endapan Abu:</span>
+              <span class="text-xs font-mono font-bold text-[#e2b083]">${st.depthMm.toFixed(2)} mm</span>
+            </div>
+            <p class="text-[9px] text-[#8e9bb0] leading-tight">
+              <span class="text-[#dda15e] font-semibold">Mitigasi:</span> ${st.recommendation}
+            </p>
+            <div class="pt-0.5 flex justify-end">
+              <button onclick="focusCameraOnStation(${st.x}, ${st.z})" class="text-[10px] text-[#38bdf8] hover:text-white font-mono flex items-center gap-1 hover:underline">
+                <i data-lucide="crosshair" class="w-3 h-3"></i> Fokus 3D
+              </button>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        if (stationBeaconsGroup) {
+          stationBeaconsGroup.children.forEach((child) => {
+            if (child.userData && child.userData.station) {
+              const match = stations.find((s) => s.id === child.userData.station.id);
+              if (match) {
+                child.userData.station = match;
+                if (child.isMesh && child.geometry.type === "SphereGeometry") {
+                  child.material.color.setHex(match.depthMm > 2 ? 0xe07a5f : match.depthMm > 0.5 ? 0xdda15e : 0x81b29a);
+                }
+              }
+            }
+          });
+        }
+
+        lucide.createIcons();
+      }
+
+      function setParticleCount(val) {
+        totalTargetParticles = val;
+        const countLabel = document.getElementById("partCountLabel");
+        if (countLabel) countLabel.innerText = Number(val).toLocaleString("id-ID");
+        const badge = document.getElementById("particleCountBadge");
+        if (badge) badge.innerText = `${Number(val).toLocaleString("id-ID")} Partikel (60 FPS)`;
+        const lavaC = Math.round(val * 0.2);
+        const ashC = Math.round(val * 0.8);
+        const lLabel = document.getElementById("labelLavaCount");
+        if (lLabel) lLabel.innerText = `${lavaC} partikel`;
+        const aLabel = document.getElementById("labelAshCount");
+        if (aLabel) aLabel.innerText = `${ashC} partikel`;
+      }
+
+      function toggleInstancedParticles(checked) {
+        showInstancedParticles = checked;
+        if (lavaBombsMesh) lavaBombsMesh.visible = checked;
+        if (volcanicAshMesh) volcanicAshMesh.visible = checked;
+        const statusText = document.getElementById("particleActiveStatus");
+        if (statusText) statusText.innerText = checked ? "Partikel Aktif di Viewport" : "Partikel Dinonaktifkan";
       }
 
       function toggleWaterSurface() {
@@ -1549,12 +3367,239 @@
       }
 
       function update3DCamera() {
+        if (currentCamPreset === "follow" && projectileMesh && projectileMesh.visible) {
+          const px = projectileMesh.position.x;
+          const py = projectileMesh.position.y;
+          camera.position.set(px - 280, Math.max(15, py + 75), 180);
+          camera.lookAt(px + 80, py + 10, 0);
+          return;
+        }
+
+        if (currentCamPreset === "crater") {
+          const y0 = currentParams.y0 || 157;
+          camera.position.set(-80, y0 + 35, 110);
+          const targetX = trajectories ? trajectories.real.apex.x * 0.45 : 300;
+          const targetY = trajectories ? Math.max(y0 + 150, trajectories.real.apex.y * 0.7) : 600;
+          camera.lookAt(targetX, targetY, 0);
+          return;
+        }
+
         camState.phi = Math.max(0.01, Math.min(Math.PI / 2 - 0.01, camState.phi));
         camState.radius = Math.max(100, Math.min(45000, camState.radius));
         camera.position.set(camState.radius * Math.sin(camState.phi) * Math.sin(camState.theta), camState.radius * Math.cos(camState.phi), camState.radius * Math.sin(camState.phi) * Math.cos(camState.theta));
         const targetX = trajectories ? trajectories.real.range * 0.4 : 400;
-        const targetY = trajectories ? trajectories.real.apex.y * 0.4 : 200;
+        let targetY = trajectories ? trajectories.real.apex.y * 0.4 : 200;
+        if (currentCamPreset === "topdown") {
+          targetY = 0;
+        }
         camera.lookAt(targetX, targetY, 0);
+      }
+
+      function setCameraPreset(mode) {
+        currentCamPreset = mode;
+        const btnMap = {
+          free: document.getElementById("camFreeBtn"),
+          follow: document.getElementById("camFollowBtn"),
+          crater: document.getElementById("camCraterBtn"),
+          side: document.getElementById("camSideBtn"),
+          topdown: document.getElementById("camTopBtn"),
+        };
+        Object.keys(btnMap).forEach((k) => {
+          const btn = btnMap[k];
+          if (!btn) return;
+          if (k === mode) {
+            btn.className = "px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all bg-[#d4a373] text-[#16181f]";
+          } else {
+            btn.className = "px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4] bg-transparent";
+          }
+        });
+
+        const rMax = trajectories ? Math.max(1800, trajectories.real.range) : 2500;
+        if (mode === "free") {
+          targetCam.theta = 0.25;
+          targetCam.phi = 1.3;
+          targetCam.radius = Math.max(2200, rMax * 0.9);
+        } else if (mode === "side") {
+          targetCam.theta = 0;
+          targetCam.phi = Math.PI / 2 - 0.05;
+          targetCam.radius = Math.max(2600, rMax * 1.05);
+        } else if (mode === "topdown") {
+          targetCam.theta = 0;
+          targetCam.phi = 0.02;
+          targetCam.radius = Math.max(4500, rMax * 1.5);
+        }
+      }
+
+      function toggleTsunamiSimulation() {
+        isTsunamiActive = !isTsunamiActive;
+        const btn = document.getElementById("btnToggleTsunami");
+        const txt = document.getElementById("tsunamiToggleText");
+        const badge = document.getElementById("tsunamiStatusBadge");
+
+        if (isTsunamiActive) {
+          if (txt) txt.innerText = "Tsunami: Aktif (2018)";
+          if (btn) {
+            btn.className = "px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#38bdf8]/20 border border-[#38bdf8] text-[#38bdf8] shadow-[0_0_12px_rgba(56,189,248,0.35)]";
+          }
+          if (badge) {
+            badge.className = "text-[9px] font-mono px-2 py-0.5 rounded bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8] animate-pulse";
+            badge.innerText = "Gelombang Menjalar (38.4 m/s)";
+          }
+          if (!showWaterSurface) {
+            toggleWaterSurface();
+          }
+        } else {
+          if (txt) txt.innerText = "Tsunami: Off";
+          if (btn) {
+            btn.className = "px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-[#38bdf8]";
+          }
+          if (badge) {
+            badge.className = "text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#81b29a] border border-[#343c4e]";
+            badge.innerText = "Shallow Water Model";
+          }
+        }
+      }
+
+      function setup3DProbe(container) {
+        probeRaycaster = new THREE.Raycaster();
+        const tooltip = document.getElementById("threeProbeTooltip");
+        if (!tooltip || !container) return;
+
+        container.addEventListener("pointermove", (e) => {
+          if (!camera || !scene || viewMode !== "3D") {
+            tooltip.classList.add("hidden");
+            return;
+          }
+
+          const rect = container.getBoundingClientRect();
+          probeMouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          probeMouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+          probeRaycaster.setFromCamera(probeMouse, camera);
+          const ray = probeRaycaster.ray;
+
+          let hitType = null;
+          let hitData = null;
+
+          // 1. Primary projectile (Lava Bomb)
+          if (projectileMesh && projectileMesh.visible) {
+            const pPos = projectileMesh.position;
+            if (ray.distanceToPoint(pPos) < 120) {
+              hitType = "projectile";
+            }
+          }
+
+          // 2. Monitoring Station Beacons
+          if (!hitType && stationBeaconsGroup && stationBeaconsGroup.children.length > 0) {
+            for (const child of stationBeaconsGroup.children) {
+              if (child.userData && child.userData.station) {
+                if (ray.distanceToPoint(child.position) < 280) {
+                  hitType = "station";
+                  hitData = child.userData.station;
+                  break;
+                }
+              }
+            }
+          }
+
+          // 3. Krakatau Archipelago Islands
+          if (!hitType && calderaArchipelagoGroup && calderaArchipelagoGroup.children.length > 0) {
+            for (const isl of calderaArchipelagoGroup.children) {
+              if (isl.userData && isl.userData.name) {
+                const islPos = isl.position;
+                const rBase = isl.userData.baseRadius || 2000;
+                if (ray.distanceToPoint(islPos) < rBase * 0.75) {
+                  hitType = "island";
+                  hitData = isl.userData;
+                  break;
+                }
+              }
+            }
+          }
+
+          // 4. Caldera Vent / Crater
+          if (!hitType && volcanoGroup) {
+            const vPos = new THREE.Vector3(0, (currentParams.y0 || 157) / 2, 0);
+            if (ray.distanceToPoint(vPos) < 240) {
+              hitType = "crater";
+            }
+          }
+
+          if (hitType) {
+            tooltip.classList.remove("hidden");
+            const tW = 240;
+            const tH = 130;
+            let left = e.clientX - rect.left + 16;
+            let top = e.clientY - rect.top + 16;
+            if (left + tW > rect.width) left = left - tW - 24;
+            if (top + tH > rect.height) top = top - tH - 24;
+            tooltip.style.left = `${Math.max(10, left)}px`;
+            tooltip.style.top = `${Math.max(10, top)}px`;
+
+            const tpTarget = document.getElementById("tp_target");
+            const tpPos = document.getElementById("tp_pos");
+            const tpAlt = document.getElementById("tp_alt");
+            const tpVel = document.getElementById("tp_vel");
+            const tpQ = document.getElementById("tp_q");
+            const tpRho = document.getElementById("tp_rho");
+            const tpTitle = document.getElementById("threeProbeTitle");
+            const tpTag = document.getElementById("threeProbeTag");
+
+            if (hitType === "projectile") {
+              tpTitle.innerHTML = `<i data-lucide="crosshair" class="w-3 h-3 text-[#e07a5f]"></i> Probe Bom Vulkanik`;
+              tpTag.innerText = "Real-Time Telemetry";
+              tpTag.className = "text-[9px] px-1.5 py-0.2 rounded bg-[#e07a5f]/20 text-[#e07a5f]";
+              const p = lastRenderedPoint || { x: projectileMesh.position.x, y: projectileMesh.position.y, vx: 0, vy: 0, v: 0 };
+              const alt = Math.max(0, p.y);
+              const rho = currentParams.useBarometric ? CONSTANTS.RHO_0 * Math.exp(-alt / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
+              const qDyn = (0.5 * rho * p.v * p.v) / 1000;
+
+              tpTarget.innerText = "Bom Lava Piroklastik";
+              tpPos.innerText = `${p.x.toFixed(0)}, ${p.y.toFixed(0)}, 0`;
+              tpAlt.innerText = `${alt.toFixed(1)} m`;
+              tpVel.innerText = `${p.v.toFixed(1)} m/s (${(p.v * 3.6).toFixed(0)} km/h)`;
+              tpQ.innerText = `${qDyn.toFixed(2)} kPa`;
+              tpRho.innerText = `${rho.toFixed(3)} kg/m³`;
+            } else if (hitType === "station") {
+              tpTitle.innerHTML = `<i data-lucide="radio" class="w-3 h-3 text-[#38bdf8]"></i> Stasiun Geospasial`;
+              tpTag.innerText = hitData.hazardLevel || "Monitoring";
+              tpTag.className = hitData.depthMm > 2 ? "text-[9px] px-1.5 py-0.2 rounded bg-[#e07a5f]/20 text-[#e07a5f]" : "text-[9px] px-1.5 py-0.2 rounded bg-[#81b29a]/20 text-[#81b29a]";
+              tpTarget.innerText = hitData.name;
+              tpPos.innerText = `${(hitData.x / 1000).toFixed(1)} km, ${(hitData.z / 1000).toFixed(1)} km`;
+              tpAlt.innerText = "0 m (Pantai)";
+              tpVel.innerText = `Jarak: ${hitData.distanceKm} km`;
+              tpQ.innerText = `Abu: ${(hitData.depthMm || 0).toFixed(2)} mm`;
+              tpRho.innerText = hitData.region;
+            } else if (hitType === "island") {
+              tpTitle.innerHTML = `<i data-lucide="mountain" class="w-3 h-3 text-[#dda15e]"></i> Kepulauan Krakatau`;
+              tpTag.innerText = "Kaldera 1883";
+              tpTag.className = "text-[9px] px-1.5 py-0.2 rounded bg-[#dda15e]/20 text-[#dda15e]";
+              tpTarget.innerText = hitData.name;
+              tpPos.innerText = `${(hitData.x / 1000).toFixed(1)} km, ${(hitData.z / 1000).toFixed(1)} km`;
+              tpAlt.innerText = `Puncak: ${hitData.height} m`;
+              tpVel.innerText = `Radius: ${hitData.baseRadius} m`;
+              tpQ.innerText = "Batuan Andesit";
+              tpRho.innerText = "Cagar Alam Laut";
+            } else if (hitType === "crater") {
+              tpTitle.innerHTML = `<i data-lucide="flame" class="w-3 h-3 text-[#e07a5f]"></i> Ventilasi Erupsi`;
+              tpTag.innerText = "Titik Peluncuran";
+              tpTag.className = "text-[9px] px-1.5 py-0.2 rounded bg-[#e07a5f]/20 text-[#e07a5f]";
+              tpTarget.innerText = "Kawah Anak Krakatau";
+              tpPos.innerText = `0, ${currentParams.y0 || 157}, 0`;
+              tpAlt.innerText = `${currentParams.y0 || 157} m`;
+              tpVel.innerText = `v₀: ${currentParams.v0} m/s`;
+              tpQ.innerText = `θ₀: ${currentParams.angle}°`;
+              tpRho.innerText = "Basaltik-Andesitik";
+            }
+            lucide.createIcons();
+          } else {
+            tooltip.classList.add("hidden");
+          }
+        });
+
+        container.addEventListener("pointerleave", () => {
+          tooltip.classList.add("hidden");
+        });
       }
 
       function setup3DControls(el) {
@@ -1565,6 +3610,9 @@
         el.addEventListener("pointerdown", (e) => {
           isDrag = true;
           prev = { x: e.clientX, y: e.clientY };
+          if (currentCamPreset !== "free") {
+            setCameraPreset("free");
+          }
         });
         window.addEventListener("pointerup", () => {
           isDrag = false;
@@ -1580,6 +3628,9 @@
         el.addEventListener(
           "wheel",
           (e) => {
+            if (currentCamPreset !== "free") {
+              setCameraPreset("free");
+            }
             targetCam.radius += e.deltaY * 1.5;
             targetCam.radius = Math.max(100, Math.min(45000, targetCam.radius));
           },
@@ -1629,6 +3680,11 @@
           volcanoGroup.children[0].position.y = hVal / 2;
           volcanoGroup.children[1].position.y = hVal + 0.5;
         }
+
+        if (eruptionPlumeMesh) {
+          const hVal = Math.max(1, currentParams.y0 || 1);
+          eruptionPlumeMesh.position.y = hVal + 1600;
+        }
       }
 
       let prevSimClock = 0;
@@ -1639,6 +3695,14 @@
         camState.phi += (targetCam.phi - camState.phi) * 0.1;
         camState.radius += (targetCam.radius - camState.radius) * 0.1;
         update3DCamera();
+
+        if (eruptionPlumeMesh) {
+          const pTime = performance.now() * 0.0015;
+          eruptionPlumeMesh.scale.x = 1.0 + Math.sin(pTime * 2.2) * 0.06;
+          eruptionPlumeMesh.scale.z = 1.0 + Math.cos(pTime * 2.5) * 0.06;
+          const highW = currentParams.highWind || 0;
+          eruptionPlumeMesh.rotation.z = -(highW / 75) * 0.18;
+        }
 
         if (impactRipple3D && impactRipple3D.material.opacity > 0.01) {
           impactRipple3D.scale.x += 1.8;
@@ -1661,11 +3725,17 @@
             if (simClock > finalT + 1.2) {
               simClock = 0;
               audioEngine.playThump();
+              resetParticleSystem();
             }
           }
 
           const currentP = getInterpolatedPoint(pts, simClock);
+          lastRenderedPoint = currentP;
           projectileMesh.position.set(currentP.x, currentP.y, 0);
+
+          if (showInstancedParticles) {
+            stepInstancedParticles(0.02 * playbackSpeed);
+          }
 
           if (showFbdVectors && arrowV && arrowW && arrowDrag) {
             const pPos = new THREE.Vector3(currentP.x, currentP.y, 0);
@@ -1700,6 +3770,43 @@
           updateHUDValues(currentP);
           draw2DCanvas(currentP);
           drawFBDCanvas(currentP);
+        }
+
+        // Sub-Mesin Animasi Gelombang Tsunami Selat Sunda 2018 (Runtuhan Lereng Barat Daya)
+        if (isTsunamiActive && oceanSurfaceMesh && oceanSurfaceMesh.visible) {
+          tsunamiWasActive = true;
+          tsunamiClock += 0.02 * playbackSpeed;
+          const pos = oceanSurfaceMesh.geometry.attributes.position;
+          const x0 = -250;
+          const z0 = -200;
+          const speed = 480;
+          const tMod = (tsunamiClock * speed) % 24000;
+
+          for (let i = 0; i < pos.count; i++) {
+            const vx = pos.getX(i);
+            const vy = pos.getY(i);
+            const r = Math.sqrt((vx - x0) * (vx - x0) + (-vy - z0) * (-vy - z0));
+            const dr = r - tMod;
+            let waveZ = 0;
+            if (Math.abs(dr) < 4500) {
+              const env = Math.exp(-(dr * dr) / (2 * 1100 * 1100));
+              const greenDamp = 30 * Math.sqrt(800 / (r + 800));
+              const k = 0.0045;
+              waveZ = greenDamp * env * Math.sin(k * dr);
+            }
+            const ambient = 2.0 * Math.sin(vx * 0.001 + tsunamiClock * 1.5) * Math.cos(vy * 0.001 + tsunamiClock * 1.2);
+            pos.setZ(i, waveZ + ambient);
+          }
+          pos.needsUpdate = true;
+          oceanSurfaceMesh.geometry.computeVertexNormals();
+        } else if (tsunamiWasActive && oceanSurfaceMesh) {
+          tsunamiWasActive = false;
+          const pos = oceanSurfaceMesh.geometry.attributes.position;
+          for (let i = 0; i < pos.count; i++) {
+            pos.setZ(i, 0);
+          }
+          pos.needsUpdate = true;
+          oceanSurfaceMesh.geometry.computeVertexNormals();
         }
 
         if (viewMode === "3D" && currentPage === "simulator") {
@@ -2405,9 +4512,10 @@
       }
 
       function switchSimTab(idx) {
-        [1, 2, 3, 4].forEach((n) => {
+        [1, 2, 3, 4, 5].forEach((n) => {
           const btn = document.getElementById(`simTabBtn${n}`);
           const content = document.getElementById(`simTabContent${n}`);
+          if (!btn || !content) return;
           if (n === idx) {
             btn.className = "flex-1 min-w-[70px] py-3 flex justify-center items-center gap-1 text-[#e2b083] border-b-2 border-[#d4a373] transition-all hover:bg-[#252b37]";
             content.classList.remove("hidden");
@@ -2416,6 +4524,9 @@
             content.classList.add("hidden");
           }
         });
+        if (idx === 5) {
+          updateStationAshUI();
+        }
         lucide.createIcons();
       }
 
@@ -2477,6 +4588,11 @@
         syncKey("m", currentParams.m);
         syncKey("cd", currentParams.cd);
         syncKey("area", currentParams.area);
+        syncKey("lowWind", currentParams.lowWind !== undefined ? currentParams.lowWind : currentParams.wind || 0);
+        syncKey("highWind", currentParams.highWind !== undefined ? currentParams.highWind : 18);
+        syncKey("buoyancy", currentParams.buoyancyForce !== undefined ? currentParams.buoyancyForce : 12);
+        const baroEl = document.getElementById("param_barometric");
+        if (baroEl) baroEl.checked = currentParams.useBarometric !== false;
         document.getElementById("param_rk4").checked = currentParams.useRK4;
         recalculateSimulation(true);
       }
@@ -2493,6 +4609,8 @@
         render3DCurves();
         fitToBounds2D();
         updateAuditUI();
+        updateStationAshUI();
+        resetParticleSystem();
 
         if (playSound && currentParams.v0 > 0) {
           audioEngine.playThump();
@@ -2694,15 +4812,33 @@
 
       function exportCSV() {
         if (!trajectories) return;
-        let csv = "Time(s),Real_X(m),Real_Y(m),Ek(J),Ep(J),Em(J),W_drag(J)\n";
-        trajectories.real.data.forEach((r) => {
-          csv += `${r.t},${r.x},${r.y},${r.ek},${r.ep},${r.em},${r.wDrag}\n`;
+        let csv = "# ====================================================================\n";
+        csv += "# KRAKATAU VOLCANIC BALLISTICS & ASH FALLOUT TELEMETRY - FATISDA UNS\n";
+        csv += "# Suite Simulasi Fisika Komputasi Universitas Sebelas Maret\n";
+        csv += `# Tanggal Ekspor: ${new Date().toLocaleString("id-ID")}\n`;
+        csv += `# Parameter: v0=${currentParams.v0} m/s, theta=${currentParams.angle} deg, y0=${currentParams.y0} m, m=${currentParams.m} kg, Cd=${currentParams.cd}, Area=${currentParams.area} m2\n`;
+        csv += `# Atmosfer: w_low=${currentParams.lowWind || 0} m/s, w_high=${currentParams.highWind || 0} m/s, B0=${currentParams.buoyancyForce || 0} m/s2, Barometrik=${currentParams.useBarometric}\n`;
+        csv += "# ====================================================================\n\n";
+
+        csv += "# --- BAGIAN 1: ESTIMASI AKUMULASI JATUHAN ABU DI STASIUN PEMANTAU ---\n";
+        csv += "Stasiun,Jarak_km,Posisi_X_m,Posisi_Z_m,Wilayah,Tebal_Abu_mm,Kategori_Bahaya,Rekomendasi_Mitigasi\n";
+        const Hc = trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
+        const stations = computeAshFalloutStations(Hc, currentParams.lowWind || 0, currentParams.highWind || 0);
+        stations.forEach((st) => {
+          csv += `"${st.name}",${st.distanceKm},${st.x},${st.z},"${st.region}",${st.depthMm.toFixed(2)},"${st.hazardLevel}","${st.recommendation}"\n`;
         });
-        const blob = new Blob([csv], { type: "text/csv" });
+
+        csv += "\n# --- BAGIAN 2: DERET WAKTU KINEMATIKA & ENERGI PROYEKTIL ---\n";
+        csv += "Time_s,Posisi_X_m,Ketinggian_Y_m,Vx_ms,Vy_ms,Kecepatan_V_ms,Gaya_Drag_N,Ek_Joule,Ep_Joule,Em_Joule,W_drag_Joule\n";
+        trajectories.real.data.forEach((r) => {
+          csv += `${r.t.toFixed(3)},${r.x.toFixed(2)},${r.y.toFixed(2)},${r.vx.toFixed(2)},${r.vy.toFixed(2)},${r.v.toFixed(2)},${r.fDrag.toFixed(2)},${r.ek.toFixed(1)},${r.ep.toFixed(1)},${r.em.toFixed(1)},${r.wDrag.toFixed(1)}\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `Energi_Kinematika_${Date.now()}.csv`;
+        a.download = `Telemetri_Krakatau_FATISDA_UNS_${Date.now()}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
       }
@@ -2722,6 +4858,15 @@
         resizeWindCanvas();
         if (ashMap) ashMap.invalidateSize();
       }
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeTheoryModal();
+          closeKinematicModal();
+          closeNumericalAnalysisModal();
+          closeGuidedTour();
+        }
+      });
 
       window.addEventListener("DOMContentLoaded", () => {
         lucide.createIcons();
