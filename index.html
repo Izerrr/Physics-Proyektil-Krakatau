@@ -265,55 +265,81 @@
             <span class="text-[9px] px-1 py-0.2 rounded bg-[#252b37] text-[#d4a373] font-mono border border-[#343c4e]">Pak BL</span>
           </button>
 
-          <button
-            id="btnNavGuidedTour"
-            onclick="startGuidedTour()"
-            class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-            title="Tour Presentasi Interaktif 5 Langkah Erupsi Krakatau"
-          >
-            <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
-            <span class="hidden xl:inline">Tour Erupsi</span>
-          </button>
-
-          <button
-            id="btnNavErrorAnalysis"
-            onclick="openNumericalAnalysisModal()"
-            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#81b29a] hover:text-[#f4ede4] hover:border-[#81b29a] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-            title="Uji Konvergensi Galat Numerik RK4 vs Euler"
-          >
-            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-            <span class="hidden lg:inline">Galat RK4</span>
-          </button>
-
-          <button
-            id="btnNavTheory"
-            onclick="openTheoryModal()"
-            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#38bdf8] hover:text-[#f4ede4] hover:border-[#38bdf8] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-            title="Buku Panduan Teori Fisika & Formulasi Matematika"
-          >
-            <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-            <span class="hidden md:inline">Teori &amp; Rumus</span>
-          </button>
-
-          <button
-            id="btnNavKinematic"
-            onclick="openKinematicModal()"
-            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-            title="Buka Grafik Kinematika Fungsi Waktu"
-          >
-            <i data-lucide="line-chart" class="w-3.5 h-3.5"></i>
-            <span class="hidden md:inline">Grafik Kinematika</span>
-          </button>
-
-          <button
-            id="btnNavPrintLab"
-            onclick="printLabReport()"
-            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#f4ede4] hover:text-[#d4a373] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-            title="Cetak Lembar Kerja Hasil Praktikum (PDF Resmi FATISDA)"
-          >
-            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-            <span class="hidden lg:inline">Laporan PDF</span>
-          </button>
+          <!-- Dropdown Modul Analisis & Alat Riset -->
+          <div class="relative" id="navModulDropdownContainer">
+            <button
+              id="btnNavModulDropdown"
+              onclick="toggleNavModulDropdown(event)"
+              class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-[#f4ede4] hover:border-[#81b29a] transition-all text-xs font-bold flex items-center gap-1.5 shadow-sm"
+              title="Modul Analisis, Teori, Grafik, &amp; Laporan Praktikum"
+            >
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-[#81b29a]"></i>
+              <span class="hidden lg:inline">Modul Analisis</span>
+              <span class="lg:hidden">Modul</span>
+              <i data-lucide="chevron-down" id="navModulChevron" class="w-3 h-3 text-[#8e9bb0] transition-transform duration-200"></i>
+            </button>
+            <div
+              id="navModulDropdownMenu"
+              class="hidden absolute right-0 mt-1.5 w-60 bg-[#1b1e26]/98 border border-[#343c4e] rounded-xl shadow-2xl backdrop-blur-xl p-1.5 z-50 space-y-0.5"
+            >
+              <button
+                id="btnNavGuidedTour"
+                onclick="startGuidedTour(); closeNavModulDropdown();"
+                class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#d4a373] transition-all flex items-center gap-2"
+              >
+                <i data-lucide="play-circle" class="w-4 h-4 text-[#d4a373]"></i>
+                <div>
+                  <span class="block">Tour Erupsi Krakatau</span>
+                  <span class="text-[10px] text-[#8e9bb0]">Presentasi interaktif 5 langkah</span>
+                </div>
+              </button>
+              <button
+                id="btnNavErrorAnalysis"
+                onclick="openNumericalAnalysisModal(); closeNavModulDropdown();"
+                class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#81b29a] transition-all flex items-center gap-2"
+              >
+                <i data-lucide="cpu" class="w-4 h-4 text-[#81b29a]"></i>
+                <div>
+                  <span class="block">Uji Galat Numerik RK4</span>
+                  <span class="text-[10px] text-[#8e9bb0]">Komparasi RK4 vs Euler &amp; Vakum</span>
+                </div>
+              </button>
+              <button
+                id="btnNavTheory"
+                onclick="openTheoryModal(); closeNavModulDropdown();"
+                class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#38bdf8] transition-all flex items-center gap-2"
+              >
+                <i data-lucide="book-open" class="w-4 h-4 text-[#38bdf8]"></i>
+                <div>
+                  <span class="block">Buku Teori &amp; Rumus</span>
+                  <span class="text-[10px] text-[#8e9bb0]">Formulasi fisika balistik &amp; abu</span>
+                </div>
+              </button>
+              <button
+                id="btnNavKinematic"
+                onclick="openKinematicModal(); closeNavModulDropdown();"
+                class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#dda15e] transition-all flex items-center gap-2"
+              >
+                <i data-lucide="line-chart" class="w-4 h-4 text-[#dda15e]"></i>
+                <div>
+                  <span class="block">Grafik Kinematika</span>
+                  <span class="text-[10px] text-[#8e9bb0]">Plot kurva posisi, kecepatan, energi</span>
+                </div>
+              </button>
+              <div class="border-t border-[#2e3544] my-1"></div>
+              <button
+                id="btnNavPrintLab"
+                onclick="printLabReport(); closeNavModulDropdown();"
+                class="w-full text-left px-3 py-2 rounded-lg text-xs font-bold text-[#e2b083] hover:bg-[#252b37] hover:text-white transition-all flex items-center gap-2"
+              >
+                <i data-lucide="printer" class="w-4 h-4 text-[#e2b083]"></i>
+                <div>
+                  <span class="block">Cetak Laporan Resmi PDF</span>
+                  <span class="text-[10px] text-[#8e9bb0]">Format formal A4 Kop FATISDA UNS</span>
+                </div>
+              </button>
+            </div>
+          </div>
 
           <button id="globalMuteBtn" onclick="toggleMute()" class="p-1.5 sm:p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[#d4a373] hover:text-[#f4ede4] transition-all" title="Audio Erupsi">
             <i data-lucide="volume-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
@@ -659,7 +685,8 @@
                   <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#dda15e] border border-[#343c4e]">Wentworth-Fisher</span>
                 </div>
                 <p class="text-[11px] text-[#8e9bb0] leading-relaxed">
-                  Menjawab pertanyaan: <span class="text-[#f4ede4] font-medium">seberapa jauh sebaran letusannya</span>. Erupsi melontarkan spektrum ukuran butir piroklastik dari blok raksasa hingga lapilli halus dengan deselerasi drag berbeda.
+                  Menjawab pertanyaan: <span class="text-[#f4ede4] font-medium">seberapa jauh sebaran letusannya</span>. Erupsi melontarkan spektrum ukuran butir piroklastik dari blok raksasa hingga lapilli halus dengan deselerasi drag
+                  berbeda.
                 </p>
 
                 <!-- Envelope Jangkauan Letusan Balistik -->
@@ -676,9 +703,7 @@
                   <!-- Diisi secara dinamis oleh updatePyroclasticSpectrumUI() -->
                 </div>
 
-                <p class="text-[10px] text-[#8e9bb0] font-mono leading-tight pt-1 border-t border-[#2e3544]">
-                  *Megablock (80cm) memiliki koefisien balistik m/(Cd·A) tertinggi sehingga menjangkau jarak terjauh.
-                </p>
+                <p class="text-[10px] text-[#8e9bb0] font-mono leading-tight pt-1 border-t border-[#2e3544]">*Megablock (80cm) memiliki koefisien balistik m/(Cd·A) tertinggi sehingga menjangkau jarak terjauh.</p>
               </div>
             </div>
 
@@ -1036,77 +1061,107 @@
         <!-- VIEWPORT SIMULATOR -->
         <div class="flex-1 relative flex flex-col min-w-0 h-full overflow-hidden bg-[#16181f]">
           <!-- Top Toolbar -->
-          <div class="h-10 sm:h-12 bg-[#1b1e26]/95 backdrop-blur-md border-b border-[#2e3544] flex items-center justify-between gap-1.5 px-2 sm:px-4 py-1 absolute top-0 w-full z-20 overflow-x-auto no-scrollbar">
+          <div class="h-11 sm:h-12 bg-[#1b1e26]/90 backdrop-blur-md border-b border-[#2e3544] flex items-center justify-between gap-1.5 px-2.5 sm:px-4 py-1 absolute top-0 w-full z-20 overflow-x-auto no-scrollbar">
+            <!-- Cluster Kiri: Parameter & Mode 3D/2D -->
             <div class="flex items-center gap-1.5 flex-shrink-0">
               <button
+                id="btnSidebarToggleToolbar"
                 onclick="toggleSidebar()"
-                class="p-1.5 px-2 sm:px-2.5 rounded-lg bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-white flex items-center gap-1 text-[11px] sm:text-xs font-bold active:scale-95 transition-all shadow-sm"
+                class="p-1.5 px-2.5 rounded-lg bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-white flex items-center gap-1 text-[11px] sm:text-xs font-bold active:scale-95 transition-all shadow-sm"
               >
                 <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
                 <span>Parameter</span>
               </button>
 
               <div class="flex items-center p-0.5 bg-[#222733] rounded-lg border border-[#343c4e]">
-                <button id="btnView3D" onclick="setViewMode('3D')" class="px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#d4a373] text-[#16181f] shadow-sm">
+                <button id="btnView3D" onclick="setViewMode('3D')" class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#d4a373] text-[#16181f] shadow-sm">
                   <i data-lucide="box" class="w-3 h-3"></i> 3D
                 </button>
-                <button id="btnView2D" onclick="setViewMode('2D')" class="px-2 sm:px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 text-[#8e9bb0] hover:text-[#f4ede4]">
+                <button id="btnView2D" onclick="setViewMode('2D')" class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 text-[#8e9bb0] hover:text-[#f4ede4]">
                   <i data-lucide="line-chart" class="w-3 h-3"></i> 2D
                 </button>
               </div>
-
-              <!-- Presets Sudut Kamera 3D -->
-              <div id="camPresetsGroup" class="flex items-center p-0.5 bg-[#222733] rounded-lg border border-[#343c4e]">
-                <button id="camFreeBtn" onclick="setCameraPreset('free')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all bg-[#d4a373] text-[#16181f]" title="Orbit Bebas">
-                  <i data-lucide="video" class="w-3 h-3 inline"></i> Orbit
-                </button>
-                <button id="camFollowBtn" onclick="setCameraPreset('follow')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Ikuti Bom Lava (POV Peluru)">
-                  <i data-lucide="crosshair" class="w-3 h-3 inline text-[#e07a5f]"></i> POV
-                </button>
-                <button id="camCraterBtn" onclick="setCameraPreset('crater')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Pandangan Kawah">
-                  <i data-lucide="flame" class="w-3 h-3 inline text-[#dda15e]"></i> Kawah
-                </button>
-                <button id="camSideBtn" onclick="setCameraPreset('side')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Profil Samping Parabola">Profil</button>
-                <button id="camTopBtn" onclick="setCameraPreset('topdown')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Satelit Top-Down">Satelit</button>
-              </div>
-
-              <button
-                id="btnToggleWater"
-                onclick="toggleWaterSurface()"
-                class="px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-[#f4ede4]"
-              >
-                <i data-lucide="waves" class="w-3 h-3 text-[#81b29a]"></i>
-                <span id="waterToggleText">Laut</span>
-              </button>
-
-              <!-- Tombol Tsunami 2018 -->
-              <button
-                id="btnToggleTsunami"
-                onclick="toggleTsunamiSimulation()"
-                class="px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-[#38bdf8]"
-                title="Simulasi Gelombang Tsunami Runtuhan Lereng Barat Daya 2018 (c = √(g·h))"
-              >
-                <i data-lucide="activity" class="w-3 h-3 text-[#38bdf8]"></i>
-                <span id="tsunamiToggleText">Tsunami: Off</span>
-              </button>
-
-              <button onclick="openKinematicModal()" class="px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#dda15e] hover:text-white">
-                <i data-lucide="line-chart" class="w-3 h-3"></i>
-                <span>Plot Waktu</span>
-              </button>
             </div>
 
-            <div class="flex items-center gap-1 bg-[#222733] px-1.5 py-0.5 rounded-lg border border-[#343c4e] flex-shrink-0">
-              <button id="btnPlayPause" onclick="togglePlayPause()" class="text-[#8e9bb0] hover:text-[#e2b083] p-1" title="Jeda/Lanjut">
-                <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+            <!-- Cluster Tengah: Presets Kamera 3D & Layer Laut / Tsunami -->
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <div id="camPresetsGroup" class="flex items-center p-0.5 bg-[#222733] rounded-lg border border-[#343c4e]">
+                <button id="camFreeBtn" onclick="setCameraPreset('free')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all bg-[#d4a373] text-[#16181f]" title="Orbit Bebas">
+                  <i data-lucide="video" class="w-3 h-3 inline"></i> <span class="hidden md:inline">Orbit</span>
+                </button>
+                <button id="camFollowBtn" onclick="setCameraPreset('follow')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Ikuti Bom Lava (POV Peluru)">
+                  <i data-lucide="crosshair" class="w-3 h-3 inline text-[#e07a5f]"></i> <span class="hidden md:inline">POV</span>
+                </button>
+                <button id="camCraterBtn" onclick="setCameraPreset('crater')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Pandangan Kawah">
+                  <i data-lucide="flame" class="w-3 h-3 inline text-[#dda15e]"></i> <span class="hidden md:inline">Kawah</span>
+                </button>
+                <button id="camSideBtn" onclick="setCameraPreset('side')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Profil Samping Parabola">
+                  <span class="hidden md:inline">Profil</span><span class="md:hidden">Side</span>
+                </button>
+                <button id="camTopBtn" onclick="setCameraPreset('topdown')" class="px-2 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all text-[#8e9bb0] hover:text-[#f4ede4]" title="Satelit Top-Down">
+                  <span class="hidden md:inline">Satelit</span><span class="md:hidden">Top</span>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-1">
+                <button
+                  id="btnToggleWater"
+                  onclick="toggleWaterSurface()"
+                  class="px-2 py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#81b29a]/20 border border-[#81b29a] text-[#81b29a]"
+                  title="Tampilkan / Sembunyikan Permukaan Air Laut Sunda (W)"
+                >
+                  <i data-lucide="waves" class="w-3 h-3"></i>
+                  <span id="waterToggleText">Laut: On</span>
+                </button>
+
+                <button
+                  id="btnToggleTsunami"
+                  onclick="toggleTsunamiSimulation()"
+                  class="px-2 py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 bg-[#222733] border border-[#343c4e] text-[#8e9bb0] hover:text-[#38bdf8]"
+                  title="Simulasi Gelombang Tsunami Runtuhan Lereng Barat Daya 2018 (c = √(g·h)) (T)"
+                >
+                  <i data-lucide="activity" class="w-3 h-3 text-[#38bdf8]"></i>
+                  <span id="tsunamiToggleText" class="hidden sm:inline">Tsunami: Off</span>
+                  <span class="sm:hidden">Tsunami</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Cluster Kanan: Player, Mode Zen, & Hotkeys -->
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <div class="flex items-center gap-1 bg-[#222733] px-1.5 py-0.5 rounded-lg border border-[#343c4e]">
+                <button id="btnPlayPause" onclick="togglePlayPause()" class="text-[#8e9bb0] hover:text-[#e2b083] p-1" title="Jeda / Lanjut (Spasi)">
+                  <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="restartAnimation()" class="text-[#8e9bb0] hover:text-[#e2b083] p-1" title="Ulangi (R)">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                </button>
+                <div class="h-3 w-px bg-[#343c4e] mx-0.5"></div>
+                <button onclick="setSpeed(1)" id="spd_1" class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono bg-[#d4a373] text-[#16181f] font-bold">1x</button>
+                <button onclick="setSpeed(2)" id="spd_2" class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono text-[#8e9bb0] hover:text-[#f4ede4]">2x</button>
+                <button onclick="setSpeed(5)" id="spd_5" class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono text-[#8e9bb0] hover:text-[#f4ede4]">5x</button>
+              </div>
+
+              <!-- Tombol Mode Zen (Cinema View) -->
+              <button
+                id="btnZenMode"
+                onclick="toggleZenMode()"
+                class="px-2 py-1 rounded-lg bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] text-[#8e9bb0] hover:text-[#e2b083] text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1"
+                title="Mode Zen: Layar Bersih Sinematik (Tekan Z)"
+              >
+                <i data-lucide="eye" class="w-3 h-3"></i>
+                <span class="hidden md:inline">Zen</span>
               </button>
-              <button onclick="restartAnimation()" class="text-[#8e9bb0] hover:text-[#e2b083] p-1" title="Ulangi">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+
+              <!-- Tombol Pintasan Keyboard Modal -->
+              <button
+                id="btnHotkeysHelp"
+                onclick="openKeyboardShortcutsModal()"
+                class="p-1.5 rounded-lg bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] text-[#8e9bb0] hover:text-white transition-all text-xs"
+                title="Daftar Pintasan Keyboard (?)"
+              >
+                <i data-lucide="keyboard" class="w-3.5 h-3.5"></i>
               </button>
-              <div class="h-3 w-px bg-[#343c4e] mx-0.5"></div>
-              <button onclick="setSpeed(1)" id="spd_1" class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono bg-[#d4a373] text-[#16181f] font-bold">1x</button>
-              <button onclick="setSpeed(2)" id="spd_2" class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono text-[#8e9bb0] hover:text-[#f4ede4]">2x</button>
-              <button onclick="setSpeed(5)" id="spd_5" class="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono text-[#8e9bb0] hover:text-[#f4ede4]">5x</button>
             </div>
           </div>
 
@@ -1173,15 +1228,23 @@
           <!-- Floating HUD Telemetri -->
           <div
             id="floatingHudCard"
-            class="absolute bottom-2 left-2 right-2 sm:right-auto sm:left-4 sm:bottom-4 bg-[#1b1e26]/95 backdrop-blur-md border border-[#343c4e] rounded-xl sm:rounded-2xl shadow-2xl z-30 transition-shadow duration-200"
+            class="absolute bottom-2 left-2 right-2 sm:right-auto sm:left-4 sm:bottom-4 bg-[#1b1e26]/90 backdrop-blur-xl border border-[#343c4e]/70 rounded-2xl shadow-2xl z-30 transition-all duration-200"
           >
-            <div id="hudDragHandle" class="p-2 sm:p-2.5 pb-1 sm:pb-2 flex items-center justify-between border-b border-[#2e3544] cursor-grab active:cursor-grabbing select-none">
+            <div id="hudDragHandle" class="p-2.5 pb-2 flex items-center justify-between border-b border-[#2e3544] cursor-grab active:cursor-grabbing select-none">
               <div class="flex items-center gap-1.5">
                 <i data-lucide="grip-vertical" class="w-3 h-3 text-[#8e9bb0]"></i>
                 <span class="w-1.5 h-1.5 rounded-full bg-[#e2b083]"></span>
-                <h3 class="text-[9px] sm:text-xs font-bold text-[#f4ede4] uppercase tracking-wider">Telemetri Kinematika</h3>
+                <h3 class="text-[10px] sm:text-xs font-bold text-[#f4ede4] uppercase tracking-wider">Telemetri Kinematika</h3>
               </div>
               <div class="flex items-center gap-1">
+                <button
+                  onclick="togglePrecisionDigits()"
+                  id="btnHudPrecisionToggle"
+                  class="px-1.5 py-0.5 text-[9px] font-mono rounded bg-[#252b37] border border-[#343c4e] text-[#81b29a] hover:text-white transition-all"
+                  title="Ganti Presisi Tampilan Angka (2 Desimal vs 4 Desimal Pak BL) (P)"
+                >
+                  <span id="hudPrecisionText">4 Desimal</span>
+                </button>
                 <button onclick="toggleSidebar(true)" class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono text-[#d4a373] hover:text-white rounded bg-[#252b37] border border-[#343c4e]">Edit</button>
                 <button onclick="toggleHudMinimize(event)" class="p-1 text-[#8e9bb0] hover:text-white rounded hover:bg-[#252b37]">
                   <i id="hudMinimizeIcon" data-lucide="minimize-2" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
@@ -1201,16 +1264,23 @@
               </button>
             </div>
 
-            <div id="hudFullContent" class="p-2 sm:p-3 pt-1.5 sm:pt-2 space-y-1.5 sm:space-y-2 w-full sm:w-80">
+            <div id="hudFullContent" class="p-2.5 sm:p-3 pt-2 space-y-2 w-full sm:w-80">
               <div>
-                <div class="flex justify-between items-center text-[9px] sm:text-[10px] font-mono text-[#8e9bb0] mb-0.5">
-                  <span>Scrubber Waktu:</span>
-                  <span id="scrubberTimeLabel" class="text-[#e2b083] font-bold">t = 0.00 s</span>
+                <div class="flex justify-between items-center text-[9px] sm:text-[10px] font-mono text-[#8e9bb0] mb-1">
+                  <div class="flex items-center gap-1.5">
+                    <span>Scrubber:</span>
+                    <span id="scrubberTimeLabel" class="text-[#e2b083] font-bold">t = 0.00 s</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button onclick="jumpToMilestone('start')" class="px-1.5 py-0.2 rounded bg-[#222733] hover:bg-[#2e3544] text-[9px] text-[#8e9bb0] hover:text-[#f4ede4] border border-[#343c4e]" title="Luncur Awal">0s</button>
+                    <button onclick="jumpToMilestone('apex')" class="px-1.5 py-0.2 rounded bg-[#222733] hover:bg-[#2e3544] text-[9px] text-[#dda15e] hover:text-white border border-[#343c4e]" title="Titik Tertinggi (Apex)">▲ Apex</button>
+                    <button onclick="jumpToMilestone('landing')" class="px-1.5 py-0.2 rounded bg-[#222733] hover:bg-[#2e3544] text-[9px] text-[#e07a5f] hover:text-white border border-[#343c4e]" title="Impak Permukaan">💥 Impak</button>
+                  </div>
                 </div>
-                <input type="range" id="timeScrubber" min="0" max="100" step="0.05" value="0" oninput="onScrubTime(+this.value)" class="w-full cursor-pointer h-1 sm:h-1.5 bg-[#252b37] rounded-lg" />
+                <input type="range" id="timeScrubber" min="0" max="100" step="0.05" value="0" oninput="onScrubTime(+this.value)" class="w-full cursor-pointer h-1.5 bg-[#252b37] rounded-lg" />
               </div>
 
-              <div class="grid grid-cols-3 gap-1 sm:gap-2 text-[9px] sm:text-[11px] font-mono bg-[#16181f]/80 p-1.5 sm:p-2 rounded-lg sm:rounded-xl border border-[#2e3544]">
+              <div class="grid grid-cols-3 gap-1 sm:gap-2 text-[9px] sm:text-[11px] font-mono bg-[#16181f]/80 p-1.5 sm:p-2 rounded-xl border border-[#2e3544]">
                 <div>
                   <span class="text-[#8e9bb0] block text-[8px] sm:text-[9px]">Posisi X</span>
                   <span id="hud_x" class="font-bold text-[#e2b083]">0.0 m</span>
@@ -1711,15 +1781,9 @@
         <!-- Badges Info & Toolbar Aksi -->
         <div class="p-3 sm:px-5 py-2.5 bg-[#1b1e26] border-b border-[#2e3544] flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="px-2 py-0.5 rounded-lg bg-[#81b29a]/15 text-[#81b29a] border border-[#81b29a]/30 flex items-center gap-1">
-              <i data-lucide="check-circle" class="w-3 h-3"></i> Presisi 4 Desimal Aktif
-            </span>
-            <span class="px-2 py-0.5 rounded-lg bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 flex items-center gap-1">
-              <i data-lucide="cpu" class="w-3 h-3"></i> RK4 O(Δt⁴)
-            </span>
-            <span class="px-2 py-0.5 rounded-lg bg-[#dda15e]/15 text-[#dda15e] border border-[#dda15e]/30 flex items-center gap-1">
-              <i data-lucide="wind" class="w-3 h-3"></i> Suzuki 1983
-            </span>
+            <span class="px-2 py-0.5 rounded-lg bg-[#81b29a]/15 text-[#81b29a] border border-[#81b29a]/30 flex items-center gap-1"> <i data-lucide="check-circle" class="w-3 h-3"></i> Presisi 4 Desimal Aktif </span>
+            <span class="px-2 py-0.5 rounded-lg bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 flex items-center gap-1"> <i data-lucide="cpu" class="w-3 h-3"></i> RK4 O(Δt⁴) </span>
+            <span class="px-2 py-0.5 rounded-lg bg-[#dda15e]/15 text-[#dda15e] border border-[#dda15e]/30 flex items-center gap-1"> <i data-lucide="wind" class="w-3 h-3"></i> Suzuki 1983 </span>
           </div>
 
           <!-- Action Buttons -->
@@ -1746,7 +1810,10 @@
               <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Preset Pak BL
             </button>
             <button
-              onclick="closeRubrik9ParamModal(); printLabReport();"
+              onclick="
+                closeRubrik9ParamModal();
+                printLabReport();
+              "
               class="px-2.5 py-1 rounded-xl bg-[#e07a5f]/20 border border-[#e07a5f]/50 text-[#e07a5f] hover:bg-[#e07a5f] hover:text-[#16181f] transition-all font-bold flex items-center gap-1.5 shadow-sm text-xs"
               title="Buka cetak lembar kerja laporan resmi FATISDA PDF"
             >
@@ -1756,9 +1823,7 @@
         </div>
 
         <!-- Toast Feedback Notifikasi -->
-        <div id="rubrikCopyToast" class="hidden px-4 py-1.5 bg-[#81b29a] text-[#16181f] text-xs font-bold text-center transition-all animate-fadeIn">
-          Tabel berhasil disalin ke clipboard!
-        </div>
+        <div id="rubrikCopyToast" class="hidden px-4 py-1.5 bg-[#81b29a] text-[#16181f] text-xs font-bold text-center transition-all animate-fadeIn">Tabel berhasil disalin ke clipboard!</div>
 
         <!-- Tabel 9 Parameter -->
         <div class="p-3 sm:p-5 flex-1 overflow-y-auto space-y-3 custom-scrollbar text-xs">
@@ -1785,7 +1850,8 @@
               Petunjuk Penilaian &amp; Sinkronisasi Otomatis:
             </div>
             <p class="leading-relaxed">
-              Seluruh baris parameter di atas tersinkronisasi secara real-time saat Anda menggeser slider sudut θ, kecepatan v₀, elevasi y₀, atau hambatan udara di simulator. Nilai dicatat dalam standar akurasi 4 angka di belakang koma untuk menjamin presisi maksimum pada penilaian tugas Fisika Komputasi Pak BL.
+              Seluruh baris parameter di atas tersinkronisasi secara real-time saat Anda menggeser slider sudut θ, kecepatan v₀, elevasi y₀, atau hambatan udara di simulator. Nilai dicatat dalam standar akurasi 4 angka di belakang koma
+              untuk menjamin presisi maksimum pada penilaian tugas Fisika Komputasi Pak BL.
             </p>
           </div>
         </div>
@@ -1951,7 +2017,9 @@
       <!-- Bagian 6: Kesimpulan & Tanda Tangan -->
       <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">VI. KESIMPULAN ILMIAH &amp; ANALISIS FISIKA KOMPUTASI</h4>
       <div style="font-size: 9px; line-height: 1.4; color: #222; text-align: justify; margin-bottom: 14px" id="pr_scientific_conclusion">
-        Berdasarkan integrasi Runge-Kutta Orde-4 dengan koreksi atmosfer barometrik non-linear, disimpulkan bahwa lontaran material balistik piroklastik memiliki jangkauan amplop antara lapilli halus hingga megablock dengan reduksi aerodinamis signifikan dibanding ruang hampa. Adapun dispersi abu vulkanik model Suzuki (1983) membuktikan bahwa partikel abu mikro mengalami adveksi zonal-meridional yang menjangkau pesisir Selat Sunda sesuai dinamika geseran angin bertingkat.
+        Berdasarkan integrasi Runge-Kutta Orde-4 dengan koreksi atmosfer barometrik non-linear, disimpulkan bahwa lontaran material balistik piroklastik memiliki jangkauan amplop antara lapilli halus hingga megablock dengan reduksi
+        aerodinamis signifikan dibanding ruang hampa. Adapun dispersi abu vulkanik model Suzuki (1983) membuktikan bahwa partikel abu mikro mengalami adveksi zonal-meridional yang menjangkau pesisir Selat Sunda sesuai dinamika geseran angin
+        bertingkat.
       </div>
 
       <!-- Kolom Tanda Tangan Pengesahan -->
@@ -2199,7 +2267,7 @@
     <!-- ==================================================================== -->
     <div
       id="ballisticImpactHUD"
-      class="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-4 sm:bottom-4 z-35 w-auto sm:w-[360px] max-w-full bg-[#16181f]/95 border border-[#e07a5f] rounded-2xl shadow-2xl p-3 sm:p-4 backdrop-blur-md hidden transition-all duration-300 flex flex-col gap-2"
+      class="fixed top-14 right-2 left-2 sm:left-auto sm:right-4 sm:top-auto sm:bottom-4 z-35 w-auto sm:w-[360px] max-w-full bg-[#16181f]/95 border border-[#e07a5f] rounded-2xl shadow-2xl p-3 sm:p-4 backdrop-blur-md hidden transition-all duration-300 flex flex-col gap-2"
     >
       <!-- Header with Alert Hazard & Minimize Toggle -->
       <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
@@ -2289,6 +2357,98 @@
       </div>
     </div>
 
+    <!-- ==================================================================== -->
+    <!-- OVERLAY TOMBOL KELUAR MODE ZEN (CINEMA VIEW)                         -->
+    <!-- ==================================================================== -->
+    <div id="zenModeExitContainer" class="hidden fixed top-4 right-4 z-[70]">
+      <button
+        onclick="toggleZenMode()"
+        class="px-3.5 py-2 rounded-xl bg-[#1b1e26]/90 hover:bg-[#252b37] border border-[#d4a373] text-[#f4ede4] text-xs font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 transition-all active:scale-95"
+      >
+        <i data-lucide="minimize-2" class="w-4 h-4 text-[#d4a373]"></i>
+        <span>Keluar Mode Zen (Esc)</span>
+      </button>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL PINTASAN KEYBOARD (HOTKEYS CHEATSHEET)                         -->
+    <!-- ==================================================================== -->
+    <div id="keyboardShortcutsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 hidden transition-opacity">
+      <div class="bg-[#1b1e26] border border-[#343c4e] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+        <div class="p-4 sm:p-5 border-b border-[#2e3544] flex items-center justify-between bg-[#16181f]">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-[#222733] border border-[#343c4e] flex items-center justify-center text-[#e2b083]">
+              <i data-lucide="keyboard" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-[#f4ede4]">Pintasan Keyboard (Hotkeys)</h3>
+              <p class="text-[11px] text-[#8e9bb0]">Navigasi cepat dan kendali simulasi fisika</p>
+            </div>
+          </div>
+          <button onclick="closeKeyboardShortcutsModal()" class="text-[#8e9bb0] hover:text-[#f4ede4] p-1.5 rounded-lg hover:bg-[#252b37] transition-all">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="p-4 sm:p-5 space-y-2.5 text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Jeda / Lanjut</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#e2b083] font-bold text-[10px]">Spasi</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Ulangi Erupsi</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#e2b083] font-bold text-[10px]">R</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Mode Zen Sinematik</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#e2b083] font-bold text-[10px]">Z</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Presisi Angka (2/4 Desimal)</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#81b29a] font-bold text-[10px]">P</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Toggle Permukaan Laut</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#38bdf8] font-bold text-[10px]">W</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Toggle Tsunami 2018</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#38bdf8] font-bold text-[10px]">T</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Mute / Nyalakan Audio</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#e2b083] font-bold text-[10px]">M</kbd>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#16181f] border border-[#2e3544] flex items-center justify-between">
+              <span class="text-[#8e9bb0]">Tutup Dialog / Keluar Zen</span>
+              <kbd class="px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e] font-mono text-[#8e9bb0] font-bold text-[10px]">Esc</kbd>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-[#16181f] border border-[#2e3544]">
+            <div class="text-[11px] font-bold text-[#f4ede4] mb-1.5 flex items-center gap-1.5">
+              <i data-lucide="video" class="w-3.5 h-3.5 text-[#d4a373]"></i>
+              Sudut Pandang Kamera 3D:
+            </div>
+            <div class="grid grid-cols-5 gap-1 text-center font-mono text-[10px]">
+              <div class="p-1.5 rounded-lg bg-[#222733] border border-[#343c4e]"><span class="text-[#e2b083] block font-bold">1</span> Orbit</div>
+              <div class="p-1.5 rounded-lg bg-[#222733] border border-[#343c4e]"><span class="text-[#e07a5f] block font-bold">2</span> POV</div>
+              <div class="p-1.5 rounded-lg bg-[#222733] border border-[#343c4e]"><span class="text-[#dda15e] block font-bold">3</span> Kawah</div>
+              <div class="p-1.5 rounded-lg bg-[#222733] border border-[#343c4e]"><span class="text-[#81b29a] block font-bold">4</span> Profil</div>
+              <div class="p-1.5 rounded-lg bg-[#222733] border border-[#343c4e]"><span class="text-[#38bdf8] block font-bold">5</span> Satelit</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 sm:p-4 bg-[#16181f] border-t border-[#2e3544] flex justify-end">
+          <button onclick="closeKeyboardShortcutsModal()" class="px-4 py-2 rounded-xl bg-[#d4a373] hover:bg-[#e2b083] text-[#16181f] font-bold text-xs transition-all shadow-sm">
+            Mengerti
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       const CONSTANTS = {
         G: 9.80665,
@@ -2315,7 +2475,11 @@
       let isMuted = false;
       let showFbdVectors = true;
       let isHudMinimized = false;
-      let showWaterSurface = false;
+      let showWaterSurface = true; // Default aktif dengan pemandangan laut Selat Sunda yang stabil
+      let isZenMode = false;
+      let telemetryPrecision = 4; // 4 Desimal untuk acuan presisi tugas Pak BL FATISDA UNS
+      let isNavModulDropdownOpen = false;
+      let oceanClock = 0;
       let currentPlotTab = "velocity";
       let bestOptimalAngle = 36.5;
 
@@ -2568,7 +2732,7 @@
       function computeTrajectories(params) {
         const dt = 0.02;
         const maxTime = 1200;
-        const { v0, angle, y0, m, cd, area, g, wind, lowWind, highWind, useRK4, useBarometric } = params;
+        const { v0, angle, y0, m, cd, area, g, wind, lowWind, highWind, useRK4, useBarometric, buoyancyForce } = params;
         const theta = (angle * Math.PI) / 180;
         const currentG = g || 9.81;
         const effLowW = lowWind !== undefined ? lowWind : wind || 0;
@@ -2589,13 +2753,36 @@
 
           if (!isVacuum && vRel > 0 && cd > 0 && area > 0) {
             const rho = useBarometric ? CONSTANTS.RHO_0 * Math.exp(-y / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
-            const dragConst = 0.5 * rho * cd * area;
+
+            // Transonic & Compressibility Mach Drag Divergence:
+            // T(y) = 288.15 - 0.0065*y, speedOfSound = sqrt(gamma * R * T)
+            const T_kelvin = Math.max(216.65, 288.15 - 0.0065 * Math.max(0, y));
+            const speedOfSound = Math.sqrt(1.4 * 287.05 * T_kelvin);
+            const mach = vRel / speedOfSound;
+            let cdEff = cd;
+            if (mach > 0.6 && mach < 1.0) {
+              cdEff = cd * (1 + 0.35 * Math.pow((mach - 0.6) / 0.4, 2));
+            } else if (mach >= 1.0) {
+              cdEff = cd * 1.35;
+            }
+
+            const dragConst = 0.5 * rho * cdEff * area;
             const fDragX = dragConst * vRel * vrx;
             const fDragY = dragConst * vRel * vry;
 
             ax -= fDragX / m;
             ay -= fDragY / m;
           }
+
+          // Plume Thermal Buoyancy Acceleration near eruption column vent
+          if (!isVacuum && buoyancyForce && buoyancyForce > 0) {
+            if (Math.abs(x) < 250 && y >= y0) {
+              const plumeAtten = Math.exp(-Math.abs(x) / 120);
+              const aBuoy = (buoyancyForce / 250) * plumeAtten; // Percepatan apung termal konvektif plume
+              ay += aBuoy;
+            }
+          }
+
           return [vx, vy, ax, ay];
         };
 
@@ -3344,7 +3531,7 @@
 
       function solveTrajectoryCustom(params, useRK4Solver, dtCustom = 0.02) {
         const maxTime = 1200;
-        const { v0, angle, y0, m, cd, area, g, lowWind, highWind, wind, useBarometric } = params;
+        const { v0, angle, y0, m, cd, area, g, lowWind, highWind, wind, useBarometric, buoyancyForce } = params;
         const theta = (angle * Math.PI) / 180;
         const currentG = g || 9.81;
         const effLowW = lowWind !== undefined ? lowWind : wind || 0;
@@ -3366,10 +3553,30 @@
             ay = -currentG;
           if (vRel > 0 && cd > 0 && area > 0) {
             const rho = useBarometric ? CONSTANTS.RHO_0 * Math.exp(-y / CONSTANTS.H_SCALE) : CONSTANTS.RHO_0;
-            const dragConst = 0.5 * rho * cd * area;
+
+            const T_kelvin = Math.max(216.65, 288.15 - 0.0065 * Math.max(0, y));
+            const speedOfSound = Math.sqrt(1.4 * 287.05 * T_kelvin);
+            const mach = vRel / speedOfSound;
+            let cdEff = cd;
+            if (mach > 0.6 && mach < 1.0) {
+              cdEff = cd * (1 + 0.35 * Math.pow((mach - 0.6) / 0.4, 2));
+            } else if (mach >= 1.0) {
+              cdEff = cd * 1.35;
+            }
+
+            const dragConst = 0.5 * rho * cdEff * area;
             ax -= (dragConst * vRel * vrx) / m;
             ay -= (dragConst * vRel * vy) / m;
           }
+
+          if (buoyancyForce && buoyancyForce > 0) {
+            if (Math.abs(x) < 250 && y >= y0) {
+              const plumeAtten = Math.exp(-Math.abs(x) / 120);
+              const aBuoy = (buoyancyForce / 250) * plumeAtten; // Percepatan apung termal konvektif plume
+              ay += aBuoy;
+            }
+          }
+
           return [vx, vy, ax, ay];
         };
 
@@ -4136,14 +4343,15 @@
           badge.innerText = a.krbLevel.split(" ")[0];
           badge.className = `text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${a.krbBadgeClass}`;
         }
+        const prec = telemetryPrecision || 4;
         document.getElementById("impactLocationSector").innerText = a.sectorName;
-        document.getElementById("impactDistVal").innerText = `${a.posX.toFixed(1)} m`;
-        document.getElementById("impactEnergyVal").innerText = `${a.eMJ.toFixed(2)} MJ`;
-        document.getElementById("impactTntVal").innerText = `${a.tntKg.toFixed(2)} kg`;
-        document.getElementById("impactVelAngleVal").innerText = `${a.vFinal.toFixed(1)} m/s • ${a.thetaFinal.toFixed(1)}°`;
-        document.getElementById("impactCraterVal").innerText = `${a.craterDiam.toFixed(1)} meter`;
-        document.getElementById("impactBlastVal").innerText = `${a.blastRad.toFixed(1)} meter`;
-        document.getElementById("impactSplashVal").innerText = `${a.splashHeight.toFixed(1)} meter`;
+        document.getElementById("impactDistVal").innerText = `${a.posX.toFixed(prec === 4 ? 4 : 1)} m`;
+        document.getElementById("impactEnergyVal").innerText = `${a.eMJ.toFixed(prec === 4 ? 4 : 2)} MJ`;
+        document.getElementById("impactTntVal").innerText = `${a.tntKg.toFixed(prec === 4 ? 4 : 2)} kg`;
+        document.getElementById("impactVelAngleVal").innerText = `${a.vFinal.toFixed(prec === 4 ? 4 : 1)} m/s • ${a.thetaFinal.toFixed(prec === 4 ? 4 : 1)}°`;
+        document.getElementById("impactCraterVal").innerText = `${a.craterDiam.toFixed(prec === 4 ? 3 : 1)} meter`;
+        document.getElementById("impactBlastVal").innerText = `${a.blastRad.toFixed(prec === 4 ? 3 : 1)} meter`;
+        document.getElementById("impactSplashVal").innerText = `${a.splashHeight.toFixed(prec === 4 ? 3 : 1)} meter`;
         document.getElementById("impactMitigationNote").innerText = a.mitigationNote;
 
         // Auto-minimize floatingHudCard on mobile when impact HUD appears to prevent overlapping
@@ -4151,6 +4359,7 @@
           toggleHudMinimize();
         }
 
+        hud.dataset.closedByUser = "";
         hud.classList.remove("hidden");
         lucide.createIcons();
       }
@@ -4173,7 +4382,10 @@
 
       function closeImpactHUD() {
         const hud = document.getElementById("ballisticImpactHUD");
-        if (hud) hud.classList.add("hidden");
+        if (hud) {
+          hud.classList.add("hidden");
+          hud.dataset.closedByUser = "true";
+        }
       }
 
       function openMobileToolsModal() {
@@ -4699,10 +4911,14 @@
         scene.background = new THREE.Color(0x16181f);
         scene.fog = new THREE.FogExp2(0x16181f, 0.00012);
 
-        camera = new THREE.PerspectiveCamera(50, w / h, 1, 60000);
+        camera = new THREE.PerspectiveCamera(45, w / h, 4, 80000);
         update3DCamera();
 
-        renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer = new THREE.WebGLRenderer({
+          antialias: true,
+          powerPreference: "high-performance",
+          logarithmicDepthBuffer: true,
+        });
         renderer.setSize(w, h);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         container.appendChild(renderer.domElement);
@@ -4714,34 +4930,41 @@
         dirLight.position.set(2000, 4000, 2500);
         scene.add(dirLight);
 
+        // Dasar Laut Kaldera Selat Sunda (Bathymetry Seafloor pada kedalaman -120m)
         const groundGeo = new THREE.PlaneGeometry(60000, 60000);
         const groundMat = new THREE.MeshStandardMaterial({
-          color: 0x181b22,
-          roughness: 0.96,
-          metalness: 0.04,
+          color: 0x091118,
+          roughness: 0.98,
+          metalness: 0.02,
         });
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
-        ground.position.y = 0;
+        ground.position.y = -120;
         scene.add(ground);
 
-        const oceanGeo = new THREE.PlaneGeometry(60000, 60000, 48, 48);
+        // Permukaan Air Laut Sunda (Sea Level y = 0.0)
+        const oceanGeo = new THREE.PlaneGeometry(50000, 50000, 120, 120);
         const oceanMat = new THREE.MeshPhongMaterial({
-          color: 0x1d3557,
+          color: 0x0f3147,
+          emissive: 0x04111c,
+          specular: 0x64b5f6,
+          shininess: 85,
           transparent: true,
-          opacity: 0.72,
-          shininess: 90,
-          specular: 0x457b9d,
+          opacity: 0.88,
           flatShading: true,
+          depthWrite: false, // Menghilangkan z-clipping & visual tearing
         });
         oceanSurfaceMesh = new THREE.Mesh(oceanGeo, oceanMat);
         oceanSurfaceMesh.rotation.x = -Math.PI / 2;
-        oceanSurfaceMesh.position.y = 1.0;
+        oceanSurfaceMesh.position.y = 0.0;
         oceanSurfaceMesh.visible = showWaterSurface;
         scene.add(oceanSurfaceMesh);
 
         const grid = new THREE.GridHelper(40000, 80, 0x2e3544, 0x1e222b);
-        grid.position.y = 1.5;
+        grid.position.y = 0.5;
+        grid.material.transparent = true;
+        grid.material.opacity = 0.45;
+        grid.material.depthWrite = false;
         scene.add(grid);
 
         const axisGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-2000, 2, 0), new THREE.Vector3(30000, 2, 0)]);
@@ -4764,14 +4987,15 @@
         KRAKATAU_ISLANDS_3D.forEach((isl) => {
           const isRakata = isl.name.includes("Rakata");
           const segs = 32;
-          const coneGeo = new THREE.ConeGeometry(isl.baseRadius, isl.height, segs);
+          const totalH = isl.height + 140;
+          const coneGeo = new THREE.ConeGeometry(isl.baseRadius * 1.12, totalH, segs);
 
           const pos = coneGeo.attributes.position;
           for (let i = 0; i < pos.count; i++) {
             const vx = pos.getX(i);
             const vy = pos.getY(i);
             const vz = pos.getZ(i);
-            const normY = (vy + isl.height / 2) / isl.height;
+            const normY = (vy + totalH / 2) / totalH;
             const angle = Math.atan2(vz, vx);
             const curR = Math.sqrt(vx * vx + vz * vz);
             const ridge = Math.sin(angle * 5) * (isl.baseRadius * 0.05 * (1 - normY));
@@ -4792,7 +5016,7 @@
             flatShading: true,
           });
           const islandMesh = new THREE.Mesh(coneGeo, coneMat);
-          islandMesh.position.set(isl.x, isl.height / 2, isl.z);
+          islandMesh.position.set(isl.x, (isl.height - 140) / 2, isl.z);
           islandMesh.userData = { ...isl };
           calderaArchipelagoGroup.add(islandMesh);
         });
@@ -4800,10 +5024,10 @@
 
         volcanoGroup = new THREE.Group();
         const vH = Math.max(1, currentParams.y0 || 1);
-        const vConeGeo = new THREE.CylinderGeometry(25, 750, vH, 48, 8, true);
+        const vConeGeo = new THREE.CylinderGeometry(25, 820, vH + 140, 48, 8, true);
         const vConeMat = new THREE.MeshStandardMaterial({ color: 0x242a35, roughness: 0.92, flatShading: true });
         const volcano = new THREE.Mesh(vConeGeo, vConeMat);
-        volcano.position.y = vH / 2;
+        volcano.position.y = (vH - 140) / 2;
         volcano.userData = { isVolcano: true, name: "Gunung Anak Krakatau" };
         volcanoGroup.add(volcano);
 
@@ -5603,10 +5827,11 @@
           apexMarkerMesh.visible = true;
         }
 
-        if (volcanoGroup) {
+        if (volcanoGroup && volcanoGroup.children.length >= 2) {
           const hVal = Math.max(1, currentParams.y0 || 1);
-          volcanoGroup.children[0].scale.set(1, hVal / 157, 1);
-          volcanoGroup.children[0].position.y = hVal / 2;
+          const totalH = hVal + 140;
+          volcanoGroup.children[0].scale.set(1, totalH / (157 + 140), 1);
+          volcanoGroup.children[0].position.y = (hVal - 140) / 2;
           volcanoGroup.children[1].position.y = hVal + 0.5;
         }
       }
@@ -5702,38 +5927,39 @@
           drawFBDCanvas(currentP);
         }
 
-        // Sub-Mesin Animasi Gelombang Tsunami Selat Sunda 2018 (Runtuhan Lereng Barat Daya)
-        if (isTsunamiActive && oceanSurfaceMesh && oceanSurfaceMesh.visible) {
-          tsunamiWasActive = true;
-          tsunamiClock += 0.02 * playbackSpeed;
+        // Sub-Mesin Animasi Air Laut & Gelombang Tsunami Selat Sunda 2018
+        if (oceanSurfaceMesh && oceanSurfaceMesh.visible) {
+          oceanClock += 0.016 * playbackSpeed;
           const pos = oceanSurfaceMesh.geometry.attributes.position;
           const x0 = -250;
           const z0 = -200;
           const speed = 480;
+
+          if (isTsunamiActive) {
+            tsunamiClock += 0.02 * playbackSpeed;
+          }
           const tMod = (tsunamiClock * speed) % 24000;
 
           for (let i = 0; i < pos.count; i++) {
             const vx = pos.getX(i);
             const vy = pos.getY(i);
-            const r = Math.sqrt((vx - x0) * (vx - x0) + (-vy - z0) * (-vy - z0));
-            const dr = r - tMod;
-            let waveZ = 0;
-            if (Math.abs(dr) < 4500) {
-              const env = Math.exp(-(dr * dr) / (2 * 1100 * 1100));
-              const greenDamp = 30 * Math.sqrt(800 / (r + 800));
-              const k = 0.0045;
-              waveZ = greenDamp * env * Math.sin(k * dr);
+
+            // Gelombang alami permukaan laut (Living ocean swell)
+            const ambient = 1.35 * Math.sin(vx * 0.0016 + oceanClock * 1.15) * Math.cos(vy * 0.0016 + oceanClock * 0.9)
+                          + 0.65 * Math.sin((vx + vy) * 0.0011 + oceanClock * 1.45);
+
+            let tsunamiWave = 0;
+            if (isTsunamiActive) {
+              const r = Math.sqrt((vx - x0) * (vx - x0) + (-vy - z0) * (-vy - z0));
+              const dr = r - tMod;
+              if (Math.abs(dr) < 4500) {
+                const env = Math.exp(-(dr * dr) / (2 * 1100 * 1100));
+                const greenDamp = 26 * Math.sqrt(800 / (r + 800));
+                const k = 0.0045;
+                tsunamiWave = greenDamp * env * Math.sin(k * dr);
+              }
             }
-            const ambient = 2.0 * Math.sin(vx * 0.001 + tsunamiClock * 1.5) * Math.cos(vy * 0.001 + tsunamiClock * 1.2);
-            pos.setZ(i, waveZ + ambient);
-          }
-          pos.needsUpdate = true;
-          oceanSurfaceMesh.geometry.computeVertexNormals();
-        } else if (tsunamiWasActive && oceanSurfaceMesh) {
-          tsunamiWasActive = false;
-          const pos = oceanSurfaceMesh.geometry.attributes.position;
-          for (let i = 0; i < pos.count; i++) {
-            pos.setZ(i, 0);
+            pos.setZ(i, ambient + tsunamiWave);
           }
           pos.needsUpdate = true;
           oceanSurfaceMesh.geometry.computeVertexNormals();
@@ -6497,14 +6723,134 @@
 
       function setOptimalAngle() {
         if (!trajectories) return;
-        const opt = Math.round(trajectories.audit.optAngle * 10) / 10;
-        currentParams.angle = opt;
-        const rangeEl = document.getElementById("param_angle");
-        const numEl = document.getElementById("num_angle");
-        if (rangeEl) rangeEl.value = opt;
-        if (numEl) numEl.value = opt;
-        recalculateSimulation(false);
+        if (typeof calculateOptimalAngle === "function") {
+          calculateOptimalAngle();
+          applyOptimalAngle();
+        } else {
+          const opt = Math.round(trajectories.audit.optAngle * 10) / 10;
+          currentParams.angle = opt;
+          const rangeEl = document.getElementById("param_angle");
+          const numEl = document.getElementById("num_angle");
+          if (rangeEl) rangeEl.value = opt;
+          if (numEl) numEl.value = opt;
+          recalculateSimulation(false);
+        }
       }
+
+      function togglePrecisionDigits() {
+        telemetryPrecision = telemetryPrecision === 4 ? 2 : 4;
+        const btnText = document.getElementById("hudPrecisionText");
+        if (btnText) btnText.innerText = `${telemetryPrecision} Desimal`;
+        if (lastRenderedPoint) {
+          updateHUDValues(lastRenderedPoint);
+        }
+        if (lastImpactData && typeof displayImpactHUD === "function") {
+          displayImpactHUD(lastImpactData);
+        }
+      }
+
+      function jumpToMilestone(type) {
+        if (!trajectories || !trajectories.real || !trajectories.real.data) return;
+        const pts = trajectories.real.data;
+        if (type === "start") {
+          simClock = 0;
+        } else if (type === "apex") {
+          if (trajectories.real.apex) {
+            simClock = trajectories.real.apex.t;
+          }
+        } else if (type === "landing") {
+          simClock = trajectories.real.flightTime;
+        }
+        isPlaying = false;
+        const playBtn = document.getElementById("btnPlayPause");
+        if (playBtn) {
+          playBtn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5"></i>`;
+          lucide.createIcons();
+        }
+        const scrubber = document.getElementById("timeScrubber");
+        if (scrubber) scrubber.value = simClock;
+        const label = document.getElementById("scrubberTimeLabel");
+        if (label) label.innerText = `t = ${simClock.toFixed(2)} s`;
+        const p = getInterpolatedPoint(pts, simClock);
+        if (p) {
+          if (projectileMesh) projectileMesh.position.set(p.x, p.y, 0);
+          updateHUDValues(p);
+          draw2DCanvas(p);
+          drawFBDCanvas(p);
+        }
+      }
+
+      function toggleZenMode() {
+        isZenMode = !isZenMode;
+        const nav = document.querySelector("nav");
+        const toolbar = document.querySelector("#pageSimulator > div > div.h-11, #pageSimulator > div > div.h-10, #pageSimulator > div > div.h-12");
+        const hud = document.getElementById("floatingHudCard");
+        const impactHud = document.getElementById("ballisticImpactHUD");
+        const exitBtn = document.getElementById("zenModeExitContainer");
+        const sidebar = document.querySelector("aside");
+
+        if (isZenMode) {
+          if (nav) nav.classList.add("hidden");
+          if (toolbar) toolbar.classList.add("hidden");
+          if (hud) hud.classList.add("hidden");
+          if (impactHud) impactHud.classList.add("hidden");
+          if (sidebar) sidebar.classList.add("hidden");
+          if (exitBtn) exitBtn.classList.remove("hidden");
+        } else {
+          if (nav) nav.classList.remove("hidden");
+          if (toolbar) toolbar.classList.remove("hidden");
+          if (hud && !isHudMinimized) hud.classList.remove("hidden");
+          if (impactHud && lastImpactData && !impactHud.dataset.closedByUser) impactHud.classList.remove("hidden");
+          if (sidebar) sidebar.classList.remove("hidden");
+          if (exitBtn) exitBtn.classList.add("hidden");
+        }
+        lucide.createIcons();
+        if (typeof onResizeWindow === "function") onResizeWindow();
+      }
+
+      function openKeyboardShortcutsModal() {
+        const modal = document.getElementById("keyboardShortcutsModal");
+        if (modal) {
+          modal.classList.remove("hidden");
+          lucide.createIcons();
+        }
+      }
+
+      function closeKeyboardShortcutsModal() {
+        const modal = document.getElementById("keyboardShortcutsModal");
+        if (modal) modal.classList.add("hidden");
+      }
+
+      function toggleNavModulDropdown(e) {
+        if (e) e.stopPropagation();
+        isNavModulDropdownOpen = !isNavModulDropdownOpen;
+        const menu = document.getElementById("navModulDropdownMenu");
+        const chevron = document.getElementById("navModulChevron");
+        if (menu) {
+          if (isNavModulDropdownOpen) {
+            menu.classList.remove("hidden");
+            if (chevron) chevron.style.transform = "rotate(180deg)";
+          } else {
+            menu.classList.add("hidden");
+            if (chevron) chevron.style.transform = "rotate(0deg)";
+          }
+        }
+      }
+
+      function closeNavModulDropdown() {
+        isNavModulDropdownOpen = false;
+        const menu = document.getElementById("navModulDropdownMenu");
+        const chevron = document.getElementById("navModulChevron");
+        if (menu) menu.classList.add("hidden");
+        if (chevron) chevron.style.transform = "rotate(0deg)";
+      }
+
+      document.addEventListener("click", (e) => {
+        const container = document.getElementById("navModulDropdownContainer");
+        if (container && !container.contains(e.target)) {
+          closeNavModulDropdown();
+        }
+      });
 
       function applyPreset(pName) {
         if (!PRESETS[pName]) return;
@@ -6556,7 +6902,7 @@
       function onScrubTime(tVal) {
         simClock = tVal;
         isPlaying = false;
-        document.getElementById("btnPlayPause").innerHTML = `<i data-lucide="play" class="w-4 h-4"></i>`;
+        document.getElementById("btnPlayPause").innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5"></i>`;
         lucide.createIcons();
 
         if (trajectories) {
@@ -6569,18 +6915,19 @@
       }
 
       function updateHUDValues(p) {
-        document.getElementById("hud_x").innerText = `${p.x.toFixed(1)} m`;
-        document.getElementById("hud_y").innerText = `${p.y.toFixed(1)} m`;
-        document.getElementById("hud_v").innerText = `${p.v.toFixed(1)} m/s`;
-        document.getElementById("hud_vx").innerText = `${p.vx.toFixed(1)} m/s`;
-        document.getElementById("hud_vy").innerText = `${p.vy.toFixed(1)} m/s`;
-        document.getElementById("hud_fdrag").innerText = `${Math.round(p.fDrag)} N`;
+        const prec = telemetryPrecision || 4;
+        document.getElementById("hud_x").innerText = `${p.x.toFixed(prec)} m`;
+        document.getElementById("hud_y").innerText = `${p.y.toFixed(prec)} m`;
+        document.getElementById("hud_v").innerText = `${p.v.toFixed(prec)} m/s`;
+        document.getElementById("hud_vx").innerText = `${p.vx.toFixed(prec)} m/s`;
+        document.getElementById("hud_vy").innerText = `${p.vy.toFixed(prec)} m/s`;
+        document.getElementById("hud_fdrag").innerText = `${prec === 4 ? p.fDrag.toFixed(2) : Math.round(p.fDrag)} N`;
 
         // Update Live Energy Viewer
-        const ekMega = (p.ek / 1e6).toFixed(2);
-        const epMega = (p.ep / 1e6).toFixed(2);
-        const emMega = (p.em / 1e6).toFixed(2);
-        const wDragMega = (p.wDrag / 1e6).toFixed(2);
+        const ekMega = (p.ek / 1e6).toFixed(prec === 4 ? 4 : 2);
+        const epMega = (p.ep / 1e6).toFixed(prec === 4 ? 4 : 2);
+        const emMega = (p.em / 1e6).toFixed(prec === 4 ? 4 : 2);
+        const wDragMega = (p.wDrag / 1e6).toFixed(prec === 4 ? 4 : 2);
 
         const elEk = document.getElementById("live_ek");
         const elEp = document.getElementById("live_ep");
@@ -6593,9 +6940,9 @@
         if (elWDrag) elWDrag.innerText = `${wDragMega} MJ`;
 
         document.getElementById("pill_t").innerText = `${p.t.toFixed(1)}s`;
-        document.getElementById("pill_x").innerText = `${p.x.toFixed(0)}m`;
-        document.getElementById("pill_y").innerText = `${p.y.toFixed(0)}m`;
-        document.getElementById("pill_v").innerText = `${p.v.toFixed(0)}m/s`;
+        document.getElementById("pill_x").innerText = `${p.x.toFixed(prec === 4 ? 1 : 0)}m`;
+        document.getElementById("pill_y").innerText = `${p.y.toFixed(prec === 4 ? 1 : 0)}m`;
+        document.getElementById("pill_v").innerText = `${p.v.toFixed(prec === 4 ? 1 : 0)}m/s`;
 
         const scrubber = document.getElementById("timeScrubber");
         if (scrubber && isPlaying) scrubber.value = p.t.toFixed(2);
@@ -6806,7 +7153,9 @@
       }
 
       window.addEventListener("keydown", (e) => {
+        const isInputFocused = ["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement?.tagName);
         if (e.key === "Escape") {
+          if (isZenMode) toggleZenMode();
           closeTheoryModal();
           closeKinematicModal();
           closeNumericalAnalysisModal();
@@ -6815,6 +7164,39 @@
           closeImpactHUD();
           closeMobileToolsModal();
           closeRubrik9ParamModal();
+          closeKeyboardShortcutsModal();
+          closeNavModulDropdown();
+          return;
+        }
+        if (isInputFocused) return;
+
+        if (e.key === " " || e.code === "Space") {
+          e.preventDefault();
+          togglePlayPause();
+        } else if (e.key === "r" || e.key === "R") {
+          restartAnimation();
+        } else if (e.key === "z" || e.key === "Z") {
+          toggleZenMode();
+        } else if (e.key === "p" || e.key === "P") {
+          togglePrecisionDigits();
+        } else if (e.key === "w" || e.key === "W") {
+          toggleWaterSurface();
+        } else if (e.key === "t" || e.key === "T") {
+          toggleTsunamiSimulation();
+        } else if (e.key === "m" || e.key === "M") {
+          toggleMute();
+        } else if (e.key === "?" || e.key === "/") {
+          openKeyboardShortcutsModal();
+        } else if (e.key === "1") {
+          setCameraPreset("free");
+        } else if (e.key === "2") {
+          setCameraPreset("follow");
+        } else if (e.key === "3") {
+          setCameraPreset("crater");
+        } else if (e.key === "4") {
+          setCameraPreset("side");
+        } else if (e.key === "5") {
+          setCameraPreset("topdown");
         }
       });
 
