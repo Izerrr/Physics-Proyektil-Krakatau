@@ -67,6 +67,14 @@
         touch-action: none;
       }
 
+      .demo-highlighted-target {
+        position: relative !important;
+        z-index: 75 !important;
+        pointer-events: auto !important;
+        box-shadow: 0 0 0 3px #e2b083, 0 0 24px rgba(226, 176, 131, 0.85) !important;
+        transition: box-shadow 0.2s ease-in-out !important;
+      }
+
       input[type="number"]::-webkit-inner-spin-button,
       input[type="number"]::-webkit-outer-spin-button {
         opacity: 0.4;
@@ -219,70 +227,84 @@
       </div>
 
       <!-- Action Tools -->
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
         <button
           id="btnNavInteractiveDemo"
           onclick="startInteractiveDemo()"
-          class="px-2.5 py-1 rounded-xl bg-[#e07a5f] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+          class="px-2 sm:px-2.5 py-1 rounded-xl bg-[#e07a5f] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm flex-shrink-0"
           title="Mode Demo Interaktif Langkah-demi-Langkah (Panduan Praktikum)"
         >
           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-          <span class="hidden xl:inline">Demo Interaktif</span>
+          <span class="inline">Demo</span><span class="hidden sm:inline"> Interaktif</span>
         </button>
 
+        <!-- Mobile More Tools Button -->
         <button
-          id="btnNavGuidedTour"
-          onclick="startGuidedTour()"
-          class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-          title="Tour Presentasi Interaktif 5 Langkah Erupsi Krakatau"
+          id="btnMobileToolsToggle"
+          onclick="openMobileToolsModal()"
+          class="md:hidden px-2 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] text-xs font-bold flex items-center gap-1 shadow-sm flex-shrink-0"
+          title="Buka Menu Alat &amp; Modul Tambahan"
         >
-          <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
-          <span class="hidden xl:inline">Tour Erupsi</span>
+          <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+          <span class="text-[11px]">Alat</span>
         </button>
 
-        <button
-          id="btnNavErrorAnalysis"
-          onclick="openNumericalAnalysisModal()"
-          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#81b29a] hover:text-[#f4ede4] hover:border-[#81b29a] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-          title="Uji Konvergensi Galat Numerik RK4 vs Euler"
-        >
-          <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-          <span class="hidden lg:inline">Galat RK4</span>
-        </button>
+        <!-- Desktop Action Buttons -->
+        <div class="hidden md:flex items-center gap-1.5">
+          <button
+            id="btnNavGuidedTour"
+            onclick="startGuidedTour()"
+            class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+            title="Tour Presentasi Interaktif 5 Langkah Erupsi Krakatau"
+          >
+            <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+            <span class="hidden xl:inline">Tour Erupsi</span>
+          </button>
 
-        <button
-          id="btnNavTheory"
-          onclick="openTheoryModal()"
-          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#38bdf8] hover:text-[#f4ede4] hover:border-[#38bdf8] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-          title="Buku Panduan Teori Fisika & Formulasi Matematika"
-        >
-          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-          <span class="hidden md:inline">Teori &amp; Rumus</span>
-        </button>
+          <button
+            id="btnNavErrorAnalysis"
+            onclick="openNumericalAnalysisModal()"
+            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#81b29a] hover:text-[#f4ede4] hover:border-[#81b29a] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+            title="Uji Konvergensi Galat Numerik RK4 vs Euler"
+          >
+            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+            <span class="hidden lg:inline">Galat RK4</span>
+          </button>
 
-        <button
-          id="btnNavKinematic"
-          onclick="openKinematicModal()"
-          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-          title="Buka Grafik Kinematika Fungsi Waktu"
-        >
-          <i data-lucide="line-chart" class="w-3.5 h-3.5"></i>
-          <span class="hidden md:inline">Grafik Kinematika</span>
-        </button>
+          <button
+            id="btnNavTheory"
+            onclick="openTheoryModal()"
+            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#38bdf8] hover:text-[#f4ede4] hover:border-[#38bdf8] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+            title="Buku Panduan Teori Fisika & Formulasi Matematika"
+          >
+            <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+            <span class="hidden md:inline">Teori &amp; Rumus</span>
+          </button>
 
-        <button
-          id="btnNavPrintLab"
-          onclick="printLabReport()"
-          class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#f4ede4] hover:text-[#d4a373] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
-          title="Cetak Lembar Kerja Hasil Praktikum (PDF Resmi FATISDA)"
-        >
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-          <span class="hidden lg:inline">Laporan PDF</span>
-        </button>
+          <button
+            id="btnNavKinematic"
+            onclick="openKinematicModal()"
+            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+            title="Buka Grafik Kinematika Fungsi Waktu"
+          >
+            <i data-lucide="line-chart" class="w-3.5 h-3.5"></i>
+            <span class="hidden md:inline">Grafik Kinematika</span>
+          </button>
 
-        <button id="globalMuteBtn" onclick="toggleMute()" class="p-1.5 sm:p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[#d4a373] hover:text-[#f4ede4] transition-all" title="Audio Erupsi">
-          <i data-lucide="volume-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-        </button>
+          <button
+            id="btnNavPrintLab"
+            onclick="printLabReport()"
+            class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#f4ede4] hover:text-[#d4a373] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+            title="Cetak Lembar Kerja Hasil Praktikum (PDF Resmi FATISDA)"
+          >
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span class="hidden lg:inline">Laporan PDF</span>
+          </button>
+
+          <button id="globalMuteBtn" onclick="toggleMute()" class="p-1.5 sm:p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[#d4a373] hover:text-[#f4ede4] transition-all" title="Audio Erupsi">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          </button>
+        </div>
       </div>
     </nav>
 
@@ -419,6 +441,7 @@
                     Sudut Optimum (R_max)
                   </span>
                   <button
+                    id="btnCalculateOptAngle"
                     onclick="calculateOptimalAngle()"
                     class="px-2 py-0.5 rounded-lg bg-[#dda15e]/20 border border-[#dda15e] text-[#dda15e] hover:bg-[#dda15e] hover:text-[#16181f] text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm"
                     title="Cari sudut elevasi terjauh secara numerik"
@@ -847,13 +870,9 @@
                     <i data-lucide="crosshair" class="w-4 h-4 text-[#e07a5f]"></i>
                     Dampak Tumbukan Bom Vulkanik
                   </span>
-                  <span id="tab5ImpactKrbBadge" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40 font-bold">
-                    KRB III
-                  </span>
+                  <span id="tab5ImpactKrbBadge" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40 font-bold"> KRB III </span>
                 </div>
-                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">
-                  Konsekuensi fisik pelepasan energi kinetik saat proyektil menyentuh permukaan di kaldera Krakatau Selat Sunda.
-                </p>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">Konsekuensi fisik pelepasan energi kinetik saat proyektil menyentuh permukaan di kaldera Krakatau Selat Sunda.</p>
 
                 <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] space-y-1">
                   <div class="text-[10px] text-[#8e9bb0]">Sektor Wilayah Terdampak:</div>
@@ -1704,75 +1723,165 @@
     </div>
 
     <!-- ==================================================================== -->
+    <!-- MOBILE TOOLS DRAWER / MODAL (ALAT & MODUL TAMBAHAN)                  -->
+    <!-- ==================================================================== -->
+    <div id="mobileToolsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+      <div class="bg-[#1b1e26] border border-[#343c4e] rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-200">
+        <!-- Header -->
+        <div class="p-4 border-b border-[#2e3544] flex items-center justify-between bg-[#16181f]/60">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-[#e2b083]/20 border border-[#e2b083]/40 flex items-center justify-center text-[#e2b083]">
+              <i data-lucide="layout-grid" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-[#f4ede4]">Peralatan &amp; Modul Tambahan</h3>
+              <p class="text-[11px] text-[#8e9bb0]">Fitur analisis, presentasi, dan instrumen laboratorium</p>
+            </div>
+          </div>
+          <button onclick="closeMobileToolsModal()" class="p-1.5 rounded-lg text-[#8e9bb0] hover:text-[#f4ede4] hover:bg-[#252b37] transition-all">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Tools List -->
+        <div class="p-3 sm:p-4 overflow-y-auto space-y-2">
+          <!-- Tour Erupsi -->
+          <button onclick="startGuidedTour(); closeMobileToolsModal();" class="w-full p-3 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] flex items-center justify-between text-left transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#d4a373]/20 border border-[#d4a373]/40 flex items-center justify-center text-[#d4a373] group-hover:scale-105 transition-transform">
+                <i data-lucide="play-circle" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4]">Tour Presentasi Erupsi</div>
+                <div class="text-[10px] text-[#8e9bb0]">Panduan narasi 5 babak letusan Krakatau</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+          </button>
+
+          <!-- Galat RK4 vs Euler -->
+          <button onclick="openNumericalAnalysisModal(); closeMobileToolsModal();" class="w-full p-3 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] flex items-center justify-between text-left transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#81b29a]/20 border border-[#81b29a]/40 flex items-center justify-center text-[#81b29a] group-hover:scale-105 transition-transform">
+                <i data-lucide="cpu" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4]">Uji Galat RK4 vs Euler</div>
+                <div class="text-[10px] text-[#8e9bb0]">Analisis kestabilan numerik &amp; perbandingan dt</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+          </button>
+
+          <!-- Teori & Rumus Fisika -->
+          <button onclick="openTheoryModal(); closeMobileToolsModal();" class="w-full p-3 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] flex items-center justify-between text-left transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#38bdf8]/20 border border-[#38bdf8]/40 flex items-center justify-center text-[#38bdf8] group-hover:scale-105 transition-transform">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4]">Teori Fisika &amp; Formulasi KaTeX</div>
+                <div class="text-[10px] text-[#8e9bb0]">Persamaan gerak bola di fluida viskos atmosfer</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+          </button>
+
+          <!-- Grafik Kinematika Waktu -->
+          <button onclick="openKinematicModal(); closeMobileToolsModal();" class="w-full p-3 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] flex items-center justify-between text-left transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#e2b083]/20 border border-[#e2b083]/40 flex items-center justify-center text-[#e2b083] group-hover:scale-105 transition-transform">
+                <i data-lucide="line-chart" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4]">Grafik Kinematika Waktu</div>
+                <div class="text-[10px] text-[#8e9bb0]">Kurva v(t), a(t), dan dekomposisi energi mekanik</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+          </button>
+
+          <!-- Cetak Laporan Lembar Kerja Resmi -->
+          <button id="btnMobilePrintLab" onclick="printLabReport(); closeMobileToolsModal();" class="w-full p-3 rounded-xl bg-[#e07a5f]/15 hover:bg-[#e07a5f]/25 border border-[#e07a5f]/40 flex items-center justify-between text-left transition-all group">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#e07a5f]/20 border border-[#e07a5f]/40 flex items-center justify-center text-[#e07a5f] group-hover:scale-105 transition-transform">
+                <i data-lucide="printer" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4]">Cetak Laporan Praktikum FATISDA</div>
+                <div class="text-[10px] text-[#e2b083]">Ekspor lembar kerja praktikum format PDF / Print</div>
+              </div>
+            </div>
+            <i data-lucide="external-link" class="w-4 h-4 text-[#e07a5f]"></i>
+          </button>
+
+          <!-- Audio Efek Suara Toggle -->
+          <button id="btnMobileAudioToggle" onclick="toggleMute()" class="w-full p-3 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] flex items-center justify-between text-left transition-all group">
+            <div class="flex items-center gap-3">
+              <div id="mobileAudioIconBox" class="w-9 h-9 rounded-xl bg-[#8e9bb0]/20 border border-[#8e9bb0]/40 flex items-center justify-center text-[#8e9bb0] group-hover:scale-105 transition-transform">
+                <i id="mobileAudioIcon" data-lucide="volume-2" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4]">Efek Suara Audio Sintesis</div>
+                <div id="mobileAudioStatusText" class="text-[10px] text-[#8e9bb0]">Status: Aktif</div>
+              </div>
+            </div>
+            <span id="mobileAudioBadge" class="text-[10px] px-2 py-0.5 rounded-full font-mono bg-[#81b29a]/20 text-[#81b29a]">ON</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
     <!-- INTERACTIVE STEP-BY-STEP DEMO OVERLAY (COACHMARKS & SPOTLIGHT)       -->
     <!-- ==================================================================== -->
     <div id="interactiveDemoOverlay" class="fixed inset-0 z-[60] pointer-events-none hidden transition-opacity duration-300">
-      <!-- Dark backdrop -->
-      <div id="demoBackdrop" onclick="closeInteractiveDemo()" class="absolute inset-0 bg-black/60 pointer-events-auto backdrop-blur-[1px]"></div>
-      
+      <!-- Dark backdrop panels that surround the target without covering it -->
+      <div id="demoBackdropTop" onclick="handleDemoBackdropClick()" class="absolute bg-black/65 backdrop-blur-[1px] pointer-events-auto transition-all duration-200"></div>
+      <div id="demoBackdropBottom" onclick="handleDemoBackdropClick()" class="absolute bg-black/65 backdrop-blur-[1px] pointer-events-auto transition-all duration-200"></div>
+      <div id="demoBackdropLeft" onclick="handleDemoBackdropClick()" class="absolute bg-black/65 backdrop-blur-[1px] pointer-events-auto transition-all duration-200"></div>
+      <div id="demoBackdropRight" onclick="handleDemoBackdropClick()" class="absolute bg-black/65 backdrop-blur-[1px] pointer-events-auto transition-all duration-200"></div>
+
       <!-- Spotlight Glowing Box around Target Element -->
       <div
         id="demoSpotlightBox"
-        class="absolute border-2 border-[#e2b083] rounded-2xl pointer-events-none transition-all duration-300 shadow-[0_0_0_9999px_rgba(0,0,0,0.65),0_0_24px_rgba(226,176,131,0.6)] animate-pulse"
-        style="top: 0px; left: 0px; width: 0px; height: 0px; display: none;"
+        class="absolute border-2 border-[#e2b083] rounded-2xl pointer-events-none transition-all duration-200 shadow-[0_0_24px_rgba(226,176,131,0.7)] animate-pulse"
+        style="top: 0px; left: 0px; width: 0px; height: 0px; display: none"
       ></div>
 
       <!-- Coachmark Popover Card -->
       <div
         id="demoCoachmarkCard"
-        class="absolute pointer-events-auto w-[350px] max-w-[92vw] bg-[#1b1e26] border border-[#d4a373] rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3 transition-all duration-300 z-10"
-        style="top: 100px; left: 100px; display: none;"
+        class="absolute pointer-events-auto w-[350px] max-w-[92vw] bg-[#1b1e26] border border-[#d4a373] rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3 transition-all duration-200 z-10"
+        style="top: 100px; left: 100px; display: none"
       >
         <div class="flex items-center justify-between border-b border-[#2e3544] pb-2.5">
           <div class="flex items-center gap-2">
-            <span id="demoStepBadge" class="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-[#e07a5f]/20 border border-[#e07a5f]/40 text-[#e07a5f]">
-              Langkah 1 dari 8
-            </span>
+            <span id="demoStepBadge" class="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-[#e07a5f]/20 border border-[#e07a5f]/40 text-[#e07a5f]"> Langkah 1 dari 8 </span>
             <span class="w-1.5 h-1.5 rounded-full bg-[#81b29a] animate-ping"></span>
           </div>
-          <button
-            onclick="closeInteractiveDemo()"
-            class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all"
-            title="Keluar dari Demo (Esc)"
-          >
+          <button onclick="closeInteractiveDemo()" class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all" title="Keluar dari Demo (Esc)">
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
 
         <div>
-          <h3 id="demoStepTitle" class="text-sm font-bold text-[#f4ede4] flex items-center gap-2">
-            1. Pilih Preset Erupsi Krakatau
-          </h3>
+          <h3 id="demoStepTitle" class="text-sm font-bold text-[#f4ede4] flex items-center gap-2">1. Pilih Preset Erupsi Krakatau</h3>
           <div id="demoActionBox" class="mt-2 p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] text-xs text-[#e2b083] font-medium flex items-start gap-2">
             <i data-lucide="hand" class="w-4 h-4 text-[#e07a5f] flex-shrink-0 mt-0.5 animate-bounce"></i>
             <span id="demoStepAction">Klik dropdown ini dan pilih skenario 'Bom Vulkanik Anak Krakatau 2018'.</span>
           </div>
-          <p id="demoStepDesc" class="text-[11px] text-[#8e9bb0] leading-relaxed mt-2">
-            Preset ini memuat data empiris erupsi sesungguhnya dengan kecepatan awal 180 m/s dan elevasi kawah 157 meter dpl.
-          </p>
+          <p id="demoStepDesc" class="text-[11px] text-[#8e9bb0] leading-relaxed mt-2">Preset ini memuat data empiris erupsi sesungguhnya dengan kecepatan awal 180 m/s dan elevasi kawah 157 meter dpl.</p>
         </div>
 
         <div class="flex items-center justify-between pt-2 border-t border-[#2e3544]">
-          <button
-            id="demoPrevBtn"
-            onclick="prevDemoStep()"
-            class="px-3 py-1.5 rounded-xl bg-[#222733] hover:bg-[#2e3544] text-[#8e9bb0] hover:text-[#f4ede4] text-xs font-bold transition-all flex items-center gap-1"
-          >
+          <button id="demoPrevBtn" onclick="prevDemoStep()" class="px-3 py-1.5 rounded-xl bg-[#222733] hover:bg-[#2e3544] text-[#8e9bb0] hover:text-[#f4ede4] text-xs font-bold transition-all flex items-center gap-1">
             <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Sebelumnya
           </button>
-          
+
           <div class="flex items-center gap-2">
-            <button
-              onclick="closeInteractiveDemo()"
-              class="px-2.5 py-1.5 text-xs text-[#8e9bb0] hover:text-[#f4ede4] transition-all font-medium"
-            >
-              Lewati
-            </button>
-            <button
-              id="demoNextBtn"
-              onclick="nextDemoStep()"
-              class="px-3.5 py-1.5 rounded-xl bg-[#d4a373] hover:bg-[#e2b083] text-[#16181f] text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
-            >
+            <button onclick="closeInteractiveDemo()" class="px-2.5 py-1.5 text-xs text-[#8e9bb0] hover:text-[#f4ede4] transition-all font-medium">Lewati</button>
+            <button id="demoNextBtn" onclick="nextDemoStep()" class="px-3.5 py-1.5 rounded-xl bg-[#d4a373] hover:bg-[#e2b083] text-[#16181f] text-xs font-bold transition-all flex items-center gap-1 shadow-sm">
               Lanjut <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
             </button>
           </div>
@@ -1785,93 +1894,98 @@
     <!-- ==================================================================== -->
     <div
       id="ballisticImpactHUD"
-      class="fixed bottom-4 right-4 z-25 w-[360px] max-w-[94vw] bg-[#16181f]/95 border border-[#e07a5f] rounded-2xl shadow-2xl p-3.5 sm:p-4 backdrop-blur-md hidden transition-all duration-300 flex flex-col gap-2.5"
+      class="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-4 sm:bottom-4 z-35 w-auto sm:w-[360px] max-w-full bg-[#16181f]/95 border border-[#e07a5f] rounded-2xl shadow-2xl p-3 sm:p-4 backdrop-blur-md hidden transition-all duration-300 flex flex-col gap-2"
     >
-      <!-- Header with Alert Hazard -->
-      <div class="flex items-center justify-between border-b border-[#2e3544] pb-2">
-        <div class="flex items-center gap-2">
+      <!-- Header with Alert Hazard & Minimize Toggle -->
+      <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+        <div class="flex items-center gap-2 min-w-0">
           <div class="w-7 h-7 rounded-xl bg-[#e07a5f]/20 border border-[#e07a5f]/40 flex items-center justify-center text-[#e07a5f] flex-shrink-0 animate-pulse">
             <i data-lucide="flame" class="w-4 h-4"></i>
           </div>
-          <div>
+          <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <h4 class="text-xs font-bold text-[#f4ede4]">Dampak Tumbukan Balistik</h4>
-              <span id="impactHazardBadge" class="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-[#e07a5f] text-[#16181f]">
-                KRB III
-              </span>
+              <h4 class="text-xs font-bold text-[#f4ede4] truncate">Dampak Tumbukan</h4>
+              <span id="impactHazardBadge" class="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-[#e07a5f] text-[#16181f] flex-shrink-0"> KRB III </span>
             </div>
-            <p id="impactLocationSector" class="text-[10px] text-[#e2b083] font-medium truncate max-w-[220px]">
-              Perairan Kaldera Selat Sunda
-            </p>
+            <p id="impactLocationSector" class="text-[10px] text-[#e2b083] font-medium truncate max-w-[190px] sm:max-w-[220px]">Perairan Kaldera Selat Sunda</p>
           </div>
         </div>
-        <button
-          onclick="closeImpactHUD()"
-          class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all"
-          title="Tutup Notifikasi Tumbukan"
-        >
-          <i data-lucide="x" class="w-3.5 h-3.5"></i>
-        </button>
-      </div>
-
-      <!-- Physics Metrics Grid -->
-      <div class="grid grid-cols-3 gap-1.5 text-center">
-        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
-          <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Jarak Impak</span>
-          <span id="impactDistVal" class="text-xs font-bold text-[#f4ede4] font-mono">1.350 m</span>
-        </div>
-        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
-          <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Energi Impak</span>
-          <span id="impactEnergyVal" class="text-xs font-bold text-[#e07a5f] font-mono">4.12 MJ</span>
-        </div>
-        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
-          <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Setara TNT</span>
-          <span id="impactTntVal" class="text-xs font-bold text-[#dda15e] font-mono">0.98 kg</span>
+        <div class="flex items-center gap-1 flex-shrink-0">
+          <button
+            onclick="toggleMinimizeImpactHUD()"
+            id="btnMinImpactHUD"
+            class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all"
+            title="Kecilkan / Buka Detail"
+          >
+            <i data-lucide="chevron-down" id="impactMinIcon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="closeImpactHUD()" class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all" title="Tutup Notifikasi Tumbukan">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
         </div>
       </div>
 
-      <!-- Secondary Metrics & Consequences -->
-      <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-2 space-y-1.5 text-[11px]">
-        <div class="flex items-center justify-between text-[#8e9bb0]">
-          <span>Kecepatan &amp; Sudut Impak:</span>
-          <span id="impactVelAngleVal" class="text-[#f4ede4] font-mono font-medium">108.4 m/s • 41.2°</span>
+      <!-- Collapsible Container for Details -->
+      <div id="impactHudDetails" class="space-y-2 flex flex-col">
+        <!-- Physics Metrics Grid -->
+        <div class="grid grid-cols-3 gap-1.5 text-center">
+          <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
+            <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Jarak Impak</span>
+            <span id="impactDistVal" class="text-xs font-bold text-[#f4ede4] font-mono">1.350 m</span>
+          </div>
+          <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
+            <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Energi Impak</span>
+            <span id="impactEnergyVal" class="text-xs font-bold text-[#e07a5f] font-mono">4.12 MJ</span>
+          </div>
+          <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
+            <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Setara TNT</span>
+            <span id="impactTntVal" class="text-xs font-bold text-[#dda15e] font-mono">0.98 kg</span>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-[#8e9bb0]">
-          <span>Estimasi Diameter Kawah:</span>
-          <span id="impactCraterVal" class="text-[#81b29a] font-mono font-medium">5.7 meter</span>
-        </div>
-        <div class="flex items-center justify-between text-[#8e9bb0]">
-          <span>Radius Gelombang Kejut (5 kPa):</span>
-          <span id="impactBlastVal" class="text-[#e2b083] font-mono font-medium">31.8 meter</span>
-        </div>
-        <div class="flex items-center justify-between text-[#8e9bb0]">
-          <span>Tinggi Percikan Air / Lontaran:</span>
-          <span id="impactSplashVal" class="text-[#38bdf8] font-mono font-medium">18.2 meter</span>
-        </div>
-      </div>
 
-      <!-- Recommendation & Action Buttons -->
-      <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[10px] text-[#8e9bb0] leading-snug">
-        <span class="font-bold text-[#e2b083]">Rekomendasi PVMBG:</span>
-        <span id="impactMitigationNote">Radius 5 km harus dikosongkan dari aktivitas nelayan dan wisatawan.</span>
-      </div>
+        <!-- Secondary Metrics & Consequences -->
+        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-2 space-y-1.5 text-[11px]">
+          <div class="flex items-center justify-between text-[#8e9bb0]">
+            <span>Kecepatan &amp; Sudut Impak:</span>
+            <span id="impactVelAngleVal" class="text-[#f4ede4] font-mono font-medium">108.4 m/s • 41.2°</span>
+          </div>
+          <div class="flex items-center justify-between text-[#8e9bb0]">
+            <span>Estimasi Diameter Kawah:</span>
+            <span id="impactCraterVal" class="text-[#81b29a] font-mono font-medium">5.7 meter</span>
+          </div>
+          <div class="flex items-center justify-between text-[#8e9bb0]">
+            <span>Radius Gelombang Kejut (5 kPa):</span>
+            <span id="impactBlastVal" class="text-[#e2b083] font-mono font-medium">31.8 meter</span>
+          </div>
+          <div class="flex items-center justify-between text-[#8e9bb0]">
+            <span>Tinggi Percikan Air / Lontaran:</span>
+            <span id="impactSplashVal" class="text-[#38bdf8] font-mono font-medium">18.2 meter</span>
+          </div>
+        </div>
 
-      <div class="flex items-center gap-1.5 pt-1">
-        <button
-          onclick="focusCameraOnImpact()"
-          class="flex-1 py-1.5 px-2 rounded-xl bg-[#e07a5f]/20 hover:bg-[#e07a5f]/30 border border-[#e07a5f]/40 text-[#f4ede4] text-[11px] font-bold transition-all flex items-center justify-center gap-1.5"
-        >
-          <i data-lucide="crosshair" class="w-3.5 h-3.5 text-[#e07a5f]"></i>
-          <span>Fokus Kamera ke Impak</span>
-        </button>
-        <button
-          onclick="switchSimTab(5)"
-          class="py-1.5 px-2.5 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-[#8e9bb0] hover:text-[#f4ede4] text-[11px] font-medium transition-all flex items-center gap-1"
-          title="Buka Tab Geospasial"
-        >
-          <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-          <span>Geospasial</span>
-        </button>
+        <!-- Recommendation & Action Buttons -->
+        <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[10px] text-[#8e9bb0] leading-snug">
+          <span class="font-bold text-[#e2b083]">Rekomendasi PVMBG:</span>
+          <span id="impactMitigationNote">Radius 5 km harus dikosongkan dari aktivitas nelayan dan wisatawan.</span>
+        </div>
+
+        <div class="flex items-center gap-1.5 pt-0.5">
+          <button
+            onclick="focusCameraOnImpact()"
+            class="flex-1 py-1.5 px-2 rounded-xl bg-[#e07a5f]/20 hover:bg-[#e07a5f]/30 border border-[#e07a5f]/40 text-[#f4ede4] text-[11px] font-bold transition-all flex items-center justify-center gap-1.5"
+          >
+            <i data-lucide="crosshair" class="w-3.5 h-3.5 text-[#e07a5f]"></i>
+            <span>Fokus Kamera ke Impak</span>
+          </button>
+          <button
+            onclick="switchSimTab(5)"
+            class="py-1.5 px-2.5 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-[#8e9bb0] hover:text-[#f4ede4] text-[11px] font-medium transition-all flex items-center gap-1"
+            title="Buka Tab Geospasial"
+          >
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+            <span>Geospasial</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2795,11 +2909,12 @@
           step: 1,
           target: "#presetSelect",
           title: "1. Pilih Skenario Erupsi Krakatau",
-          action: "Klik dropdown preset ini dan pilih skenario letusan empiris nyata (misal: 'Bom Vulkanik Anak Krakatau 2018').",
-          desc: "Sistem akan langsung mengkalibrasi parameter peluncuran: kecepatan v₀ = 180 m/s, massa batu 250 kg, dan elevasi kawah 157 m dpl.",
+          action: "Pilih dropdown preset ini (misal: 'Bom Vulkanik Anak Krakatau 2018').",
+          desc: "Sistem otomatis mengkalibrasi parameter peluncuran: kecepatan v₀ = 180 m/s, massa batu 250 kg, dan elevasi kawah 157 m dpl.",
           setup: () => {
             switchPage("simulator");
             switchSimTab(1);
+            if (window.innerWidth < 768) toggleSidebar(true);
           },
         },
         {
@@ -2810,6 +2925,7 @@
           desc: "Amati bagaimana sudut elevasi mengubah geometri parabola dan titik tertinggi (Apex) secara real-time di kanvas dan viewport 3D.",
           setup: () => {
             switchSimTab(1);
+            if (window.innerWidth < 768) toggleSidebar(true);
           },
         },
         {
@@ -2820,6 +2936,7 @@
           desc: "Komputer melakukan sapuan parameter sudut 15° hingga 75° untuk membuktikan pergeseran sudut optimum riil (36.0°) terhadap sudut hampa (43.7°).",
           setup: () => {
             switchSimTab(1);
+            if (window.innerWidth < 768) toggleSidebar(true);
           },
         },
         {
@@ -2829,26 +2946,27 @@
           action: "Pencet tab ke-2 ini untuk meninjau geseran angin bertingkat (Wind Shear) dan daya apung termal.",
           desc: "Atmosfer Selat Sunda dimodelkan dalam 3 strata: troposfer bawah (w_low), zona transisi 3-5 km, dan stratosfer atas (w_high).",
           setup: () => {
-            switchSimTab(1);
+            if (window.innerWidth < 768) toggleSidebar(true);
           },
         },
         {
           step: 5,
           target: "#camFollowBtn",
           title: "5. Aktifkan Kamera Sinematik POV Follow",
-          action: "Pencet tombol preset kamera 'Follow POV' ini!",
+          action: "Pencet tombol preset kamera 'POV' ini di bilah kontrol!",
           desc: "Kamera 3D Three.js akan menempel dan terbang bersama proyektil melintasi langit kaldera Selat Sunda.",
           setup: () => {
-            switchSimTab(1);
+            if (window.innerWidth < 768) toggleSidebar(false);
           },
         },
         {
           step: 6,
           target: "#btnPlayPause",
           title: "6. Luncurkan Bom Vulkanik!",
-          action: "Pencet tombol Play / Ulangi ini untuk menembakkan bom lava dan amati detik-detik pendaratannya!",
+          action: "Pencet tombol Play / Luncurkan ini untuk menembakkan bom lava dan amati detik-detik pendaratannya!",
           desc: "Bom vulkanik akan terbang menembus geseran angin, melepaskan energi mekanik ke atmosfer, dan menghantam sasaran.",
           setup: () => {
+            if (window.innerWidth < 768) toggleSidebar(false);
             restartAnimation();
           },
         },
@@ -2859,38 +2977,108 @@
           action: "Perhatikan kartu hazard yang muncul di sudut kanan bawah ini saat bom mendarat!",
           desc: "Menampilkan kalkulasi energi impak (MJ), ekuivalen TNT, estimasi diameter kawah, radius blast, dan klasifikasi KRB PVMBG.",
           setup: () => {
+            if (window.innerWidth < 768) toggleSidebar(false);
             if (trajectories) triggerImpactEffect(trajectories.real.range);
           },
         },
         {
           step: 8,
-          target: "#btnNavPrintLab",
-          title: "8. Cetak Laporan Lembar Kerja Resmi",
-          action: "Terakhir, klik tombol 'Laporan PDF' di navbar untuk mencetak lembar kerja praktikum FATISDA UNS!",
+          target: () => (window.innerWidth < 768 ? "#btnMobileToolsToggle" : "#btnNavPrintLab"),
+          title: "8. Eksplorasi Alat & Cetak Laporan Lembar Kerja",
+          action: () =>
+            window.innerWidth < 768
+              ? "Pencet tombol 'Alat ⋯' di navbar untuk membuka Laporan PDF, Uji Galat RK4, dan modul laboratorium lainnya!"
+              : "Terakhir, klik tombol 'Laporan PDF' di navbar untuk mencetak lembar kerja praktikum resmi FATISDA UNS!",
           desc: "Dokumen resmi siap cetak format A4 mencakup tabel telemetri kinematika, komparasi galat RK4, dan sebaran abu stasiun.",
-          setup: () => {},
+          setup: () => {
+            if (window.innerWidth < 768) toggleSidebar(false);
+          },
         },
       ];
 
-      function positionSpotlight(targetSelectorOrEl) {
+      let currentDemoTarget = null;
+
+      function updateBackdropPanels(top, left, width, height) {
+        const pTop = document.getElementById("demoBackdropTop");
+        const pBottom = document.getElementById("demoBackdropBottom");
+        const pLeft = document.getElementById("demoBackdropLeft");
+        const pRight = document.getElementById("demoBackdropRight");
+        if (!pTop || !pBottom || !pLeft || !pRight) return;
+
+        const wW = window.innerWidth;
+        const wH = window.innerHeight;
+
+        if (width === 0 || height === 0) {
+          pTop.style.cssText = "top:0;left:0;width:100%;height:100%;display:block;";
+          pBottom.style.display = "none";
+          pLeft.style.display = "none";
+          pRight.style.display = "none";
+          return;
+        }
+
+        const bottom = top + height;
+        const right = left + width;
+
+        pTop.style.cssText = `top:0px;left:0px;width:100%;height:${Math.max(0, top)}px;display:block;`;
+        pBottom.style.cssText = `top:${bottom}px;left:0px;width:100%;height:${Math.max(0, wH - bottom)}px;display:block;`;
+        pLeft.style.cssText = `top:${top}px;left:0px;width:${Math.max(0, left)}px;height:${height}px;display:block;`;
+        pRight.style.cssText = `top:${top}px;left:${right}px;width:${Math.max(0, wW - right)}px;height:${height}px;display:block;`;
+      }
+
+      function handleDemoBackdropClick() {
+        const card = document.getElementById("demoCoachmarkCard");
+        if (card) {
+          card.classList.add("ring-2", "ring-[#e2b083]");
+          setTimeout(() => card.classList.remove("ring-2", "ring-[#e2b083]"), 400);
+        }
+      }
+
+      function handleDemoReposition() {
+        if (isDemoActive && currentDemoTarget) {
+          positionSpotlight(currentDemoTarget, false);
+        }
+      }
+
+      function cleanupCurrentTarget() {
+        if (activeTargetEl && activeTargetListener) {
+          activeTargetEl.removeEventListener("click", activeTargetListener);
+          activeTargetEl.removeEventListener("change", activeTargetListener);
+          activeTargetEl.removeEventListener("input", activeTargetListener);
+          activeTargetEl.classList.remove("demo-highlighted-target");
+          activeTargetEl = null;
+          activeTargetListener = null;
+        }
+      }
+
+      function positionSpotlight(targetSelectorOrEl, doScroll = true) {
+        currentDemoTarget = targetSelectorOrEl;
         const spotlightBox = document.getElementById("demoSpotlightBox");
         const coachmarkCard = document.getElementById("demoCoachmarkCard");
         if (!spotlightBox || !coachmarkCard) return;
 
-        const targetEl = typeof targetSelectorOrEl === "string" ? document.querySelector(targetSelectorOrEl) : targetSelectorOrEl;
+        const sel = typeof targetSelectorOrEl === "function" ? targetSelectorOrEl() : targetSelectorOrEl;
+        const targetEl = typeof sel === "string" ? document.querySelector(sel) : sel;
 
         if (!targetEl) {
+          updateBackdropPanels(0, 0, 0, 0);
           spotlightBox.style.display = "none";
+          coachmarkCard.style.position = "fixed";
           coachmarkCard.style.top = "50%";
           coachmarkCard.style.left = "50%";
+          coachmarkCard.style.bottom = "auto";
+          coachmarkCard.style.right = "auto";
           coachmarkCard.style.transform = "translate(-50%, -50%)";
           coachmarkCard.style.display = "flex";
           return;
         }
 
-        try {
-          targetEl.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
-        } catch (err) {}
+        const isMobile = window.innerWidth < 768;
+
+        if (doScroll) {
+          try {
+            targetEl.scrollIntoView({ behavior: "smooth", block: isMobile ? "center" : "nearest", inline: "center" });
+          } catch (err) {}
+        }
 
         setTimeout(() => {
           const rect = targetEl.getBoundingClientRect();
@@ -2900,6 +3088,8 @@
           const width = Math.max(24, rect.width + pad * 2);
           const height = Math.max(24, rect.height + pad * 2);
 
+          updateBackdropPanels(top, left, width, height);
+
           spotlightBox.style.display = "block";
           spotlightBox.style.top = `${top}px`;
           spotlightBox.style.left = `${left}px`;
@@ -2908,33 +3098,52 @@
 
           const winW = window.innerWidth;
           const winH = window.innerHeight;
-          const cardW = Math.min(350, winW * 0.92);
-          const cardH = 260;
 
-          let cardLeft = left;
-          if (cardLeft + cardW > winW - 16) {
-            cardLeft = Math.max(16, winW - cardW - 16);
-          }
+          if (isMobile) {
+            coachmarkCard.style.position = "fixed";
+            coachmarkCard.style.top = "auto";
+            coachmarkCard.style.bottom = "12px";
+            coachmarkCard.style.left = "12px";
+            coachmarkCard.style.right = "12px";
+            coachmarkCard.style.width = "auto";
+            coachmarkCard.style.maxWidth = "calc(100vw - 24px)";
+            coachmarkCard.style.transform = "none";
+            coachmarkCard.style.display = "flex";
+          } else {
+            coachmarkCard.style.position = "absolute";
+            coachmarkCard.style.bottom = "auto";
+            coachmarkCard.style.right = "auto";
+            const cardW = Math.min(360, winW * 0.92);
+            coachmarkCard.style.width = `${cardW}px`;
+            coachmarkCard.style.maxWidth = "92vw";
 
-          let cardTop = top + height + 12;
-          if (cardTop + cardH > winH - 16) {
-            if (top - cardH - 12 > 55) {
-              cardTop = top - cardH - 12;
-            } else {
-              cardTop = Math.max(60, Math.min(winH - cardH - 16, top));
-              if (left + width + cardW + 16 < winW) {
-                cardLeft = left + width + 12;
-              } else if (left - cardW - 12 > 16) {
-                cardLeft = left - cardW - 12;
+            const cardH = coachmarkCard.offsetHeight || 260;
+
+            let cardLeft = left;
+            if (cardLeft + cardW > winW - 16) {
+              cardLeft = Math.max(16, winW - cardW - 16);
+            }
+
+            let cardTop = top + height + 12;
+            if (cardTop + cardH > winH - 16) {
+              if (top - cardH - 12 > 55) {
+                cardTop = top - cardH - 12;
+              } else {
+                cardTop = Math.max(60, Math.min(winH - cardH - 16, top));
+                if (left + width + cardW + 16 < winW) {
+                  cardLeft = left + width + 12;
+                } else if (left - cardW - 12 > 16) {
+                  cardLeft = left - cardW - 12;
+                }
               }
             }
-          }
 
-          coachmarkCard.style.transform = "none";
-          coachmarkCard.style.top = `${cardTop}px`;
-          coachmarkCard.style.left = `${cardLeft}px`;
-          coachmarkCard.style.display = "flex";
-        }, 120);
+            coachmarkCard.style.transform = "none";
+            coachmarkCard.style.top = `${cardTop}px`;
+            coachmarkCard.style.left = `${cardLeft}px`;
+            coachmarkCard.style.display = "flex";
+          }
+        }, doScroll ? 130 : 10);
       }
 
       function startInteractiveDemo() {
@@ -2943,22 +3152,26 @@
         const overlay = document.getElementById("interactiveDemoOverlay");
         if (overlay) {
           overlay.classList.remove("hidden");
-          overlay.style.pointerEvents = "auto";
+        }
+        window.addEventListener("resize", handleDemoReposition);
+        const mainSidebar = document.getElementById("mainSidebar");
+        if (mainSidebar) {
+          mainSidebar.addEventListener("scroll", handleDemoReposition);
         }
         applyDemoStep(1);
       }
 
       function closeInteractiveDemo() {
         isDemoActive = false;
-        if (activeTargetEl && activeTargetListener) {
-          activeTargetEl.removeEventListener("click", activeTargetListener);
-          activeTargetEl = null;
-          activeTargetListener = null;
+        cleanupCurrentTarget();
+        window.removeEventListener("resize", handleDemoReposition);
+        const mainSidebar = document.getElementById("mainSidebar");
+        if (mainSidebar) {
+          mainSidebar.removeEventListener("scroll", handleDemoReposition);
         }
         const overlay = document.getElementById("interactiveDemoOverlay");
         if (overlay) {
           overlay.classList.add("hidden");
-          overlay.style.pointerEvents = "none";
         }
       }
 
@@ -2967,17 +3180,16 @@
         const item = DEMO_STEPS[idx - 1];
         if (!item) return;
 
-        if (activeTargetEl && activeTargetListener) {
-          activeTargetEl.removeEventListener("click", activeTargetListener);
-          activeTargetEl = null;
-          activeTargetListener = null;
-        }
+        cleanupCurrentTarget();
 
         if (item.setup) item.setup();
 
+        const sel = typeof item.target === "function" ? item.target() : item.target;
+        const actionTxt = typeof item.action === "function" ? item.action() : item.action;
+
         document.getElementById("demoStepBadge").innerText = `Langkah ${item.step} dari 8`;
         document.getElementById("demoStepTitle").innerText = item.title;
-        document.getElementById("demoStepAction").innerText = item.action;
+        document.getElementById("demoStepAction").innerText = actionTxt;
         document.getElementById("demoStepDesc").innerText = item.desc;
 
         const btnPrev = document.getElementById("demoPrevBtn");
@@ -2987,16 +3199,28 @@
           btnNext.innerHTML = idx === 8 ? `Selesai <i data-lucide="check" class="w-3.5 h-3.5"></i>` : `Lanjut <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>`;
         }
 
-        positionSpotlight(item.target);
+        positionSpotlight(sel, true);
 
-        // Bind click on the target element itself to auto-advance
-        const targetNode = typeof item.target === "string" ? document.querySelector(item.target) : item.target;
+        // Bind interactive event directly to the target element so user can interact and auto-advance
+        const targetNode = typeof sel === "string" ? document.querySelector(sel) : sel;
         if (targetNode) {
           activeTargetEl = targetNode;
+          activeTargetEl.classList.add("demo-highlighted-target");
           activeTargetListener = () => {
-            setTimeout(() => nextDemoStep(), 350);
+            setTimeout(() => {
+              if (isDemoActive && demoCurrentStep === idx) {
+                nextDemoStep();
+              }
+            }, 420);
           };
-          activeTargetEl.addEventListener("click", activeTargetListener, { once: true });
+
+          if (targetNode.tagName === "SELECT") {
+            targetNode.addEventListener("change", activeTargetListener, { once: true });
+          } else if (targetNode.type === "range") {
+            targetNode.addEventListener("change", activeTargetListener, { once: true });
+          } else {
+            targetNode.addEventListener("click", activeTargetListener, { once: true });
+          }
         }
 
         lucide.createIcons();
@@ -3118,13 +3342,66 @@
         document.getElementById("impactSplashVal").innerText = `${a.splashHeight.toFixed(1)} meter`;
         document.getElementById("impactMitigationNote").innerText = a.mitigationNote;
 
+        // Auto-minimize floatingHudCard on mobile when impact HUD appears to prevent overlapping
+        if (window.innerWidth < 768 && !isHudMinimized && typeof toggleHudMinimize === "function") {
+          toggleHudMinimize();
+        }
+
         hud.classList.remove("hidden");
+        lucide.createIcons();
+      }
+
+      let isImpactHudMinimized = false;
+      function toggleMinimizeImpactHUD() {
+        isImpactHudMinimized = !isImpactHudMinimized;
+        const details = document.getElementById("impactHudDetails");
+        const icon = document.getElementById("impactMinIcon");
+        if (!details) return;
+        if (isImpactHudMinimized) {
+          details.classList.add("hidden");
+          if (icon) icon.setAttribute("data-lucide", "chevron-up");
+        } else {
+          details.classList.remove("hidden");
+          if (icon) icon.setAttribute("data-lucide", "chevron-down");
+        }
         lucide.createIcons();
       }
 
       function closeImpactHUD() {
         const hud = document.getElementById("ballisticImpactHUD");
         if (hud) hud.classList.add("hidden");
+      }
+
+      function openMobileToolsModal() {
+        const modal = document.getElementById("mobileToolsModal");
+        if (!modal) return;
+        modal.classList.remove("hidden");
+        updateMobileAudioBtn();
+        lucide.createIcons();
+      }
+
+      function closeMobileToolsModal() {
+        const modal = document.getElementById("mobileToolsModal");
+        if (modal) modal.classList.add("hidden");
+      }
+
+      function updateMobileAudioBtn() {
+        const icon = document.getElementById("mobileAudioIcon");
+        const badge = document.getElementById("mobileAudioBadge");
+        const txt = document.getElementById("mobileAudioStatusText");
+        if (!icon || !badge) return;
+        if (isMuted) {
+          icon.setAttribute("data-lucide", "volume-x");
+          badge.innerText = "MUTE";
+          badge.className = "text-[10px] px-2 py-0.5 rounded-full font-mono bg-[#e07a5f]/20 text-[#e07a5f]";
+          if (txt) txt.innerText = "Status: Terbisukan (Mute)";
+        } else {
+          icon.setAttribute("data-lucide", "volume-2");
+          badge.innerText = "ON";
+          badge.className = "text-[10px] px-2 py-0.5 rounded-full font-mono bg-[#81b29a]/20 text-[#81b29a]";
+          if (txt) txt.innerText = "Status: Aktif (SFX On)";
+        }
+        lucide.createIcons();
       }
 
       function updateTab5ImpactUI(a) {
@@ -4105,6 +4382,7 @@
       }
 
       function triggerImpactEffect(posX) {
+        if (audioEngine) audioEngine.playThump();
         if (impactRipple3D) {
           impactRipple3D.position.set(posX, 2.0, 0);
           impactRipple3D.scale.set(1, 1, 1);
@@ -4122,7 +4400,7 @@
           const pts = trajectories.real.data;
           const lastPt = pts[pts.length - 1];
           const vf = lastPt ? lastPt.v : currentParams.v0;
-          const th = lastPt ? (Math.atan2(Math.abs(lastPt.vy), Math.abs(lastPt.vx)) * 180 / Math.PI) : currentParams.angle;
+          const th = lastPt ? (Math.atan2(Math.abs(lastPt.vy), Math.abs(lastPt.vx)) * 180) / Math.PI : currentParams.angle;
           const assessment = computeImpactAssessment(posX, vf, currentParams.m, th);
           displayImpactHUD(assessment);
           updateTab5ImpactUI(assessment);
@@ -4141,7 +4419,7 @@
         }
 
         if (currentCamPreset === "impact") {
-          const posX = lastImpactData ? lastImpactData.posX : (trajectories ? trajectories.real.range : 1200);
+          const posX = lastImpactData ? lastImpactData.posX : trajectories ? trajectories.real.range : 1200;
           camera.position.set(posX - 250, 90, 220);
           camera.lookAt(posX, 10, 0);
           return;
@@ -5532,7 +5810,10 @@
       function toggleMute() {
         isMuted = !isMuted;
         const b = document.getElementById("globalMuteBtn");
-        b.innerHTML = `<i data-lucide="${isMuted ? "volume-x" : "volume-2"}" class="w-4 h-4 ${isMuted ? "text-[#e07a5f]" : "text-[#e2b083]"}"></i>`;
+        if (b) {
+          b.innerHTML = `<i data-lucide="${isMuted ? "volume-x" : "volume-2"}" class="w-4 h-4 ${isMuted ? "text-[#e07a5f]" : "text-[#e2b083]"}"></i>`;
+        }
+        updateMobileAudioBtn();
         lucide.createIcons();
       }
 
@@ -5660,6 +5941,7 @@
           closeGuidedTour();
           closeInteractiveDemo();
           closeImpactHUD();
+          closeMobileToolsModal();
         }
       });
 
