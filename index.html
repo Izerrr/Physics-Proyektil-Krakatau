@@ -221,6 +221,17 @@
       <!-- Action Tools -->
       <div class="flex items-center gap-1.5">
         <button
+          id="btnNavInteractiveDemo"
+          onclick="startInteractiveDemo()"
+          class="px-2.5 py-1 rounded-xl bg-[#e07a5f] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
+          title="Mode Demo Interaktif Langkah-demi-Langkah (Panduan Praktikum)"
+        >
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span class="hidden xl:inline">Demo Interaktif</span>
+        </button>
+
+        <button
+          id="btnNavGuidedTour"
           onclick="startGuidedTour()"
           class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
           title="Tour Presentasi Interaktif 5 Langkah Erupsi Krakatau"
@@ -230,6 +241,7 @@
         </button>
 
         <button
+          id="btnNavErrorAnalysis"
           onclick="openNumericalAnalysisModal()"
           class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#81b29a] hover:text-[#f4ede4] hover:border-[#81b29a] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
           title="Uji Konvergensi Galat Numerik RK4 vs Euler"
@@ -239,6 +251,7 @@
         </button>
 
         <button
+          id="btnNavTheory"
           onclick="openTheoryModal()"
           class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#38bdf8] hover:text-[#f4ede4] hover:border-[#38bdf8] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
           title="Buku Panduan Teori Fisika & Formulasi Matematika"
@@ -248,6 +261,7 @@
         </button>
 
         <button
+          id="btnNavKinematic"
           onclick="openKinematicModal()"
           class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
           title="Buka Grafik Kinematika Fungsi Waktu"
@@ -257,6 +271,7 @@
         </button>
 
         <button
+          id="btnNavPrintLab"
           onclick="printLabReport()"
           class="px-2.5 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#f4ede4] hover:text-[#d4a373] hover:border-[#d4a373] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
           title="Cetak Lembar Kerja Hasil Praktikum (PDF Resmi FATISDA)"
@@ -823,6 +838,60 @@
                     Aktifkan Gelombang
                   </button>
                 </div>
+              </div>
+
+              <!-- Panel Dampak Tumbukan Balistik & Kawasan Rawan Bencana (KRB) -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+                  <span class="text-xs font-bold text-[#e07a5f] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="crosshair" class="w-4 h-4 text-[#e07a5f]"></i>
+                    Dampak Tumbukan Bom Vulkanik
+                  </span>
+                  <span id="tab5ImpactKrbBadge" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40 font-bold">
+                    KRB III
+                  </span>
+                </div>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">
+                  Konsekuensi fisik pelepasan energi kinetik saat proyektil menyentuh permukaan di kaldera Krakatau Selat Sunda.
+                </p>
+
+                <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] space-y-1">
+                  <div class="text-[10px] text-[#8e9bb0]">Sektor Wilayah Terdampak:</div>
+                  <div id="tab5ImpactSector" class="text-xs font-bold text-[#f4ede4]">Perairan Kaldera Selat Sunda</div>
+                  <div id="tab5ImpactDesc" class="text-[10px] text-[#8e9bb0] leading-tight">Perairan terbuka kaldera Krakatau. Memicu gelombang percikan impulsif.</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Jarak Impak (X)</span>
+                    <span id="tab5ImpactDist" class="font-bold text-[#f4ede4] text-sm">--</span>
+                    <div id="tab5ImpactVel" class="text-[9px] text-[#8e9bb0]">v_imp: -- m/s</div>
+                  </div>
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Energi &amp; Setara TNT</span>
+                    <span id="tab5ImpactEnergy" class="font-bold text-[#e07a5f] text-sm">--</span>
+                    <div id="tab5ImpactTnt" class="text-[9px] text-[#dda15e]">Setara: -- kg TNT</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                  <div class="p-2 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Diameter Kawah:</span>
+                    <span id="tab5ImpactCrater" class="font-bold text-[#81b29a]">-- m</span>
+                  </div>
+                  <div class="p-2 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Radius Blast (5 kPa):</span>
+                    <span id="tab5ImpactBlast" class="font-bold text-[#e2b083]">-- m</span>
+                  </div>
+                </div>
+
+                <button
+                  onclick="focusCameraOnImpact()"
+                  class="w-full py-2 px-3 rounded-xl bg-[#e07a5f]/20 hover:bg-[#e07a5f]/30 border border-[#e07a5f]/40 text-[#f4ede4] text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                >
+                  <i data-lucide="crosshair" class="w-3.5 h-3.5 text-[#e07a5f]"></i>
+                  <span>Fokus Kamera 3D ke Ground Zero Impak</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1593,6 +1662,10 @@
           <td>Total Energi Mekanik Terdipasi (W_drag)</td>
           <td id="pr_w_drag" colspan="3" style="text-align: center; font-weight: bold">--</td>
         </tr>
+        <tr>
+          <td>Analisis Dampak Tumbukan &amp; Zona KRB</td>
+          <td id="pr_impact_summary" colspan="3" style="text-align: center; font-weight: bold; color: #b91c1c">--</td>
+        </tr>
       </table>
 
       <!-- Bagian 3: Tabel Sebaran Abu -->
@@ -1630,6 +1703,178 @@
       </table>
     </div>
 
+    <!-- ==================================================================== -->
+    <!-- INTERACTIVE STEP-BY-STEP DEMO OVERLAY (COACHMARKS & SPOTLIGHT)       -->
+    <!-- ==================================================================== -->
+    <div id="interactiveDemoOverlay" class="fixed inset-0 z-[60] pointer-events-none hidden transition-opacity duration-300">
+      <!-- Dark backdrop -->
+      <div id="demoBackdrop" onclick="closeInteractiveDemo()" class="absolute inset-0 bg-black/60 pointer-events-auto backdrop-blur-[1px]"></div>
+      
+      <!-- Spotlight Glowing Box around Target Element -->
+      <div
+        id="demoSpotlightBox"
+        class="absolute border-2 border-[#e2b083] rounded-2xl pointer-events-none transition-all duration-300 shadow-[0_0_0_9999px_rgba(0,0,0,0.65),0_0_24px_rgba(226,176,131,0.6)] animate-pulse"
+        style="top: 0px; left: 0px; width: 0px; height: 0px; display: none;"
+      ></div>
+
+      <!-- Coachmark Popover Card -->
+      <div
+        id="demoCoachmarkCard"
+        class="absolute pointer-events-auto w-[350px] max-w-[92vw] bg-[#1b1e26] border border-[#d4a373] rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col gap-3 transition-all duration-300 z-10"
+        style="top: 100px; left: 100px; display: none;"
+      >
+        <div class="flex items-center justify-between border-b border-[#2e3544] pb-2.5">
+          <div class="flex items-center gap-2">
+            <span id="demoStepBadge" class="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-[#e07a5f]/20 border border-[#e07a5f]/40 text-[#e07a5f]">
+              Langkah 1 dari 8
+            </span>
+            <span class="w-1.5 h-1.5 rounded-full bg-[#81b29a] animate-ping"></span>
+          </div>
+          <button
+            onclick="closeInteractiveDemo()"
+            class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all"
+            title="Keluar dari Demo (Esc)"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div>
+          <h3 id="demoStepTitle" class="text-sm font-bold text-[#f4ede4] flex items-center gap-2">
+            1. Pilih Preset Erupsi Krakatau
+          </h3>
+          <div id="demoActionBox" class="mt-2 p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] text-xs text-[#e2b083] font-medium flex items-start gap-2">
+            <i data-lucide="hand" class="w-4 h-4 text-[#e07a5f] flex-shrink-0 mt-0.5 animate-bounce"></i>
+            <span id="demoStepAction">Klik dropdown ini dan pilih skenario 'Bom Vulkanik Anak Krakatau 2018'.</span>
+          </div>
+          <p id="demoStepDesc" class="text-[11px] text-[#8e9bb0] leading-relaxed mt-2">
+            Preset ini memuat data empiris erupsi sesungguhnya dengan kecepatan awal 180 m/s dan elevasi kawah 157 meter dpl.
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-[#2e3544]">
+          <button
+            id="demoPrevBtn"
+            onclick="prevDemoStep()"
+            class="px-3 py-1.5 rounded-xl bg-[#222733] hover:bg-[#2e3544] text-[#8e9bb0] hover:text-[#f4ede4] text-xs font-bold transition-all flex items-center gap-1"
+          >
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Sebelumnya
+          </button>
+          
+          <div class="flex items-center gap-2">
+            <button
+              onclick="closeInteractiveDemo()"
+              class="px-2.5 py-1.5 text-xs text-[#8e9bb0] hover:text-[#f4ede4] transition-all font-medium"
+            >
+              Lewati
+            </button>
+            <button
+              id="demoNextBtn"
+              onclick="nextDemoStep()"
+              class="px-3.5 py-1.5 rounded-xl bg-[#d4a373] hover:bg-[#e2b083] text-[#16181f] text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+            >
+              Lanjut <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- REALISTIC BALLISTIC IMPACT & HAZARD ASSESSMENT HUD (FLOATING CARD)   -->
+    <!-- ==================================================================== -->
+    <div
+      id="ballisticImpactHUD"
+      class="fixed bottom-4 right-4 z-25 w-[360px] max-w-[94vw] bg-[#16181f]/95 border border-[#e07a5f] rounded-2xl shadow-2xl p-3.5 sm:p-4 backdrop-blur-md hidden transition-all duration-300 flex flex-col gap-2.5"
+    >
+      <!-- Header with Alert Hazard -->
+      <div class="flex items-center justify-between border-b border-[#2e3544] pb-2">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-xl bg-[#e07a5f]/20 border border-[#e07a5f]/40 flex items-center justify-center text-[#e07a5f] flex-shrink-0 animate-pulse">
+            <i data-lucide="flame" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h4 class="text-xs font-bold text-[#f4ede4]">Dampak Tumbukan Balistik</h4>
+              <span id="impactHazardBadge" class="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-[#e07a5f] text-[#16181f]">
+                KRB III
+              </span>
+            </div>
+            <p id="impactLocationSector" class="text-[10px] text-[#e2b083] font-medium truncate max-w-[220px]">
+              Perairan Kaldera Selat Sunda
+            </p>
+          </div>
+        </div>
+        <button
+          onclick="closeImpactHUD()"
+          class="text-[#8e9bb0] hover:text-[#f4ede4] p-1 rounded-lg hover:bg-[#252b37] transition-all"
+          title="Tutup Notifikasi Tumbukan"
+        >
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- Physics Metrics Grid -->
+      <div class="grid grid-cols-3 gap-1.5 text-center">
+        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
+          <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Jarak Impak</span>
+          <span id="impactDistVal" class="text-xs font-bold text-[#f4ede4] font-mono">1.350 m</span>
+        </div>
+        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
+          <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Energi Impak</span>
+          <span id="impactEnergyVal" class="text-xs font-bold text-[#e07a5f] font-mono">4.12 MJ</span>
+        </div>
+        <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-1.5">
+          <span class="text-[9px] text-[#8e9bb0] uppercase tracking-wider block">Setara TNT</span>
+          <span id="impactTntVal" class="text-xs font-bold text-[#dda15e] font-mono">0.98 kg</span>
+        </div>
+      </div>
+
+      <!-- Secondary Metrics & Consequences -->
+      <div class="bg-[#1b1e26] border border-[#2e3544] rounded-xl p-2 space-y-1.5 text-[11px]">
+        <div class="flex items-center justify-between text-[#8e9bb0]">
+          <span>Kecepatan &amp; Sudut Impak:</span>
+          <span id="impactVelAngleVal" class="text-[#f4ede4] font-mono font-medium">108.4 m/s • 41.2°</span>
+        </div>
+        <div class="flex items-center justify-between text-[#8e9bb0]">
+          <span>Estimasi Diameter Kawah:</span>
+          <span id="impactCraterVal" class="text-[#81b29a] font-mono font-medium">5.7 meter</span>
+        </div>
+        <div class="flex items-center justify-between text-[#8e9bb0]">
+          <span>Radius Gelombang Kejut (5 kPa):</span>
+          <span id="impactBlastVal" class="text-[#e2b083] font-mono font-medium">31.8 meter</span>
+        </div>
+        <div class="flex items-center justify-between text-[#8e9bb0]">
+          <span>Tinggi Percikan Air / Lontaran:</span>
+          <span id="impactSplashVal" class="text-[#38bdf8] font-mono font-medium">18.2 meter</span>
+        </div>
+      </div>
+
+      <!-- Recommendation & Action Buttons -->
+      <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] text-[10px] text-[#8e9bb0] leading-snug">
+        <span class="font-bold text-[#e2b083]">Rekomendasi PVMBG:</span>
+        <span id="impactMitigationNote">Radius 5 km harus dikosongkan dari aktivitas nelayan dan wisatawan.</span>
+      </div>
+
+      <div class="flex items-center gap-1.5 pt-1">
+        <button
+          onclick="focusCameraOnImpact()"
+          class="flex-1 py-1.5 px-2 rounded-xl bg-[#e07a5f]/20 hover:bg-[#e07a5f]/30 border border-[#e07a5f]/40 text-[#f4ede4] text-[11px] font-bold transition-all flex items-center justify-center gap-1.5"
+        >
+          <i data-lucide="crosshair" class="w-3.5 h-3.5 text-[#e07a5f]"></i>
+          <span>Fokus Kamera ke Impak</span>
+        </button>
+        <button
+          onclick="switchSimTab(5)"
+          class="py-1.5 px-2.5 rounded-xl bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-[#8e9bb0] hover:text-[#f4ede4] text-[11px] font-medium transition-all flex items-center gap-1"
+          title="Buka Tab Geospasial"
+        >
+          <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+          <span>Geospasial</span>
+        </button>
+      </div>
+    </div>
+
     <script>
       const CONSTANTS = {
         G: 9.80665,
@@ -1661,6 +1906,18 @@
 
       let impactRipple3D = null;
       let impactRipple2D = { active: false, x: 0, y: 0, radius: 0, opacity: 0 };
+      let lastImpactData = null;
+      let impactBeaconGroup = null;
+      let impactCraterRingMesh = null;
+      let impactBlastRingMesh = null;
+      let impactBeaconCylinder = null;
+      let impactMapMarker = null;
+      let impactMapCircle = null;
+
+      let demoCurrentStep = 1;
+      let isDemoActive = false;
+      let activeTargetListener = null;
+      let activeTargetEl = null;
 
       const GHOST_COLORS = ["#38bdf8", "#ec4899", "#a855f7", "#81b29a"];
 
@@ -2530,6 +2787,495 @@
         lucide.createIcons();
       }
 
+      // ======================================================================
+      // 1. ENGINE DEMO INTERAKTIF STEP-BY-STEP (COACHMARKS & SPOTLIGHT)
+      // ======================================================================
+      const DEMO_STEPS = [
+        {
+          step: 1,
+          target: "#presetSelect",
+          title: "1. Pilih Skenario Erupsi Krakatau",
+          action: "Klik dropdown preset ini dan pilih skenario letusan empiris nyata (misal: 'Bom Vulkanik Anak Krakatau 2018').",
+          desc: "Sistem akan langsung mengkalibrasi parameter peluncuran: kecepatan v₀ = 180 m/s, massa batu 250 kg, dan elevasi kawah 157 m dpl.",
+          setup: () => {
+            switchPage("simulator");
+            switchSimTab(1);
+          },
+        },
+        {
+          step: 2,
+          target: "#param_angle",
+          title: "2. Kalibrasi Sudut Elevasi (θ)",
+          action: "Coba geser slider ini ke sudut 45° atau 60° untuk mengamati perubahan kurva peluncuran.",
+          desc: "Amati bagaimana sudut elevasi mengubah geometri parabola dan titik tertinggi (Apex) secara real-time di kanvas dan viewport 3D.",
+          setup: () => {
+            switchSimTab(1);
+          },
+        },
+        {
+          step: 3,
+          target: "#btnCalculateOptAngle",
+          title: "3. Uji Laboratorium Sudut Optimum (R_max)",
+          action: "Pencet tombol 'Uji Sudut Optimum' ini untuk memicu komputasi numerik pencari jangkauan terjauh!",
+          desc: "Komputer melakukan sapuan parameter sudut 15° hingga 75° untuk membuktikan pergeseran sudut optimum riil (36.0°) terhadap sudut hampa (43.7°).",
+          setup: () => {
+            switchSimTab(1);
+          },
+        },
+        {
+          step: 4,
+          target: "#simTabBtn2",
+          title: "4. Buka Tab Dinamika Atmosfer",
+          action: "Pencet tab ke-2 ini untuk meninjau geseran angin bertingkat (Wind Shear) dan daya apung termal.",
+          desc: "Atmosfer Selat Sunda dimodelkan dalam 3 strata: troposfer bawah (w_low), zona transisi 3-5 km, dan stratosfer atas (w_high).",
+          setup: () => {
+            switchSimTab(1);
+          },
+        },
+        {
+          step: 5,
+          target: "#camFollowBtn",
+          title: "5. Aktifkan Kamera Sinematik POV Follow",
+          action: "Pencet tombol preset kamera 'Follow POV' ini!",
+          desc: "Kamera 3D Three.js akan menempel dan terbang bersama proyektil melintasi langit kaldera Selat Sunda.",
+          setup: () => {
+            switchSimTab(1);
+          },
+        },
+        {
+          step: 6,
+          target: "#btnPlayPause",
+          title: "6. Luncurkan Bom Vulkanik!",
+          action: "Pencet tombol Play / Ulangi ini untuk menembakkan bom lava dan amati detik-detik pendaratannya!",
+          desc: "Bom vulkanik akan terbang menembus geseran angin, melepaskan energi mekanik ke atmosfer, dan menghantam sasaran.",
+          setup: () => {
+            restartAnimation();
+          },
+        },
+        {
+          step: 7,
+          target: "#ballisticImpactHUD",
+          title: "7. Tinjau Analisis Dampak Tumbukan Balistik",
+          action: "Perhatikan kartu hazard yang muncul di sudut kanan bawah ini saat bom mendarat!",
+          desc: "Menampilkan kalkulasi energi impak (MJ), ekuivalen TNT, estimasi diameter kawah, radius blast, dan klasifikasi KRB PVMBG.",
+          setup: () => {
+            if (trajectories) triggerImpactEffect(trajectories.real.range);
+          },
+        },
+        {
+          step: 8,
+          target: "#btnNavPrintLab",
+          title: "8. Cetak Laporan Lembar Kerja Resmi",
+          action: "Terakhir, klik tombol 'Laporan PDF' di navbar untuk mencetak lembar kerja praktikum FATISDA UNS!",
+          desc: "Dokumen resmi siap cetak format A4 mencakup tabel telemetri kinematika, komparasi galat RK4, dan sebaran abu stasiun.",
+          setup: () => {},
+        },
+      ];
+
+      function positionSpotlight(targetSelectorOrEl) {
+        const spotlightBox = document.getElementById("demoSpotlightBox");
+        const coachmarkCard = document.getElementById("demoCoachmarkCard");
+        if (!spotlightBox || !coachmarkCard) return;
+
+        const targetEl = typeof targetSelectorOrEl === "string" ? document.querySelector(targetSelectorOrEl) : targetSelectorOrEl;
+
+        if (!targetEl) {
+          spotlightBox.style.display = "none";
+          coachmarkCard.style.top = "50%";
+          coachmarkCard.style.left = "50%";
+          coachmarkCard.style.transform = "translate(-50%, -50%)";
+          coachmarkCard.style.display = "flex";
+          return;
+        }
+
+        try {
+          targetEl.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+        } catch (err) {}
+
+        setTimeout(() => {
+          const rect = targetEl.getBoundingClientRect();
+          const pad = 6;
+          const top = Math.max(0, rect.top - pad);
+          const left = Math.max(0, rect.left - pad);
+          const width = Math.max(24, rect.width + pad * 2);
+          const height = Math.max(24, rect.height + pad * 2);
+
+          spotlightBox.style.display = "block";
+          spotlightBox.style.top = `${top}px`;
+          spotlightBox.style.left = `${left}px`;
+          spotlightBox.style.width = `${width}px`;
+          spotlightBox.style.height = `${height}px`;
+
+          const winW = window.innerWidth;
+          const winH = window.innerHeight;
+          const cardW = Math.min(350, winW * 0.92);
+          const cardH = 260;
+
+          let cardLeft = left;
+          if (cardLeft + cardW > winW - 16) {
+            cardLeft = Math.max(16, winW - cardW - 16);
+          }
+
+          let cardTop = top + height + 12;
+          if (cardTop + cardH > winH - 16) {
+            if (top - cardH - 12 > 55) {
+              cardTop = top - cardH - 12;
+            } else {
+              cardTop = Math.max(60, Math.min(winH - cardH - 16, top));
+              if (left + width + cardW + 16 < winW) {
+                cardLeft = left + width + 12;
+              } else if (left - cardW - 12 > 16) {
+                cardLeft = left - cardW - 12;
+              }
+            }
+          }
+
+          coachmarkCard.style.transform = "none";
+          coachmarkCard.style.top = `${cardTop}px`;
+          coachmarkCard.style.left = `${cardLeft}px`;
+          coachmarkCard.style.display = "flex";
+        }, 120);
+      }
+
+      function startInteractiveDemo() {
+        isDemoActive = true;
+        demoCurrentStep = 1;
+        const overlay = document.getElementById("interactiveDemoOverlay");
+        if (overlay) {
+          overlay.classList.remove("hidden");
+          overlay.style.pointerEvents = "auto";
+        }
+        applyDemoStep(1);
+      }
+
+      function closeInteractiveDemo() {
+        isDemoActive = false;
+        if (activeTargetEl && activeTargetListener) {
+          activeTargetEl.removeEventListener("click", activeTargetListener);
+          activeTargetEl = null;
+          activeTargetListener = null;
+        }
+        const overlay = document.getElementById("interactiveDemoOverlay");
+        if (overlay) {
+          overlay.classList.add("hidden");
+          overlay.style.pointerEvents = "none";
+        }
+      }
+
+      function applyDemoStep(idx) {
+        demoCurrentStep = idx;
+        const item = DEMO_STEPS[idx - 1];
+        if (!item) return;
+
+        if (activeTargetEl && activeTargetListener) {
+          activeTargetEl.removeEventListener("click", activeTargetListener);
+          activeTargetEl = null;
+          activeTargetListener = null;
+        }
+
+        if (item.setup) item.setup();
+
+        document.getElementById("demoStepBadge").innerText = `Langkah ${item.step} dari 8`;
+        document.getElementById("demoStepTitle").innerText = item.title;
+        document.getElementById("demoStepAction").innerText = item.action;
+        document.getElementById("demoStepDesc").innerText = item.desc;
+
+        const btnPrev = document.getElementById("demoPrevBtn");
+        const btnNext = document.getElementById("demoNextBtn");
+        if (btnPrev) btnPrev.disabled = idx === 1;
+        if (btnNext) {
+          btnNext.innerHTML = idx === 8 ? `Selesai <i data-lucide="check" class="w-3.5 h-3.5"></i>` : `Lanjut <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>`;
+        }
+
+        positionSpotlight(item.target);
+
+        // Bind click on the target element itself to auto-advance
+        const targetNode = typeof item.target === "string" ? document.querySelector(item.target) : item.target;
+        if (targetNode) {
+          activeTargetEl = targetNode;
+          activeTargetListener = () => {
+            setTimeout(() => nextDemoStep(), 350);
+          };
+          activeTargetEl.addEventListener("click", activeTargetListener, { once: true });
+        }
+
+        lucide.createIcons();
+      }
+
+      function nextDemoStep() {
+        if (demoCurrentStep < 8) {
+          applyDemoStep(demoCurrentStep + 1);
+        } else {
+          closeInteractiveDemo();
+        }
+      }
+
+      function prevDemoStep() {
+        if (demoCurrentStep > 1) {
+          applyDemoStep(demoCurrentStep - 1);
+        }
+      }
+
+      // ======================================================================
+      // 2. ENGINE ANALISIS DAMPAK TUMBUKAN BALISTIK & WILAYAH TERDAMPAK (KRB)
+      // ======================================================================
+      function computeImpactAssessment(posX, vFinal, mass, thetaFinal) {
+        const m = mass || currentParams.m || 250;
+        const vf = vFinal || 100;
+        const th = thetaFinal !== undefined ? thetaFinal : currentParams.angle || 45;
+
+        // 1. Energi kinetik saat impak (Joules & MJ)
+        const eJoules = 0.5 * m * vf * vf;
+        const eMJ = eJoules / 1e6;
+
+        // 2. Ekuivalen TNT (1 kg TNT = 4.184e6 Joules)
+        const tntKg = eJoules / 4.184e6;
+
+        // 3. Estimasi Diameter Kawah (Melosh & Holsapple volcanic scaling)
+        const craterDiam = Math.max(1.2, 0.08 * Math.pow(eJoules, 0.28));
+
+        // 4. Radius Gelombang Kejut / Lontaran Fragmen (5 kPa overpressure threshold)
+        const blastRad = Math.max(10, 3.2 * Math.pow(Math.max(0.1, tntKg), 0.33) * 10);
+
+        // 5. Tinggi Semburan Percikan Air
+        const splashHeight = Math.max(4, 0.4 * Math.pow(eJoules, 0.25));
+
+        // 6. Penentuan Sektor Geografis Selat Sunda & Tingkat KRB PVMBG
+        let sectorName = "";
+        let krbLevel = "KRB III";
+        let krbBadgeClass = "bg-[#e07a5f] text-[#16181f]";
+        let impactDesc = "";
+        let mitigationNote = "";
+
+        if (posX < 350) {
+          sectorName = "Kubah Lava & Kawah Sentral Anak Krakatau";
+          krbLevel = "KRB III (Sangat Bahaya)";
+          krbBadgeClass = "bg-[#e07a5f] text-[#16181f]";
+          impactDesc = "Pusat erupsi vulkanik. Tumbukan langsung menghancurkan morfologi kawah aktif dan memicu letusan sekunder freatomagmatik.";
+          mitigationNote = "Zona steril mutlak (radius 2 km). Tidak boleh ada aktivitas manusia sama sekali.";
+        } else if (posX < 1800) {
+          sectorName = "Lereng Kaldera Barat Daya / Tenggara Anak Krakatau";
+          krbLevel = "KRB III (Bahaya Tinggi)";
+          krbBadgeClass = "bg-[#e07a5f] text-[#16181f]";
+          impactDesc = "Lereng tubuh gunung berapi yang labil. Tumbukan batuan berpotensi memicu keruntuhan lereng dan longsoran bawah laut (seperti pemicu tsunami 2018).";
+          mitigationNote = "Zona evakuasi penuh. Risiko longsor lereng yang berpotensi memicu gelombang tsunami lokal.";
+        } else if (posX < 4200) {
+          sectorName = "Perairan Kaldera Selat Sunda (Antara Anak Krakatau & P. Sertung)";
+          krbLevel = "KRB II (Bahaya Maritim)";
+          krbBadgeClass = "bg-[#dda15e] text-[#16181f]";
+          impactDesc = "Perairan terbuka kaldera Krakatau. Menimbulkan gelombang kejut air laut impulsif dan semburan percikan tinggi.";
+          mitigationNote = "Radius bahaya navigasi maritim 5 km. Kapal nelayan dan perahu wisata dilarang melintas.";
+        } else if (posX < 6500) {
+          sectorName = "Kepulauan Pembatas (Pulau Sertung / Pulau Panjang)";
+          krbLevel = "KRB II (Lontaran Batu Pijar)";
+          krbBadgeClass = "bg-[#dda15e] text-[#16181f]";
+          impactDesc = "Tebing dan daratan pulau dinding kaldera purba. Menghujani pos pemantau geofisika & stasiun seismograf PVMBG.";
+          mitigationNote = "Personel pos pantau wajib berlindung di bunker beton tahan tumbukan.";
+        } else {
+          sectorName = "Koridor Maritim Selat Sunda & Jalur Penyeberangan";
+          krbLevel = "KRB I (Waspada Jarak Jauh)";
+          krbBadgeClass = "bg-[#e2b083] text-[#16181f]";
+          impactDesc = "Wilayah perairan luar Selat Sunda mendekati koridor ferri Merak-Bakauheni. Terancam hujan abu dan lontaran pasir.";
+          mitigationNote = "Kesiapsiagaan bagi otoritas KSOP Pelabuhan Merak-Bakauheni untuk deviasi rute pelayaran bila erupsi membesar.";
+        }
+
+        return {
+          posX,
+          vFinal: vf,
+          thetaFinal: th,
+          mass: m,
+          eJoules,
+          eMJ,
+          tntKg,
+          craterDiam,
+          blastRad,
+          splashHeight,
+          sectorName,
+          krbLevel,
+          krbBadgeClass,
+          impactDesc,
+          mitigationNote,
+        };
+      }
+
+      function displayImpactHUD(a) {
+        lastImpactData = a;
+        const hud = document.getElementById("ballisticImpactHUD");
+        if (!hud) return;
+
+        const badge = document.getElementById("impactHazardBadge");
+        if (badge) {
+          badge.innerText = a.krbLevel.split(" ")[0];
+          badge.className = `text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${a.krbBadgeClass}`;
+        }
+        document.getElementById("impactLocationSector").innerText = a.sectorName;
+        document.getElementById("impactDistVal").innerText = `${a.posX.toFixed(1)} m`;
+        document.getElementById("impactEnergyVal").innerText = `${a.eMJ.toFixed(2)} MJ`;
+        document.getElementById("impactTntVal").innerText = `${a.tntKg.toFixed(2)} kg`;
+        document.getElementById("impactVelAngleVal").innerText = `${a.vFinal.toFixed(1)} m/s • ${a.thetaFinal.toFixed(1)}°`;
+        document.getElementById("impactCraterVal").innerText = `${a.craterDiam.toFixed(1)} meter`;
+        document.getElementById("impactBlastVal").innerText = `${a.blastRad.toFixed(1)} meter`;
+        document.getElementById("impactSplashVal").innerText = `${a.splashHeight.toFixed(1)} meter`;
+        document.getElementById("impactMitigationNote").innerText = a.mitigationNote;
+
+        hud.classList.remove("hidden");
+        lucide.createIcons();
+      }
+
+      function closeImpactHUD() {
+        const hud = document.getElementById("ballisticImpactHUD");
+        if (hud) hud.classList.add("hidden");
+      }
+
+      function updateTab5ImpactUI(a) {
+        if (!a) return;
+        const b = document.getElementById("tab5ImpactKrbBadge");
+        if (b) {
+          b.innerText = a.krbLevel.split(" ")[0];
+        }
+        const s = document.getElementById("tab5ImpactSector");
+        if (s) s.innerText = a.sectorName;
+        const d = document.getElementById("tab5ImpactDesc");
+        if (d) d.innerText = a.impactDesc;
+        const dist = document.getElementById("tab5ImpactDist");
+        if (dist) dist.innerText = `${a.posX.toFixed(1)} m`;
+        const vel = document.getElementById("tab5ImpactVel");
+        if (vel) vel.innerText = `v_imp: ${a.vFinal.toFixed(1)} m/s • ${a.thetaFinal.toFixed(1)}°`;
+        const eng = document.getElementById("tab5ImpactEnergy");
+        if (eng) eng.innerText = `${a.eMJ.toFixed(2)} MJ`;
+        const tnt = document.getElementById("tab5ImpactTnt");
+        if (tnt) tnt.innerText = `Setara: ${a.tntKg.toFixed(2)} kg TNT`;
+        const crt = document.getElementById("tab5ImpactCrater");
+        if (crt) crt.innerText = `${a.craterDiam.toFixed(1)} m`;
+        const bls = document.getElementById("tab5ImpactBlast");
+        if (bls) bls.innerText = `${a.blastRad.toFixed(1)} m`;
+      }
+
+      function initImpactBeacon3D() {
+        if (impactBeaconGroup) scene.remove(impactBeaconGroup);
+        impactBeaconGroup = new THREE.Group();
+
+        // 1. Crater Ground Ring
+        const crGeo = new THREE.RingGeometry(0.5, 8, 32);
+        const crMat = new THREE.MeshBasicMaterial({ color: 0xff4500, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
+        impactCraterRingMesh = new THREE.Mesh(crGeo, crMat);
+        impactCraterRingMesh.rotation.x = -Math.PI / 2;
+        impactCraterRingMesh.position.y = 2.5;
+        impactBeaconGroup.add(impactCraterRingMesh);
+
+        // 2. Blast Shockwave Radius Outer Ring
+        const blGeo = new THREE.RingGeometry(6, 25, 32);
+        const blMat = new THREE.MeshBasicMaterial({ color: 0xe07a5f, side: THREE.DoubleSide, transparent: true, opacity: 0.45 });
+        impactBlastRingMesh = new THREE.Mesh(blGeo, blMat);
+        impactBlastRingMesh.rotation.x = -Math.PI / 2;
+        impactBlastRingMesh.position.y = 2.2;
+        impactBeaconGroup.add(impactBlastRingMesh);
+
+        // 3. Vertical Light Column / Beacon Cylinder
+        const colGeo = new THREE.CylinderGeometry(4, 18, 360, 16);
+        const colMat = new THREE.MeshBasicMaterial({ color: 0xff3b30, transparent: true, opacity: 0.35, wireframe: false });
+        impactBeaconCylinder = new THREE.Mesh(colGeo, colMat);
+        impactBeaconCylinder.position.y = 180;
+        impactBeaconGroup.add(impactBeaconCylinder);
+
+        // 4. Top glowing light sphere
+        const topGeo = new THREE.SphereGeometry(12, 16, 16);
+        const topMat = new THREE.MeshBasicMaterial({ color: 0xffa07a });
+        const topSphere = new THREE.Mesh(topGeo, topMat);
+        topSphere.position.y = 360;
+        impactBeaconGroup.add(topSphere);
+
+        impactBeaconGroup.visible = false;
+        scene.add(impactBeaconGroup);
+      }
+
+      function updateImpactBeacon3D(posX, craterDiam, blastRad) {
+        if (!impactBeaconGroup) return;
+        impactBeaconGroup.position.set(posX, 0, 0);
+        impactBeaconGroup.visible = true;
+
+        if (impactCraterRingMesh) {
+          const crScale = Math.max(0.5, craterDiam / 8);
+          impactCraterRingMesh.scale.set(crScale, crScale, 1);
+        }
+        if (impactBlastRingMesh) {
+          const blScale = Math.max(0.5, blastRad / 25);
+          impactBlastRingMesh.scale.set(blScale, blScale, 1);
+        }
+      }
+
+      function focusCameraOnImpact() {
+        if (!lastImpactData) {
+          if (trajectories) {
+            triggerImpactEffect(trajectories.real.range);
+          }
+        }
+        if (!lastImpactData) return;
+        const targetX = lastImpactData.posX;
+        setCameraPreset("free");
+        targetCam.theta = -0.3;
+        targetCam.phi = 0.6;
+        targetCam.radius = Math.max(320, lastImpactData.craterDiam * 35);
+        if (window.gsap) {
+          gsap.to(camera.position, {
+            x: targetX - 250,
+            y: 120,
+            z: 220,
+            duration: 1.2,
+            ease: "power2.out",
+            onUpdate: () => camera.lookAt(targetX, 15, 0),
+          });
+        } else {
+          camera.position.set(targetX - 250, 120, 220);
+          camera.lookAt(targetX, 15, 0);
+        }
+      }
+
+      function updateAshMapImpactMarker(a) {
+        if (!ashMap || !window.L) return;
+        const baseLat = -6.102;
+        const baseLng = 105.423;
+        const deltaLng = a.posX / (111320 * Math.cos((baseLat * Math.PI) / 180));
+        const impactLatLng = [baseLat, baseLng + deltaLng];
+
+        if (!impactMapMarker) {
+          const impactIcon = L.divIcon({
+            className: "custom-impact-pin",
+            html: `<div class="relative flex items-center justify-center">
+                     <span class="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-[#e07a5f] opacity-75"></span>
+                     <div class="w-6 h-6 rounded-full bg-[#e07a5f] border-2 border-white flex items-center justify-center text-[10px] shadow-lg">💥</div>
+                   </div>`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+          });
+          impactMapMarker = L.marker(impactLatLng, { icon: impactIcon }).addTo(ashMap);
+          impactMapCircle = L.circle(impactLatLng, {
+            radius: Math.max(150, a.blastRad * 3),
+            color: "#e07a5f",
+            fillColor: "#e07a5f",
+            fillOpacity: 0.25,
+            weight: 2,
+          }).addTo(ashMap);
+        } else {
+          impactMapMarker.setLatLng(impactLatLng);
+          if (impactMapCircle) {
+            impactMapCircle.setLatLng(impactLatLng);
+            impactMapCircle.setRadius(Math.max(150, a.blastRad * 3));
+          }
+        }
+
+        impactMapMarker.bindPopup(`
+          <div style="font-family: sans-serif; font-size: 11px;">
+            <b style="color: #e07a5f;">💥 Titik Tumbukan Balistik</b><br>
+            <b>Lokasi:</b> ${a.sectorName}<br>
+            <b>Jarak:</b> ${a.posX.toFixed(1)} m dari kawah<br>
+            <b>Energi:</b> ${a.eMJ.toFixed(2)} MJ (~${a.tntKg.toFixed(2)} kg TNT)<br>
+            <b>Kawah:</b> ⌀ ${a.craterDiam.toFixed(1)} m | <b>Blast:</b> R ${a.blastRad.toFixed(1)} m<br>
+            <span style="color: #b91c1c; font-weight: bold;">Status: ${a.krbLevel}</span>
+          </div>
+        `);
+      }
+
       // --- FITUR UNGGULAN: CETAK LAPORAN RESMI PRAKTIKUM (PRINT-READY PDF) ---
       function printLabReport() {
         if (!trajectories) return;
@@ -2584,6 +3330,12 @@
         document.getElementById("pr_v_impact_dev").innerText = `-${(((trajectories.vacuum.finalSpeed - trajectories.real.finalSpeed) / (trajectories.vacuum.finalSpeed || 1)) * 100).toFixed(1)}%`;
 
         document.getElementById("pr_w_drag").innerText = `${trajectories.audit.wDrag.toLocaleString("id-ID", { maximumFractionDigits: 0 })} Joule (${trajectories.audit.eLossPercent.toFixed(1)}% energi mekanik terdisipasi)`;
+
+        const prImpEl = document.getElementById("pr_impact_summary");
+        if (prImpEl) {
+          const a = lastImpactData || computeImpactAssessment(rReal, trajectories.real.finalSpeed || 100, currentParams.m, currentParams.angle);
+          prImpEl.innerText = `${a.sectorName} [${a.krbLevel}] • Ek = ${a.eMJ.toFixed(2)} MJ (~${a.tntKg.toFixed(2)} kg TNT) • Kawah: ⌀${a.craterDiam.toFixed(1)} m • Blast: R${a.blastRad.toFixed(1)} m`;
+        }
 
         // Section 3: Ash Fallout Stations
         const Hc = trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
@@ -2969,6 +3721,7 @@
 
         initInstancedParticleSystem();
         initStationBeacons3D();
+        initImpactBeacon3D();
 
         setup3DControls(renderer.domElement);
         setup3DProbe(container);
@@ -3364,6 +4117,18 @@
           radius: 4,
           opacity: 0.9,
         };
+
+        if (trajectories && trajectories.real && trajectories.real.data) {
+          const pts = trajectories.real.data;
+          const lastPt = pts[pts.length - 1];
+          const vf = lastPt ? lastPt.v : currentParams.v0;
+          const th = lastPt ? (Math.atan2(Math.abs(lastPt.vy), Math.abs(lastPt.vx)) * 180 / Math.PI) : currentParams.angle;
+          const assessment = computeImpactAssessment(posX, vf, currentParams.m, th);
+          displayImpactHUD(assessment);
+          updateTab5ImpactUI(assessment);
+          updateImpactBeacon3D(posX, assessment.craterDiam, assessment.blastRad);
+          updateAshMapImpactMarker(assessment);
+        }
       }
 
       function update3DCamera() {
@@ -3372,6 +4137,13 @@
           const py = projectileMesh.position.y;
           camera.position.set(px - 280, Math.max(15, py + 75), 180);
           camera.lookAt(px + 80, py + 10, 0);
+          return;
+        }
+
+        if (currentCamPreset === "impact") {
+          const posX = lastImpactData ? lastImpactData.posX : (trajectories ? trajectories.real.range : 1200);
+          camera.position.set(posX - 250, 90, 220);
+          camera.lookAt(posX, 10, 0);
           return;
         }
 
@@ -3708,6 +4480,20 @@
           impactRipple3D.scale.x += 1.8;
           impactRipple3D.scale.y += 1.8;
           impactRipple3D.material.opacity *= 0.94;
+        }
+
+        if (impactBeaconGroup && impactBeaconGroup.visible) {
+          const bTime = performance.now() * 0.003;
+          if (impactCraterRingMesh) {
+            impactCraterRingMesh.rotation.z = bTime * 0.5;
+          }
+          if (impactBlastRingMesh) {
+            impactBlastRingMesh.rotation.z = -bTime * 0.3;
+            impactBlastRingMesh.material.opacity = 0.35 + Math.sin(bTime * 2.0) * 0.15;
+          }
+          if (impactBeaconCylinder) {
+            impactBeaconCylinder.material.opacity = 0.28 + Math.sin(bTime * 3.0) * 0.12;
+          }
         }
 
         if (isPlaying && trajectories && currentPage === "simulator") {
@@ -4834,6 +5620,13 @@
           csv += `${r.t.toFixed(3)},${r.x.toFixed(2)},${r.y.toFixed(2)},${r.vx.toFixed(2)},${r.vy.toFixed(2)},${r.v.toFixed(2)},${r.fDrag.toFixed(2)},${r.ek.toFixed(1)},${r.ep.toFixed(1)},${r.em.toFixed(1)},${r.wDrag.toFixed(1)}\n`;
         });
 
+        const aImp = lastImpactData || (trajectories ? computeImpactAssessment(trajectories.real.range, trajectories.real.finalSpeed || 100, currentParams.m, currentParams.angle) : null);
+        if (aImp) {
+          csv += "\n# --- BAGIAN 3: ANALISIS DAMPAK TUMBUKAN BALISTIK & KAWASAN RAWAN BENCANA (KRB) ---\n";
+          csv += "Titik_Impak_m,Kecepatan_Impak_ms,Sudut_Impak_deg,Energi_Impak_MJ,Setara_TNT_kg,Diameter_Kawah_m,Radius_Blast_m,Sektor_Wilayah,Status_KRB,Mitigasi\n";
+          csv += `${aImp.posX.toFixed(2)},${aImp.vFinal.toFixed(2)},${aImp.thetaFinal.toFixed(2)},${aImp.eMJ.toFixed(2)},${aImp.tntKg.toFixed(2)},${aImp.craterDiam.toFixed(2)},${aImp.blastRad.toFixed(2)},"${aImp.sectorName}","${aImp.krbLevel}","${aImp.mitigationNote}"\n`;
+        }
+
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -4865,6 +5658,8 @@
           closeKinematicModal();
           closeNumericalAnalysisModal();
           closeGuidedTour();
+          closeInteractiveDemo();
+          closeImpactHUD();
         }
       });
 
