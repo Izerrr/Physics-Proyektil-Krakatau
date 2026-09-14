@@ -278,13 +278,13 @@
               <span class="lg:hidden">Modul</span>
               <i data-lucide="chevron-down" id="navModulChevron" class="w-3 h-3 text-[#8e9bb0] transition-transform duration-200"></i>
             </button>
-            <div
-              id="navModulDropdownMenu"
-              class="hidden absolute right-0 mt-1.5 w-60 bg-[#1b1e26]/98 border border-[#343c4e] rounded-xl shadow-2xl backdrop-blur-xl p-1.5 z-50 space-y-0.5"
-            >
+            <div id="navModulDropdownMenu" class="hidden absolute right-0 mt-1.5 w-60 bg-[#1b1e26]/98 border border-[#343c4e] rounded-xl shadow-2xl backdrop-blur-xl p-1.5 z-50 space-y-0.5">
               <button
                 id="btnNavGuidedTour"
-                onclick="startGuidedTour(); closeNavModulDropdown();"
+                onclick="
+                  startGuidedTour();
+                  closeNavModulDropdown();
+                "
                 class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#d4a373] transition-all flex items-center gap-2"
               >
                 <i data-lucide="play-circle" class="w-4 h-4 text-[#d4a373]"></i>
@@ -295,7 +295,10 @@
               </button>
               <button
                 id="btnNavErrorAnalysis"
-                onclick="openNumericalAnalysisModal(); closeNavModulDropdown();"
+                onclick="
+                  openNumericalAnalysisModal();
+                  closeNavModulDropdown();
+                "
                 class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#81b29a] transition-all flex items-center gap-2"
               >
                 <i data-lucide="cpu" class="w-4 h-4 text-[#81b29a]"></i>
@@ -306,7 +309,10 @@
               </button>
               <button
                 id="btnNavTheory"
-                onclick="openTheoryModal(); closeNavModulDropdown();"
+                onclick="
+                  openTheoryModal();
+                  closeNavModulDropdown();
+                "
                 class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#38bdf8] transition-all flex items-center gap-2"
               >
                 <i data-lucide="book-open" class="w-4 h-4 text-[#38bdf8]"></i>
@@ -317,7 +323,10 @@
               </button>
               <button
                 id="btnNavKinematic"
-                onclick="openKinematicModal(); closeNavModulDropdown();"
+                onclick="
+                  openKinematicModal();
+                  closeNavModulDropdown();
+                "
                 class="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold text-[#f4ede4] hover:bg-[#252b37] hover:text-[#dda15e] transition-all flex items-center gap-2"
               >
                 <i data-lucide="line-chart" class="w-4 h-4 text-[#dda15e]"></i>
@@ -329,7 +338,10 @@
               <div class="border-t border-[#2e3544] my-1"></div>
               <button
                 id="btnNavPrintLab"
-                onclick="printLabReport(); closeNavModulDropdown();"
+                onclick="
+                  printLabReport();
+                  closeNavModulDropdown();
+                "
                 class="w-full text-left px-3 py-2 rounded-lg text-xs font-bold text-[#e2b083] hover:bg-[#252b37] hover:text-white transition-all flex items-center gap-2"
               >
                 <i data-lucide="printer" class="w-4 h-4 text-[#e2b083]"></i>
@@ -1226,10 +1238,7 @@
           </div>
 
           <!-- Floating HUD Telemetri -->
-          <div
-            id="floatingHudCard"
-            class="absolute bottom-2 left-2 right-2 sm:right-auto sm:left-4 sm:bottom-4 bg-[#1b1e26]/90 backdrop-blur-xl border border-[#343c4e]/70 rounded-2xl shadow-2xl z-30 transition-all duration-200"
-          >
+          <div id="floatingHudCard" class="absolute bottom-2 left-2 right-2 sm:right-auto sm:left-4 sm:bottom-4 bg-[#1b1e26]/90 backdrop-blur-xl border border-[#343c4e]/70 rounded-2xl shadow-2xl z-30 transition-all duration-200">
             <div id="hudDragHandle" class="p-2.5 pb-2 flex items-center justify-between border-b border-[#2e3544] cursor-grab active:cursor-grabbing select-none">
               <div class="flex items-center gap-1.5">
                 <i data-lucide="grip-vertical" class="w-3 h-3 text-[#8e9bb0]"></i>
@@ -2442,9 +2451,7 @@
         </div>
 
         <div class="p-3 sm:p-4 bg-[#16181f] border-t border-[#2e3544] flex justify-end">
-          <button onclick="closeKeyboardShortcutsModal()" class="px-4 py-2 rounded-xl bg-[#d4a373] hover:bg-[#e2b083] text-[#16181f] font-bold text-xs transition-all shadow-sm">
-            Mengerti
-          </button>
+          <button onclick="closeKeyboardShortcutsModal()" class="px-4 py-2 rounded-xl bg-[#d4a373] hover:bg-[#e2b083] text-[#16181f] font-bold text-xs transition-all shadow-sm">Mengerti</button>
         </div>
       </div>
     </div>
@@ -5945,8 +5952,7 @@
             const vy = pos.getY(i);
 
             // Gelombang alami permukaan laut (Living ocean swell)
-            const ambient = 1.35 * Math.sin(vx * 0.0016 + oceanClock * 1.15) * Math.cos(vy * 0.0016 + oceanClock * 0.9)
-                          + 0.65 * Math.sin((vx + vy) * 0.0011 + oceanClock * 1.45);
+            const ambient = 1.35 * Math.sin(vx * 0.0016 + oceanClock * 1.15) * Math.cos(vy * 0.0016 + oceanClock * 0.9) + 0.65 * Math.sin((vx + vy) * 0.0011 + oceanClock * 1.45);
 
             let tsunamiWave = 0;
             if (isTsunamiActive) {
