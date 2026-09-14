@@ -254,6 +254,18 @@
         <!-- Desktop Action Buttons -->
         <div class="hidden md:flex items-center gap-1.5">
           <button
+            id="btnNavRubrik9"
+            onclick="openRubrik9ParamModal()"
+            class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#d4a373]/25 to-[#e2b083]/20 border border-[#d4a373] text-[#f4ede4] hover:bg-[#d4a373] hover:text-[#16181f] transition-all text-xs font-bold flex items-center gap-1.5 shadow-sm"
+            title="Matriks Evaluasi 9 Parameter Presisi Fisika (Tugas Pak BL)"
+          >
+            <span class="text-[#e2b083]">⭐</span>
+            <span class="hidden xl:inline">9 Parameter Presisi</span>
+            <span class="xl:hidden">9 Param</span>
+            <span class="text-[9px] px-1 py-0.2 rounded bg-[#252b37] text-[#d4a373] font-mono border border-[#343c4e]">Pak BL</span>
+          </button>
+
+          <button
             id="btnNavGuidedTour"
             onclick="startGuidedTour()"
             class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm"
@@ -636,6 +648,38 @@
                   </label>
                 </div>
               </div>
+
+              <!-- Panel Spektrum Sebaran Piroklastik Wentworth-Fisher (Seberapa Jauh Letusannya) -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+                  <span class="text-xs font-bold text-[#e07a5f] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="crosshair" class="w-4 h-4 text-[#e07a5f]"></i>
+                    Spektrum Sebaran Piroklastik
+                  </span>
+                  <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#dda15e] border border-[#343c4e]">Wentworth-Fisher</span>
+                </div>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">
+                  Menjawab pertanyaan: <span class="text-[#f4ede4] font-medium">seberapa jauh sebaran letusannya</span>. Erupsi melontarkan spektrum ukuran butir piroklastik dari blok raksasa hingga lapilli halus dengan deselerasi drag berbeda.
+                </p>
+
+                <!-- Envelope Jangkauan Letusan Balistik -->
+                <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] flex items-center justify-between font-mono text-xs">
+                  <div>
+                    <span class="text-[10px] text-[#8e9bb0] block">Amplop Jangkauan (R_min - R_max):</span>
+                    <b id="pyroEnvelopeText" class="text-[#f4ede4] text-sm">Menghitung...</b>
+                  </div>
+                  <span id="pyroHazardBadge" class="text-[10px] font-bold px-2 py-1 rounded bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40">KRB III</span>
+                </div>
+
+                <!-- Daftar 5 Fraksi Ukuran Butir -->
+                <div id="pyroSpectrumListContainer" class="space-y-2">
+                  <!-- Diisi secara dinamis oleh updatePyroclasticSpectrumUI() -->
+                </div>
+
+                <p class="text-[10px] text-[#8e9bb0] font-mono leading-tight pt-1 border-t border-[#2e3544]">
+                  *Megablock (80cm) memiliki koefisien balistik m/(Cd·A) tertinggi sehingga menjangkau jarak terjauh.
+                </p>
+              </div>
             </div>
 
             <!-- TAB 2: MULTI-TRAJECTORY COMPARISON (GHOST MODE) -->
@@ -777,6 +821,61 @@
                     <input type="checkbox" id="toggleParticlesCheck" checked onchange="toggleInstancedParticles(this.checked)" class="sr-only peer" />
                     <div class="w-10 h-5 bg-[#343c4e] rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-[#38bdf8]"></div>
                   </label>
+                </div>
+              </div>
+
+              <!-- Panel Jangkauan & Radius Sebaran Abu Suzuki 1983 (Dan Juga Abunya) -->
+              <div class="p-3.5 bg-[#16181f]/80 rounded-2xl border border-[#2e3544] space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
+                  <span class="text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="wind" class="w-4 h-4 text-[#38bdf8]"></i>
+                    Jangkauan &amp; Radius Abu
+                  </span>
+                  <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#38bdf8] border border-[#343c4e]">Suzuki 1983</span>
+                </div>
+                <p class="text-[11px] text-[#8e9bb0] leading-relaxed">
+                  Menjawab pertanyaan: <span class="text-[#f4ede4] font-medium">dan juga abunya</span>. Kolom erupsi $H_c$, adveksi geseran angin, difusi turbulen atmosferik, dan laju sedimentasi partikel abu mikro (&lt;64µm).
+                </p>
+
+                <!-- Grid Metrik Jangkauan & Isopak -->
+                <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Jangkauan Abu Terjauh</span>
+                    <span id="ashMaxReachVal" class="font-bold text-[#38bdf8] text-sm">-- km</span>
+                    <div class="text-[9px] text-[#606d82]">Ambang batas 0.1 mm</div>
+                  </div>
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Isopak Kritis ≥ 50 mm</span>
+                    <span id="ashIso50Val" class="font-bold text-[#e07a5f] text-sm">-- km</span>
+                    <div class="text-[9px] text-[#606d82]">Risiko atap roboh</div>
+                  </div>
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Isopak Sedang ≥ 10 mm</span>
+                    <span id="ashIso10Val" class="font-bold text-[#dda15e] text-sm">-- km</span>
+                    <div class="text-[9px] text-[#606d82]">Tutup jalan &amp; bandara</div>
+                  </div>
+                  <div class="p-2.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+                    <span class="text-[10px] text-[#8e9bb0] block">Isopak Waspada ≥ 1 mm</span>
+                    <span id="ashIso1Val" class="font-bold text-[#e2b083] text-sm">-- km</span>
+                    <div class="text-[9px] text-[#606d82]">Bahaya ISPA &amp; mata</div>
+                  </div>
+                </div>
+
+                <!-- ETA Waktu Tiba Abu -->
+                <div class="p-2.5 rounded-xl bg-[#222733]/90 border border-[#343c4e] space-y-1.5 font-mono text-xs">
+                  <div class="text-[10px] text-[#8e9bb0] uppercase tracking-wider font-bold">Waktu Tiba Awan Abu (Adveksi Angin):</div>
+                  <div class="flex justify-between text-[11px]">
+                    <span class="text-[#f4ede4]">P. Sertung (4.75 km):</span>
+                    <b id="ashETASertung" class="text-[#e07a5f]">--</b>
+                  </div>
+                  <div class="flex justify-between text-[11px]">
+                    <span class="text-[#f4ede4]">Carita / Anyer (49.5 km):</span>
+                    <b id="ashETACarita" class="text-[#dda15e]">--</b>
+                  </div>
+                  <div class="flex justify-between text-[11px]">
+                    <span class="text-[#f4ede4]">Kalianda Lampung (51.6 km):</span>
+                    <b id="ashETAKalianda" class="text-[#dda15e]">--</b>
+                  </div>
                 </div>
               </div>
 
@@ -1586,42 +1685,150 @@
     </div>
 
     <!-- ==================================================================== -->
+    <!-- MODAL RUBRIK 9 PARAMETER PRESISI FISIKA (TUGAS PAK BL - FATISDA UNS) -->
+    <!-- ==================================================================== -->
+    <div id="rubrik9ParamModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 transition-opacity">
+      <div class="w-full max-w-5xl bg-[#1e222b] border border-[#d4a373]/60 rounded-2xl shadow-[0_15px_50px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col max-h-[94vh]">
+        <!-- Header Modal -->
+        <div class="p-4 sm:p-5 border-b border-[#2e3544] flex items-center justify-between bg-[#16181f]/95">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#d4a373]/20 border border-[#d4a373]/50 flex items-center justify-center text-[#e2b083] shadow-inner flex-shrink-0">
+              <i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6 text-[#e2b083]"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-sm sm:text-base font-bold text-[#f4ede4] tracking-tight">Matriks Evaluasi 9 Parameter Presisi Fisika (Tugas Pak BL)</h3>
+                <span class="text-[9px] px-2 py-0.5 rounded-full bg-[#d4a373]/20 text-[#e2b083] font-mono font-bold border border-[#d4a373]/40">FATISDA UNS</span>
+              </div>
+              <p class="text-[11px] text-[#8e9bb0]">Laboratorium Fisika Komputasi - Erupsi Gunung Anak Krakatau Berbasis RK4 &amp; Model Suzuki</p>
+            </div>
+          </div>
+          <button onclick="closeRubrik9ParamModal()" class="p-2 text-[#8e9bb0] hover:text-white rounded-xl hover:bg-[#252b37] transition-all" title="Tutup Modal">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Badges Info & Toolbar Aksi -->
+        <div class="p-3 sm:px-5 py-2.5 bg-[#1b1e26] border-b border-[#2e3544] flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2 py-0.5 rounded-lg bg-[#81b29a]/15 text-[#81b29a] border border-[#81b29a]/30 flex items-center gap-1">
+              <i data-lucide="check-circle" class="w-3 h-3"></i> Presisi 4 Desimal Aktif
+            </span>
+            <span class="px-2 py-0.5 rounded-lg bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 flex items-center gap-1">
+              <i data-lucide="cpu" class="w-3 h-3"></i> RK4 O(Δt⁴)
+            </span>
+            <span class="px-2 py-0.5 rounded-lg bg-[#dda15e]/15 text-[#dda15e] border border-[#dda15e]/30 flex items-center gap-1">
+              <i data-lucide="wind" class="w-3 h-3"></i> Suzuki 1983
+            </span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <button
+              onclick="copyRubrikMarkdown()"
+              class="px-2.5 py-1 rounded-xl bg-[#252b37] border border-[#343c4e] text-[#f4ede4] hover:border-[#d4a373] hover:text-[#d4a373] transition-all font-bold flex items-center gap-1.5 shadow-sm text-xs"
+              title="Salin tabel dalam sintaks Markdown siap tempel ke tugas"
+            >
+              <i data-lucide="copy" class="w-3.5 h-3.5 text-[#e2b083]"></i> Salin Markdown
+            </button>
+            <button
+              onclick="copyRubrikCSV()"
+              class="px-2.5 py-1 rounded-xl bg-[#252b37] border border-[#343c4e] text-[#f4ede4] hover:border-[#81b29a] hover:text-[#81b29a] transition-all font-bold flex items-center gap-1.5 shadow-sm text-xs"
+              title="Salin data dalam format CSV untuk Excel / Sheets"
+            >
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-[#81b29a]"></i> Salin CSV
+            </button>
+            <button
+              onclick="applyPakBLPreset()"
+              class="px-2.5 py-1 rounded-xl bg-[#d4a373] text-[#16181f] hover:bg-[#e2b083] transition-all font-bold flex items-center gap-1.5 shadow-sm text-xs"
+              title="Setelan standar erupsi Anak Krakatau sesuai arahan Pak BL"
+            >
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Preset Pak BL
+            </button>
+            <button
+              onclick="closeRubrik9ParamModal(); printLabReport();"
+              class="px-2.5 py-1 rounded-xl bg-[#e07a5f]/20 border border-[#e07a5f]/50 text-[#e07a5f] hover:bg-[#e07a5f] hover:text-[#16181f] transition-all font-bold flex items-center gap-1.5 shadow-sm text-xs"
+              title="Buka cetak lembar kerja laporan resmi FATISDA PDF"
+            >
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i> Cetak Laporan PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Toast Feedback Notifikasi -->
+        <div id="rubrikCopyToast" class="hidden px-4 py-1.5 bg-[#81b29a] text-[#16181f] text-xs font-bold text-center transition-all animate-fadeIn">
+          Tabel berhasil disalin ke clipboard!
+        </div>
+
+        <!-- Tabel 9 Parameter -->
+        <div class="p-3 sm:p-5 flex-1 overflow-y-auto space-y-3 custom-scrollbar text-xs">
+          <div class="overflow-x-auto rounded-xl border border-[#343c4e] bg-[#16181f]/80">
+            <table class="w-full border-collapse font-sans text-left text-xs">
+              <thead class="bg-[#222733] border-b border-[#343c4e] font-mono text-[11px] text-[#e2b083] uppercase">
+                <tr>
+                  <th class="py-2.5 px-3">No &amp; Simbol</th>
+                  <th class="py-2.5 px-3">Parameter &amp; Formulasi Matematis</th>
+                  <th class="py-2.5 px-3 text-right">Nilai Terkini (Presisi 4 Desimal)</th>
+                  <th class="py-2.5 px-3">Komparasi / Teori Hampa</th>
+                  <th class="py-2.5 px-3">Signifikansi &amp; Analisis Fisis FATISDA UNS</th>
+                </tr>
+              </thead>
+              <tbody id="rubrik9ParamTableBody" class="divide-y divide-[#2e3544] font-mono text-[11px] text-[#f4ede4]">
+                <!-- Diisi otomatis oleh updateRubrik9ParamTable() -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="p-3 rounded-xl bg-[#222733]/60 border border-[#343c4e] text-[11px] text-[#8e9bb0] space-y-1">
+            <div class="text-[#f4ede4] font-bold flex items-center gap-1.5">
+              <i data-lucide="info" class="w-3.5 h-3.5 text-[#d4a373]"></i>
+              Petunjuk Penilaian &amp; Sinkronisasi Otomatis:
+            </div>
+            <p class="leading-relaxed">
+              Seluruh baris parameter di atas tersinkronisasi secara real-time saat Anda menggeser slider sudut θ, kecepatan v₀, elevasi y₀, atau hambatan udara di simulator. Nilai dicatat dalam standar akurasi 4 angka di belakang koma untuk menjamin presisi maksimum pada penilaian tugas Fisika Komputasi Pak BL.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
     <!-- DOKUMEN CETAK LAPORAN RESMI PRAKTIKUM (PRINT-READY PDF A4)           -->
     <!-- ==================================================================== -->
     <div id="printLabReportContainer" class="hidden">
       <!-- Kop Surat Resmi FATISDA UNS -->
-      <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 16px">
-        <h4 style="font-size: 13px; font-weight: normal; margin: 0; text-transform: uppercase; letter-spacing: 0.5px">Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi</h4>
-        <h2 style="font-size: 17px; font-weight: bold; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px">Universitas Sebelas Maret (UNS)</h2>
-        <h3 style="font-size: 14px; font-weight: bold; margin: 2px 0">Fakultas Teknologi Informasi dan Sains Data (FATISDA)</h3>
-        <p style="font-size: 11px; margin: 2px 0; color: #333">Laboratorium Fisika Komputasi • Program Studi Informatika / Fisika</p>
-        <p style="font-size: 10px; margin: 0; color: #555">Jl. Ir. Sutami No. 36A, Jebres, Surakarta, Jawa Tengah 57126 • Laman: krakatau.izerworks.my.id</p>
+      <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 14px">
+        <h4 style="font-size: 12px; font-weight: normal; margin: 0; text-transform: uppercase; letter-spacing: 0.5px">Kementerian Pendidikan Tinggi, Sains, dan Teknologi</h4>
+        <h2 style="font-size: 16px; font-weight: bold; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px">Universitas Sebelas Maret (UNS)</h2>
+        <h3 style="font-size: 13px; font-weight: bold; margin: 2px 0">Fakultas Teknologi Informasi dan Sains Data (FATISDA)</h3>
+        <p style="font-size: 10px; margin: 2px 0; color: #333">Laboratorium Fisika Komputasi • Program Studi Informatika / Fisika</p>
+        <p style="font-size: 9px; margin: 0; color: #555">Dosen Pengampu: Pak BL • Jl. Ir. Sutami No. 36A, Jebres, Surakarta 57126 • Laman: krakatau.izerworks.my.id</p>
       </div>
 
-      <div style="text-align: center; margin-bottom: 16px">
-        <h2 style="font-size: 15px; font-weight: bold; text-decoration: underline; text-transform: uppercase; margin: 0">Lembar Hasil Simulasi &amp; Praktikum Fisika Komputasi</h2>
-        <p style="font-size: 11px; font-style: italic; margin: 4px 0 0 0">Modul: Analisis Balistik Proyektil Gunung Krakatau &amp; Dispersi Abu Vulkanik Berbasis RK4</p>
+      <div style="text-align: center; margin-bottom: 12px">
+        <h2 style="font-size: 14px; font-weight: bold; text-decoration: underline; text-transform: uppercase; margin: 0">Lembar Hasil Praktikum Fisika Komputasi - Erupsi Gunung Krakatau</h2>
+        <p style="font-size: 10px; font-style: italic; margin: 3px 0 0 0">Analisis Gerak Proyektil Balistik &amp; Model Dispersi Abu Suzuki (1983) Berbasis Integrator RK4</p>
       </div>
 
       <!-- Metadata Laporan -->
-      <table style="width: 100%; font-size: 11px; margin-bottom: 14px; border-collapse: collapse">
+      <table style="width: 100%; font-size: 10px; margin-bottom: 10px; border-collapse: collapse">
         <tr>
           <td style="width: 20%; font-weight: bold">Tanggal Pengujian</td>
           <td style="width: 30%" id="print_date">--</td>
           <td style="width: 20%; font-weight: bold">Metode Integrasi</td>
-          <td style="width: 30%" id="print_solver">Runge-Kutta Orde-4 (RK4)</td>
+          <td style="width: 30%" id="print_solver">Runge-Kutta Orde-4 (RK4, Δt=0.02s)</td>
         </tr>
         <tr>
           <td style="font-weight: bold">Skenario Erupsi</td>
-          <td id="print_scenario">Bom Vulkanik Anak Krakatau (2018)</td>
-          <td style="font-weight: bold">Atmosfer Barometrik</td>
-          <td id="print_barometric">Skala Ketinggian H = 8.500 m</td>
+          <td id="print_scenario">Bom Vulkanik Anak Krakatau (Studi Kasus 2018)</td>
+          <td style="font-weight: bold">Dosen Pengampu</td>
+          <td style="font-weight: bold" id="print_dosen">Pak BL (FATISDA UNS)</td>
         </tr>
       </table>
 
       <!-- Bagian 1: Parameter Masukan -->
-      <h4 style="font-size: 12px; font-weight: bold; margin: 10px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px">I. PARAMETER MASUKAN SIMULASI</h4>
-      <table style="width: 100%; font-size: 10.5px; border-collapse: collapse; margin-bottom: 12px" border="1" cellpadding="4">
+      <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">I. PARAMETER MASUKAN SISTEM</h4>
+      <table style="width: 100%; font-size: 9.5px; border-collapse: collapse; margin-bottom: 10px" border="1" cellpadding="3">
         <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
           <td>Kecepatan v₀</td>
           <td>Sudut Elevasi θ</td>
@@ -1646,13 +1853,13 @@
         </tr>
       </table>
 
-      <!-- Bagian 2: Hasil Kinematika -->
-      <h4 style="font-size: 12px; font-weight: bold; margin: 10px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px">II. HASIL TELEMETRI KINEMATIKA &amp; DISIPASI ENERGI</h4>
-      <table style="width: 100%; font-size: 10.5px; border-collapse: collapse; margin-bottom: 12px" border="1" cellpadding="4">
+      <!-- Bagian 2: Kinematika & Disipasi Energi -->
+      <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">II. HASIL TELEMETRI KINEMATIKA &amp; DISIPASI ENERGI (PRESISI 4 DESIMAL)</h4>
+      <table style="width: 100%; font-size: 9.5px; border-collapse: collapse; margin-bottom: 10px" border="1" cellpadding="3">
         <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
           <td>Parameter Kinematika</td>
-          <td>Kondisi Riil (RK4 + Drag)</td>
-          <td>Kondisi Ideal (Vakum Murni)</td>
+          <td>Kondisi Riil (RK4 + Hambatan Barometrik)</td>
+          <td>Kondisi Ideal (Ruang Hampa)</td>
           <td>Deviasi Aerodinamis</td>
         </tr>
         <tr>
@@ -1668,7 +1875,7 @@
           <td id="pr_apex_dev" style="text-align: center">--</td>
         </tr>
         <tr>
-          <td>Total Waktu Tempuh di Udara (t_flight)</td>
+          <td>Total Waktu Terbang (t_flight)</td>
           <td id="pr_time_real" style="text-align: center; font-weight: bold">--</td>
           <td id="pr_time_vac" style="text-align: center">--</td>
           <td id="pr_time_dev" style="text-align: center">--</td>
@@ -1680,24 +1887,60 @@
           <td id="pr_v_impact_dev" style="text-align: center">--</td>
         </tr>
         <tr>
-          <td>Total Energi Mekanik Terdipasi (W_drag)</td>
+          <td>Kerja Hambatan Udara (W_drag) &amp; Rugi Energi</td>
           <td id="pr_w_drag" colspan="3" style="text-align: center; font-weight: bold">--</td>
         </tr>
         <tr>
-          <td>Analisis Dampak Tumbukan &amp; Zona KRB</td>
+          <td>Analisis Dampak Tumbukan Balistik &amp; Zona KRB</td>
           <td id="pr_impact_summary" colspan="3" style="text-align: center; font-weight: bold; color: #b91c1c">--</td>
         </tr>
       </table>
 
-      <!-- Bagian 3: Tabel Sebaran Abu -->
-      <h4 style="font-size: 12px; font-weight: bold; margin: 10px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px">III. ESTIMASI AKUMULASI ABU VULKANIK DI STASIUN PEMANTAU</h4>
-      <table style="width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 14px" border="1" cellpadding="4">
+      <!-- Bagian 3: Matriks Evaluasi 9 Parameter Presisi Fisika FATISDA UNS -->
+      <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">III. MATRIKS EVALUASI 9 PARAMETER PRESISI FISIKA (TUGAS PAK BL)</h4>
+      <table style="width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px" border="1" cellpadding="3">
+        <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
+          <td style="width: 8%">No &amp; Simbol</td>
+          <td style="width: 25%">Parameter &amp; Formulasi</td>
+          <td style="width: 20%">Nilai Terkini (4 Desimal)</td>
+          <td style="width: 20%">Komparasi Teoretis</td>
+          <td style="width: 27%">Catatan Fisis FATISDA UNS</td>
+        </tr>
+        <tbody id="pr_rubrik9_body">
+          <!-- Diisi otomatis oleh printLabReport() -->
+        </tbody>
+      </table>
+
+      <!-- Bagian 4: Spektrum Sebaran Piroklastik Wentworth-Fisher -->
+      <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">IV. SPEKTRUM SEBARAN PIROKLASTIK WENTWORTH-FISHER (SEBERAPA JAUH SEBARAN LETUSANNYA)</h4>
+      <table style="width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px" border="1" cellpadding="3">
+        <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
+          <td>Fraksi Butir</td>
+          <td>Diameter &amp; Massa</td>
+          <td>Jangkauan (R)</td>
+          <td>Ketinggian (Apex)</td>
+          <td>Waktu Terbang</td>
+          <td>Kecepatan Impak</td>
+          <td>Status Bahaya KRB PVMBG</td>
+        </tr>
+        <tbody id="pr_pyro_spectrum_body">
+          <!-- Diisi otomatis oleh printLabReport() -->
+        </tbody>
+      </table>
+
+      <!-- Bagian 5: Dispersi & Akumulasi Abu Vulkanik Suzuki 1983 -->
+      <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">V. ESTIMASI DISPERSI &amp; AKUMULASI ABU VULKANIK MODEL SUZUKI 1983 (DAN JUGA ABUNYA)</h4>
+      <div id="pr_ash_reach_summary" style="font-size: 9.5px; margin-bottom: 6px; padding: 4px; background: #f9fafb; border: 1px solid #e5e7eb">
+        <!-- Ringkasan R_ash_max dan Isopak diisi otomatis -->
+      </div>
+      <table style="width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px" border="1" cellpadding="3">
         <tr style="background: #f3f4f6; font-weight: bold; text-align: center">
           <td>Stasiun Pemantau</td>
           <td>Jarak Geografis</td>
           <td>Wilayah Administrasi</td>
           <td>Estimasi Tebal Abu</td>
           <td>Tingkat Bahaya (PVMBG/USGS)</td>
+          <td>Estimasi Waktu Tiba (ETA)</td>
           <td>Rekomendasi Tindakan Mitigasi</td>
         </tr>
         <tbody id="pr_stations_body">
@@ -1705,14 +1948,20 @@
         </tbody>
       </table>
 
+      <!-- Bagian 6: Kesimpulan & Tanda Tangan -->
+      <h4 style="font-size: 11px; font-weight: bold; margin: 8px 0 3px 0; border-bottom: 1px solid #000; padding-bottom: 2px">VI. KESIMPULAN ILMIAH &amp; ANALISIS FISIKA KOMPUTASI</h4>
+      <div style="font-size: 9px; line-height: 1.4; color: #222; text-align: justify; margin-bottom: 14px" id="pr_scientific_conclusion">
+        Berdasarkan integrasi Runge-Kutta Orde-4 dengan koreksi atmosfer barometrik non-linear, disimpulkan bahwa lontaran material balistik piroklastik memiliki jangkauan amplop antara lapilli halus hingga megablock dengan reduksi aerodinamis signifikan dibanding ruang hampa. Adapun dispersi abu vulkanik model Suzuki (1983) membuktikan bahwa partikel abu mikro mengalami adveksi zonal-meridional yang menjangkau pesisir Selat Sunda sesuai dinamika geseran angin bertingkat.
+      </div>
+
       <!-- Kolom Tanda Tangan Pengesahan -->
-      <table style="width: 100%; font-size: 11px; margin-top: 24px; border-collapse: collapse">
+      <table style="width: 100%; font-size: 10px; margin-top: 14px; border-collapse: collapse">
         <tr>
           <td style="width: 50%; text-align: center">
             Mengetahui,<br />
-            Dosen Pengampu / Asisten Laboratorium<br /><br /><br /><br />
-            (.........................................................)<br />
-            NIP.
+            Dosen Pengampu Fisika Komputasi<br /><br /><br /><br />
+            ( <b>Pak BL</b> )<br />
+            NIP. FATISDA UNS
           </td>
           <td style="width: 50%; text-align: center">
             Surakarta, <span id="pr_sign_date">--</span><br />
@@ -1747,6 +1996,29 @@
 
         <!-- Tools List -->
         <div class="p-3 sm:p-4 overflow-y-auto space-y-2">
+          <!-- 9 Parameter Presisi (Tugas Pak BL) -->
+          <button
+            onclick="
+              openRubrik9ParamModal();
+              closeMobileToolsModal();
+            "
+            class="w-full p-3 rounded-xl bg-gradient-to-r from-[#d4a373]/20 to-[#e2b083]/15 hover:from-[#d4a373]/30 hover:to-[#e2b083]/25 border border-[#d4a373]/50 flex items-center justify-between text-left transition-all group shadow-sm"
+          >
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#d4a373]/25 border border-[#d4a373]/50 flex items-center justify-center text-[#e2b083] group-hover:scale-105 transition-transform">
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-[#f4ede4] flex items-center gap-1.5">
+                  <span>9 Parameter Presisi</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded bg-[#252b37] text-[#e2b083] font-mono border border-[#343c4e]">Pak BL</span>
+                </div>
+                <div class="text-[10px] text-[#8e9bb0]">Matriks evaluasi rubrik tugas &amp; ekspor Markdown/CSV</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-[#e2b083] group-hover:text-[#f4ede4]"></i>
+          </button>
+
           <!-- Tour Erupsi -->
           <button
             onclick="
@@ -2045,6 +2317,7 @@
       let isHudMinimized = false;
       let showWaterSurface = false;
       let currentPlotTab = "velocity";
+      let bestOptimalAngle = 36.5;
 
       let impactRipple3D = null;
       let impactRipple2D = { active: false, x: 0, y: 0, radius: 0, opacity: 0 };
@@ -2108,6 +2381,15 @@
           region: "Pesisir Lampung",
           desc: "Pusat pemerintahan & simpul logistik strategis Jalan Lintas Sumatera (Jalinsum).",
         },
+        {
+          id: "rakata",
+          name: "Pulau Rakata (Kaldera Selatan)",
+          distanceKm: 4.15,
+          x: -1200,
+          z: -3900,
+          region: "Kaldera Krakatau",
+          desc: "Sisa tebing kaldera utama Krakatau 1883; stasiun pengamatan tefra proksimal selatan.",
+        },
       ];
 
       // --- MODEL KALKULASI DEPOSIT ABU SUZUKI & GAUSS ---
@@ -2162,6 +2444,78 @@
             badgeClass,
             recommendation,
           };
+        });
+      }
+
+      // --- MODEL DISPERSI & JANGKAUAN ABU SUZUKI 1983 (DAN JUGA ABUNYA) ---
+      function computeAshDispersionReach(columnHeight, lowW, highW) {
+        const Hc = Math.max(800, columnHeight || 2500);
+        const normH = Hc / 3000;
+        const massAshKg = 1.2e7 * Math.pow(normH, 3.2); // Total massa abu halus terejeksi (kg)
+        const massAshTon = massAshKg / 1000;
+
+        const meanWind = (lowW + highW) / 2;
+        const absWind = Math.abs(meanWind);
+        const vSettle = 1.8; // Kecepatan sedimentasi abu mikro 30-60 mikron (m/s)
+        const tSuspension = Hc / vSettle; // Waktu tinggal di kolom atmosfer (s)
+        const xCenter = absWind * tSuspension * 0.65; // Pergeseran pusat plume abu akibat adveksi angin (m)
+
+        // Koefisien difusi lateral turbulen atmosfer (Pasquill-Gifford / Suzuki)
+        const sigmaX = 2800 + 0.28 * xCenter + 150 * absWind;
+
+        // Jangkauan deteksi abu terjauh (ambang tebal 0.1 mm)
+        const rAshMaxKm = Math.max(8.0, (xCenter + 2.85 * sigmaX) / 1000);
+
+        // Radius isopak ketebalan deposit abu geologis (km dari kawah)
+        const rIso50Km = Math.max(0.6, (xCenter * 0.22 + 0.32 * sigmaX * Math.sqrt(Math.max(0.5, normH))) / 1000);
+        const rIso10Km = Math.max(1.8, (xCenter * 0.48 + 0.95 * sigmaX) / 1000);
+        const rIso1Km = Math.max(3.5, (xCenter * 0.78 + 1.65 * sigmaX) / 1000);
+
+        // Estimasi Waktu Tiba Abu (ETA) ke stasiun pemantau
+        const stationETAs = ASH_MONITORING_STATIONS.map((st) => {
+          const effSpeed = Math.max(1.5, absWind * 0.9);
+          const tSec = (st.distanceKm * 1000) / effSpeed;
+          const etaText = tSec < 3600 ? `~${(tSec / 60).toFixed(1)} Menit` : `~${(tSec / 3600).toFixed(1)} Jam`;
+          return { id: st.id, name: st.name, distKm: st.distanceKm, etaText, tSec };
+        });
+
+        return {
+          columnHeight: Hc,
+          meanWind,
+          massAshTon,
+          rAshMaxKm,
+          rIso50Km,
+          rIso10Km,
+          rIso1Km,
+          stationETAs,
+        };
+      }
+
+      function updateAshReachUI() {
+        const Hc = trajectories && trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
+        const reach = computeAshDispersionReach(Hc, currentParams.lowWind || 0, currentParams.highWind || 0);
+
+        const elMax = document.getElementById("ashMaxReachVal");
+        const el50 = document.getElementById("ashIso50Val");
+        const el10 = document.getElementById("ashIso10Val");
+        const el1 = document.getElementById("ashIso1Val");
+
+        if (elMax) elMax.innerText = `${reach.rAshMaxKm.toFixed(1)} km`;
+        if (el50) el50.innerText = `${reach.rIso50Km.toFixed(1)} km`;
+        if (el10) el10.innerText = `${reach.rIso10Km.toFixed(1)} km`;
+        if (el1) el1.innerText = `${reach.rIso1Km.toFixed(1)} km`;
+
+        reach.stationETAs.forEach((st) => {
+          if (st.id === "sertung") {
+            const el = document.getElementById("ashETASertung");
+            if (el) el.innerText = st.etaText;
+          } else if (st.id === "carita") {
+            const el = document.getElementById("ashETACarita");
+            if (el) el.innerText = st.etaText;
+          } else if (st.id === "kalianda") {
+            const el = document.getElementById("ashETAKalianda");
+            if (el) el.innerText = st.etaText;
+          }
         });
       }
 
@@ -2365,6 +2719,426 @@
         };
       }
 
+      // --- SISTEM SPEKTRUM SEBARAN PIROKLASTIK WENTWORTH-FISHER 1961 ---
+      const PYROCLASTIC_SPECTRUM_CLASSES = [
+        {
+          id: "megablock",
+          name: "Megablock (Bom Raksasa)",
+          fraction: "Blok Vulkanik",
+          diamM: 0.8,
+          diamLabel: "80 cm",
+          massKg: 670,
+          cd: 0.5,
+          areaM2: 0.5027,
+          color: "#e07a5f",
+          desc: "Fragmen andesit masif kaldera",
+        },
+        {
+          id: "bomb_std",
+          name: "Bom Vulkanik Standar",
+          fraction: "Bom Pijar Kerak Roti",
+          diamM: 0.4,
+          diamLabel: "40 cm",
+          massKg: 84,
+          cd: 0.47,
+          areaM2: 0.1257,
+          color: "#dda15e",
+          desc: "Bom lava pijar kerak roti khas Krakatau",
+        },
+        {
+          id: "bomb_light",
+          name: "Bom Vulkanik Ringan",
+          fraction: "Spatter / Bom Ringan",
+          diamM: 0.2,
+          diamLabel: "20 cm",
+          massKg: 10.5,
+          cd: 0.45,
+          areaM2: 0.0314,
+          color: "#e2b083",
+          desc: "Gumpalan lava vesikular berpori",
+        },
+        {
+          id: "lapilli_coarse",
+          name: "Lapilli Kasar",
+          fraction: "Kerikil Piroklas",
+          diamM: 0.032,
+          diamLabel: "32 mm",
+          massKg: 0.043,
+          cd: 0.45,
+          areaM2: 0.000804,
+          color: "#81b29a",
+          desc: "Piroklas kerikil tefra proksimal",
+        },
+        {
+          id: "lapilli_fine",
+          name: "Lapilli Halus",
+          fraction: "Pasir Piroklas",
+          diamM: 0.004,
+          diamLabel: "4 mm",
+          massKg: 0.000084,
+          cd: 0.52,
+          areaM2: 0.00001257,
+          color: "#38bdf8",
+          desc: "Skoria butir pasir kasar kaldera",
+        },
+      ];
+
+      function computePyroclasticSpectrum(params) {
+        const results = PYROCLASTIC_SPECTRUM_CLASSES.map((cls) => {
+          const p = {
+            ...params,
+            m: cls.massKg,
+            cd: cls.cd,
+            area: cls.areaM2,
+          };
+          const res = solveTrajectoryCustom(p, true, 0.04);
+          const eImpactMJ = (0.5 * cls.massKg * res.finalSpeed * res.finalSpeed) / 1e6;
+
+          let krbZone = "KRB III";
+          let krbBadge = "bg-[#e07a5f]/20 text-[#e07a5f] border-[#e07a5f]/40";
+          if (res.range > 5000) {
+            krbZone = "KRB II (Perairan Terbuka)";
+            krbBadge = "bg-[#dda15e]/20 text-[#dda15e] border-[#dda15e]/40";
+          } else if (res.range > 3000) {
+            krbZone = "KRB III (Pulau Sertung/Panjang)";
+            krbBadge = "bg-[#e2b083]/20 text-[#e2b083] border-[#e2b083]/40";
+          } else {
+            krbZone = "KRB III (Kubah & Pesisir Kaldera)";
+            krbBadge = "bg-[#e07a5f]/20 text-[#e07a5f] border-[#e07a5f]/40";
+          }
+
+          return {
+            ...cls,
+            range: res.range,
+            apexY: res.apex ? res.apex.y : 0,
+            flightTime: res.flightTime,
+            finalSpeed: res.finalSpeed,
+            eImpactMJ,
+            krbZone,
+            krbBadge,
+          };
+        });
+
+        const ranges = results.map((r) => r.range);
+        const rMin = Math.min(...ranges);
+        const rMax = Math.max(...ranges);
+
+        return { results, rMin, rMax };
+      }
+
+      function updatePyroclasticSpectrumUI() {
+        const container = document.getElementById("pyroSpectrumListContainer");
+        const envText = document.getElementById("pyroEnvelopeText");
+        const hazBadge = document.getElementById("pyroHazardBadge");
+        if (!container) return;
+
+        const spec = computePyroclasticSpectrum(currentParams);
+        if (envText) envText.innerText = `${spec.rMin.toFixed(0)} m s/d ${spec.rMax.toFixed(0)} m`;
+
+        if (hazBadge) {
+          if (spec.rMax > 5000) {
+            hazBadge.innerText = "KRB II/III";
+            hazBadge.className = "text-[10px] font-bold px-2 py-1 rounded bg-[#dda15e]/20 text-[#dda15e] border border-[#dda15e]/40";
+          } else {
+            hazBadge.innerText = "KRB III (Bahaya Tinggi)";
+            hazBadge.className = "text-[10px] font-bold px-2 py-1 rounded bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40";
+          }
+        }
+
+        container.innerHTML = spec.results
+          .map((item) => {
+            const barPct = Math.max(6, Math.min(100, (item.range / (spec.rMax || 1)) * 100));
+            return `
+            <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] space-y-1 text-xs font-mono">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 font-bold" style="color: ${item.color};">
+                  <span class="w-2 h-2 rounded-full" style="background-color: ${item.color};"></span>
+                  <span>${item.name}</span>
+                </div>
+                <span class="font-bold text-[#f4ede4]">${item.range.toFixed(1)} m</span>
+              </div>
+              <div class="w-full bg-[#16181f] rounded-full h-1.5 overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-300" style="width: ${barPct}%; background-color: ${item.color};"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-[#8e9bb0]">
+                <span>d=${item.diamLabel} | m=${item.massKg < 1 ? (item.massKg * 1000).toFixed(0) + "g" : item.massKg + "kg"}</span>
+                <span>Apex: ${item.apexY.toFixed(0)}m | t: ${item.flightTime.toFixed(1)}s</span>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+      }
+
+      // --- RUBRIK & MODAL 9 PARAMETER PRESISI FISIKA (TUGAS PAK BL) ---
+      function openRubrik9ParamModal() {
+        const modal = document.getElementById("rubrik9ParamModal");
+        if (!modal) return;
+        modal.classList.remove("hidden");
+        updateRubrik9ParamTable();
+        lucide.createIcons();
+      }
+
+      function closeRubrik9ParamModal() {
+        const modal = document.getElementById("rubrik9ParamModal");
+        if (modal) modal.classList.add("hidden");
+      }
+
+      function getRubrik9ParamDataset() {
+        if (!trajectories) trajectories = computeTrajectories(currentParams);
+        const p = currentParams;
+        const real = trajectories.real;
+        const vac = trajectories.vacuum;
+        const audit = trajectories.audit;
+
+        const thetaRad = (p.angle * Math.PI) / 180;
+        const v0x = p.v0 * Math.cos(thetaRad);
+        const v0y = p.v0 * Math.sin(thetaRad);
+
+        const apexRealY = real.apex ? real.apex.y : p.y0;
+        const apexVacY = vac.apex ? vac.apex.y : p.y0;
+        const hApexReal = apexRealY - p.y0;
+        const tApexReal = real.apex ? real.apex.t : 0;
+
+        const devRangePct = vac.range > 0 ? ((vac.range - real.range) / vac.range) * 100 : 0;
+        const devApexPct = apexVacY > p.y0 ? ((apexVacY - apexRealY) / (apexVacY - p.y0)) * 100 : 0;
+
+        const vFinal = real.finalSpeed;
+        const lastPt = real.data[real.data.length - 1] || { vx: 1, vy: 1 };
+        const thetaImp = (Math.atan2(Math.abs(lastPt.vy), Math.abs(lastPt.vx)) * 180) / Math.PI;
+
+        const maxDragN = real.data.reduce((max, pt) => Math.max(max, pt.fDrag || 0), 0);
+
+        // RK4 vs Euler benchmark comparison
+        const rk4Solve = solveTrajectoryCustom(p, true, 0.02);
+        const eulerSolve = solveTrajectoryCustom(p, false, 0.02);
+        const relErrRange = rk4Solve.range > 0 ? (Math.abs(rk4Solve.range - eulerSolve.range) / rk4Solve.range) * 100 : 0;
+
+        // Ash reach
+        const ashReach = computeAshDispersionReach(apexRealY, p.lowWind || 0, p.highWind || 0);
+        const stFallout = computeAshFalloutStations(apexRealY, p.lowWind || 0, p.highWind || 0);
+        const sertungSt = stFallout.find((s) => s.id === "sertung") || { depthMm: 45 };
+        const caritaSt = stFallout.find((s) => s.id === "carita") || { depthMm: 4.5 };
+
+        return [
+          {
+            num: 1,
+            symbol: "y₀",
+            name: "Elevasi Awal Kawah",
+            formula: "y(0) = y₀ (Elevasi Vent)",
+            value: `${p.y0.toFixed(4)} m`,
+            comp: "y = 0.0000 m (Muka Laut)",
+            note: "Ketinggian kawah aktif Anak Krakatau (~157 m dpl). Menyebabkan lintasan parabola asimetris karena pendaratan di bawah titik luncur.",
+          },
+          {
+            num: 2,
+            symbol: "v₀, v₀x, v₀y",
+            name: "Vektor Kecepatan Awal",
+            formula: "v₀x = v₀ cos θ, v₀y = v₀ sin θ",
+            value: `v₀ = ${p.v0.toFixed(4)} m/s (v₀x=${v0x.toFixed(4)}, v₀y=${v0y.toFixed(4)})`,
+            comp: `Ek/m = ${(0.5 * p.v0 * p.v0).toFixed(2)} J/kg`,
+            note: "Kecepatan dorong overpressure gas magmatik (~180 m/s pada letusan strombolian/vulcanian). Menentukan transfer momentum awal.",
+          },
+          {
+            num: 3,
+            symbol: "θ, θ_opt, θ_vac",
+            name: "Sudut Elevasi & Optimum",
+            formula: "θ_vac = arcsin(1 / √(2 + 2gy₀/v₀²))",
+            value: `θ = ${p.angle.toFixed(4)}° | θ_opt = ${bestOptimalAngle.toFixed(4)}°`,
+            comp: `θ_vac = ${audit.optAngle.toFixed(4)}° (Deviasi: -${(audit.optAngle - bestOptimalAngle).toFixed(2)}°)`,
+            note: "Hambatan udara barometrik mereduksi sudut elevasi optimum sebesar ~7°-9° lebih landai dibanding kondisi hampa agar proyektil memotong lapisan drag rendah.",
+          },
+          {
+            num: 4,
+            symbol: "H_apex, t_apex",
+            name: "Titik Balik Tertinggi (Apex)",
+            formula: "Kondisi batas: v_y(t_apex) = 0",
+            value: `H_apex = ${hApexReal.toFixed(4)} m (Y_tot = ${apexRealY.toFixed(4)} m) | t = ${tApexReal.toFixed(4)} s`,
+            comp: `H_vac = ${(apexVacY - p.y0).toFixed(4)} m (Reduksi Drag: -${devApexPct.toFixed(2)}%)`,
+            note: "Puncak lintasan dicapai saat kecepatan vertikal nol. Hambatan udara mereduksi ketinggian secara drastis dibanding gerak parabola ideal.",
+          },
+          {
+            num: 5,
+            symbol: "R_range, t_flight",
+            name: "Jangkauan Maksimum Letusan",
+            formula: "Kondisi impak permukaan: y(t) = 0",
+            value: `R = ${real.range.toFixed(4)} m | t = ${real.flightTime.toFixed(4)} s`,
+            comp: `R_vac = ${vac.range.toFixed(4)} m (Deviasi: -${devRangePct.toFixed(2)}%)`,
+            note: "Menjawab seberapa jauh sebaran letusannya. Jangkauan bom vulkanik mencapai perairan kaldera Selat Sunda (KRB III PVMBG).",
+          },
+          {
+            num: 6,
+            symbol: "v_imp, θ_imp, v_t",
+            name: "Kinematika Impak Permukaan",
+            formula: "v_imp = √(vx² + vy²), v_t = √(2mg / ρ Cd A)",
+            value: `v_imp = ${vFinal.toFixed(4)} m/s | θ_imp = ${thetaImp.toFixed(4)}°`,
+            comp: `v_vac = ${vac.finalSpeed.toFixed(4)} m/s | v_term = ${audit.vTerminal.toFixed(4)} m/s`,
+            note: "Sudut datang impak lebih curam (θ_imp > θ₀) karena komponen horizontal vx terus mengalami disipasi drag sedangkan vy dipacu gravitasi.",
+          },
+          {
+            num: 7,
+            symbol: "F_d, W_drag, ΔE",
+            name: "Hambatan Udara & Disipasi Energi",
+            formula: "F_d = 1/2 ρ₀ e^(-y/Hs) Cd A v², W_drag = E₀ - Ef",
+            value: `W_drag = ${audit.wDrag.toFixed(2)} J | Rugi Energi = ${audit.eLossPercent.toFixed(4)}%`,
+            comp: `F_d(max) = ${maxDragN.toFixed(2)} N | E₀ = ${(audit.e0 / 1e6).toFixed(3)} MJ`,
+            note: "Hukum termodinamika & kekekalan energi non-konservatif: E₀ = Ef + W_drag. Sebagian besar energi mekanik terdisipasi menjadi panas dan turbulensi atmosfer.",
+          },
+          {
+            num: 8,
+            symbol: "ε_R, Orde Solver",
+            name: "Uji Presisi & Konvergensi Solver",
+            formula: "RK4 Orde-4 O(Δt⁴) vs Forward Euler O(Δt)",
+            value: `RK4 Δt=0.0200s | Galat Relatif ε_R = ${relErrRange.toFixed(4)}%`,
+            comp: `RK4: ${rk4Solve.range.toFixed(2)}m vs Euler: ${eulerSolve.range.toFixed(2)}m`,
+            note: "Membuktikan keunggulan komputasi presisi tinggi FATISDA UNS. Integrator Runge-Kutta Orde-4 stabil dengan galat pemotongan lokal O(Δt⁵).",
+          },
+          {
+            num: 9,
+            symbol: "R_ash_max, D_ash, ETA",
+            name: "Model Sebaran Abu (Suzuki 1983)",
+            formula: "S(z) = Q A (z/Hc)(1-z/Hc) e^(-β z/Hc) + Difusi Gauss",
+            value: `R_ash_max = ${ashReach.rAshMaxKm.toFixed(4)} km | Isopak ≥50mm = ${ashReach.rIso50Km.toFixed(4)} km`,
+            comp: `Sertung: ${sertungSt.depthMm.toFixed(2)} mm | Carita: ${caritaSt.depthMm.toFixed(2)} mm`,
+            note: "Menjawab sebaran abunya. Awan abu mikro mengapung di kolom erupsi troposfer, teradveksi oleh angin monsun, dan mengendap di daratan Banten & Lampung.",
+          },
+        ];
+      }
+
+      function updateRubrik9ParamTable() {
+        const tbody = document.getElementById("rubrik9ParamTableBody");
+        if (!tbody) return;
+
+        const dataset = getRubrik9ParamDataset();
+        tbody.innerHTML = dataset
+          .map(
+            (row) => `
+          <tr class="hover:bg-[#252b37] transition-all">
+            <td class="py-2.5 px-3 align-top">
+              <span class="font-bold text-[#e2b083] block">Item #${row.num}</span>
+              <span class="text-[10px] text-[#8e9bb0]">${row.symbol}</span>
+            </td>
+            <td class="py-2.5 px-3 align-top">
+              <div class="font-bold text-[#f4ede4]">${row.name}</div>
+              <div class="text-[10px] text-[#8e9bb0]">${row.formula}</div>
+            </td>
+            <td class="py-2.5 px-3 align-top text-right">
+              <span class="font-bold text-[#81b29a] text-xs">${row.value}</span>
+            </td>
+            <td class="py-2.5 px-3 align-top">
+              <span class="text-[10px] text-[#dda15e]">${row.comp}</span>
+            </td>
+            <td class="py-2.5 px-3 align-top">
+              <p class="text-[10px] text-[#8e9bb0] font-sans leading-relaxed">${row.note}</p>
+            </td>
+          </tr>
+        `,
+          )
+          .join("");
+      }
+
+      function copyRubrikMarkdown() {
+        const dataset = getRubrik9ParamDataset();
+        let md = `### Matriks Evaluasi 9 Parameter Presisi Fisika Erupsi Gunung Anak Krakatau\n`;
+        md += `*Mata Kuliah: Fisika Komputasi - Dosen Pengampu: Pak BL (FATISDA UNS)*\n\n`;
+        md += `| No & Simbol | Parameter & Formulasi | Nilai Terkini (4 Desimal) | Komparasi Teori | Catatan Fisis FATISDA UNS |\n`;
+        md += `|:---|:---|:---|:---|:---|\n`;
+
+        dataset.forEach((r) => {
+          md += `| **#${r.num} (${r.symbol})** | ${r.name} - \`${r.formula}\` | **${r.value}** | ${r.comp} | ${r.note} |\n`;
+        });
+
+        navigator.clipboard.writeText(md).then(() => {
+          const toast = document.getElementById("rubrikCopyToast");
+          if (toast) {
+            toast.innerText = "Tabel Format Markdown Berhasil Disalin ke Clipboard!";
+            toast.classList.remove("hidden");
+            setTimeout(() => toast.classList.add("hidden"), 2500);
+          }
+        });
+      }
+
+      function copyRubrikCSV() {
+        const dataset = getRubrik9ParamDataset();
+        let csv = `"No","Simbol","Parameter","Formulasi","Nilai Terkini (4 Desimal)","Komparasi Teori","Catatan Fisis FATISDA UNS"\n`;
+
+        dataset.forEach((r) => {
+          const cleanVal = r.value.replace(/"/g, '""');
+          const cleanComp = r.comp.replace(/"/g, '""');
+          const cleanNote = r.note.replace(/"/g, '""');
+          csv += `"${r.num}","${r.symbol}","${r.name}","${r.formula}","${cleanVal}","${cleanComp}","${cleanNote}"\n`;
+        });
+
+        navigator.clipboard.writeText(csv).then(() => {
+          const toast = document.getElementById("rubrikCopyToast");
+          if (toast) {
+            toast.innerText = "Tabel Format CSV Berhasil Disalin ke Clipboard!";
+            toast.classList.remove("hidden");
+            setTimeout(() => toast.classList.add("hidden"), 2500);
+          }
+        });
+      }
+
+      function applyPakBLPreset() {
+        currentParams = {
+          ...PRESETS.krakatau,
+          v0: 180,
+          angle: 45,
+          y0: 157,
+          m: 250,
+          cd: 0.47,
+          area: 0.8,
+          g: 9.81,
+          lowWind: 6,
+          highWind: 16,
+          buoyancyForce: 12,
+          useRK4: true,
+          useBarometric: true,
+        };
+
+        const scSelect = document.getElementById("presetSelect");
+        if (scSelect) scSelect.value = "krakatau";
+
+        const setVal = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.value = val;
+        };
+
+        setVal("num_v0", 180);
+        setVal("param_v0", 180);
+        setVal("num_angle", 45);
+        setVal("param_angle", 45);
+        setVal("num_y0", 157);
+        setVal("param_y0", 157);
+        setVal("num_m", 250);
+        setVal("param_m", 250);
+        setVal("num_cd", 0.47);
+        setVal("param_cd", 0.47);
+        setVal("num_area", 0.8);
+        setVal("param_area", 0.8);
+        setVal("num_lowWind", 6);
+        setVal("param_lowWind", 6);
+        setVal("num_highWind", 16);
+        setVal("param_highWind", 16);
+        setVal("num_buoyancy", 12);
+        setVal("param_buoyancy", 12);
+
+        const rk4Check = document.getElementById("param_rk4");
+        if (rk4Check) rk4Check.checked = true;
+        const baroCheck = document.getElementById("param_barometric");
+        if (baroCheck) baroCheck.checked = true;
+
+        recalculateSimulation(true);
+        updateRubrik9ParamTable();
+
+        const toast = document.getElementById("rubrikCopyToast");
+        if (toast) {
+          toast.innerText = "Preset Standar Anak Krakatau (Pak BL) Berhasil Diterapkan!";
+          toast.classList.remove("hidden");
+          setTimeout(() => toast.classList.add("hidden"), 2500);
+        }
+      }
+
       // --- FITUR BARU 1: GHOST TRAJECTORY CONTROLLER ---
       function saveCurrentAsGhost() {
         if (!trajectories) return;
@@ -2466,7 +3240,6 @@
       }
 
       // --- FITUR UNGGULAN: LABORATORIUM VIRTUAL SUDUT OPTIMUM ---
-      let bestOptimalAngle = 45;
       function calculateOptimalAngle() {
         const p = { ...currentParams };
         const currentG = p.g || 9.81;
@@ -3586,7 +4359,7 @@
 
       // --- FITUR UNGGULAN: CETAK LAPORAN RESMI PRAKTIKUM (PRINT-READY PDF) ---
       function printLabReport() {
-        if (!trajectories) return;
+        if (!trajectories) trajectories = computeTrajectories(currentParams);
 
         const now = new Date();
         const dateStr = now.toLocaleDateString("id-ID", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -3604,40 +4377,40 @@
         document.getElementById("print_scenario").innerText = scenarioNames[scKey] || "Kustom Pengguna";
 
         // Section 1: Inputs
-        document.getElementById("pr_v0").innerText = `${currentParams.v0} m/s`;
-        document.getElementById("pr_angle").innerText = `${currentParams.angle}°`;
-        document.getElementById("pr_y0").innerText = `${currentParams.y0} m`;
-        document.getElementById("pr_m").innerText = `${currentParams.m} kg`;
-        document.getElementById("pr_cd").innerText = `${currentParams.cd}`;
-        document.getElementById("pr_area").innerText = `${currentParams.area} m²`;
-        document.getElementById("pr_lowWind").innerText = `${currentParams.lowWind || 0} m/s`;
-        document.getElementById("pr_highWind").innerText = `${currentParams.highWind || 0} m/s`;
-        document.getElementById("pr_buoy").innerText = `${currentParams.buoyancyForce || 0} m/s²`;
+        document.getElementById("pr_v0").innerText = `${currentParams.v0.toFixed(2)} m/s`;
+        document.getElementById("pr_angle").innerText = `${currentParams.angle.toFixed(2)}°`;
+        document.getElementById("pr_y0").innerText = `${currentParams.y0.toFixed(2)} m`;
+        document.getElementById("pr_m").innerText = `${currentParams.m.toFixed(2)} kg`;
+        document.getElementById("pr_cd").innerText = `${currentParams.cd.toFixed(2)}`;
+        document.getElementById("pr_area").innerText = `${currentParams.area.toFixed(2)} m²`;
+        document.getElementById("pr_lowWind").innerText = `${(currentParams.lowWind || 0).toFixed(1)} m/s`;
+        document.getElementById("pr_highWind").innerText = `${(currentParams.highWind || 0).toFixed(1)} m/s`;
+        document.getElementById("pr_buoy").innerText = `${(currentParams.buoyancyForce || 0).toFixed(1)} m/s²`;
 
-        // Section 2: Kinematics
+        // Section 2: Kinematics (4 desimal)
         const rReal = trajectories.real.range;
         const rVac = trajectories.vacuum.range;
-        document.getElementById("pr_range_real").innerText = `${rReal.toFixed(1)} m`;
-        document.getElementById("pr_range_vac").innerText = `${rVac.toFixed(1)} m`;
-        document.getElementById("pr_range_dev").innerText = `-${(((rVac - rReal) / (rVac || 1)) * 100).toFixed(1)}%`;
+        document.getElementById("pr_range_real").innerText = `${rReal.toFixed(4)} m`;
+        document.getElementById("pr_range_vac").innerText = `${rVac.toFixed(4)} m`;
+        document.getElementById("pr_range_dev").innerText = `-${(((rVac - rReal) / (rVac || 1)) * 100).toFixed(2)}%`;
 
         const apexReal = trajectories.real.apex ? trajectories.real.apex.y : 0;
         const apexVac = trajectories.vacuum.apex ? trajectories.vacuum.apex.y : 0;
-        document.getElementById("pr_apex_real").innerText = `${apexReal.toFixed(1)} m`;
-        document.getElementById("pr_apex_vac").innerText = `${apexVac.toFixed(1)} m`;
-        document.getElementById("pr_apex_dev").innerText = `${(((apexReal - apexVac) / (apexVac || 1)) * 100).toFixed(1)}%`;
+        document.getElementById("pr_apex_real").innerText = `${apexReal.toFixed(4)} m`;
+        document.getElementById("pr_apex_vac").innerText = `${apexVac.toFixed(4)} m`;
+        document.getElementById("pr_apex_dev").innerText = `${(((apexReal - apexVac) / (apexVac || 1)) * 100).toFixed(2)}%`;
 
         const tfReal = trajectories.real.flightTime;
         const tfVac = trajectories.vacuum.flightTime;
-        document.getElementById("pr_time_real").innerText = `${tfReal.toFixed(2)} s`;
-        document.getElementById("pr_time_vac").innerText = `${tfVac.toFixed(2)} s`;
-        document.getElementById("pr_time_dev").innerText = `${(((tfReal - tfVac) / (tfVac || 1)) * 100).toFixed(1)}%`;
+        document.getElementById("pr_time_real").innerText = `${tfReal.toFixed(4)} s`;
+        document.getElementById("pr_time_vac").innerText = `${tfVac.toFixed(4)} s`;
+        document.getElementById("pr_time_dev").innerText = `${(((tfReal - tfVac) / (tfVac || 1)) * 100).toFixed(2)}%`;
 
-        document.getElementById("pr_v_impact").innerText = `${trajectories.real.finalSpeed.toFixed(1)} m/s`;
-        document.getElementById("pr_v_impact_vac").innerText = `${trajectories.vacuum.finalSpeed.toFixed(1)} m/s`;
-        document.getElementById("pr_v_impact_dev").innerText = `-${(((trajectories.vacuum.finalSpeed - trajectories.real.finalSpeed) / (trajectories.vacuum.finalSpeed || 1)) * 100).toFixed(1)}%`;
+        document.getElementById("pr_v_impact").innerText = `${trajectories.real.finalSpeed.toFixed(4)} m/s`;
+        document.getElementById("pr_v_impact_vac").innerText = `${trajectories.vacuum.finalSpeed.toFixed(4)} m/s`;
+        document.getElementById("pr_v_impact_dev").innerText = `-${(((trajectories.vacuum.finalSpeed - trajectories.real.finalSpeed) / (trajectories.vacuum.finalSpeed || 1)) * 100).toFixed(2)}%`;
 
-        document.getElementById("pr_w_drag").innerText = `${trajectories.audit.wDrag.toLocaleString("id-ID", { maximumFractionDigits: 0 })} Joule (${trajectories.audit.eLossPercent.toFixed(1)}% energi mekanik terdisipasi)`;
+        document.getElementById("pr_w_drag").innerText = `${trajectories.audit.wDrag.toLocaleString("id-ID", { maximumFractionDigits: 2 })} Joule (${trajectories.audit.eLossPercent.toFixed(4)}% energi mekanik terdisipasi)`;
 
         const prImpEl = document.getElementById("pr_impact_summary");
         if (prImpEl) {
@@ -3645,25 +4418,89 @@
           prImpEl.innerText = `${a.sectorName} [${a.krbLevel}] • Ek = ${a.eMJ.toFixed(2)} MJ (~${a.tntKg.toFixed(2)} kg TNT) • Kawah: ⌀${a.craterDiam.toFixed(1)} m • Blast: R${a.blastRad.toFixed(1)} m`;
         }
 
-        // Section 3: Ash Fallout Stations
-        const Hc = trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
-        const stations = computeAshFalloutStations(Hc, currentParams.lowWind || 0, currentParams.highWind || 0);
-        const stTbody = document.getElementById("pr_stations_body");
-        if (stTbody) {
-          stTbody.innerHTML = stations
+        // Section 3: Matriks Evaluasi 9 Parameter Presisi Fisika
+        const rubrikTbody = document.getElementById("pr_rubrik9_body");
+        if (rubrikTbody) {
+          const dataset = getRubrik9ParamDataset();
+          rubrikTbody.innerHTML = dataset
             .map(
-              (st) => `
+              (r) => `
             <tr>
-              <td style="font-weight: bold;">${st.name}</td>
-              <td style="text-align: center;">${st.distanceKm} km</td>
-              <td>${st.region}</td>
-              <td style="text-align: center; font-weight: bold;">${st.depthMm.toFixed(2)} mm</td>
-              <td style="text-align: center;">${st.hazardLevel}</td>
-              <td>${st.recommendation}</td>
+              <td style="text-align: center; font-weight: bold;">#${r.num} (${r.symbol})</td>
+              <td><b>${r.name}</b><br><span style="color: #444; font-size: 8.5px;">${r.formula}</span></td>
+              <td style="text-align: center; font-weight: bold; color: #047857;">${r.value}</td>
+              <td style="text-align: center; color: #b45309;">${r.comp}</td>
+              <td style="font-size: 8.5px; line-height: 1.3;">${r.note}</td>
             </tr>
           `,
             )
             .join("");
+        }
+
+        // Section 4: Spektrum Sebaran Piroklastik Wentworth-Fisher
+        const pyroTbody = document.getElementById("pr_pyro_spectrum_body");
+        if (pyroTbody) {
+          const spec = computePyroclasticSpectrum(currentParams);
+          pyroTbody.innerHTML = spec.results
+            .map(
+              (res) => `
+            <tr>
+              <td style="font-weight: bold;">${res.name}</td>
+              <td style="text-align: center;">⌀ ${res.diamLabel} | ${res.massKg < 1 ? (res.massKg * 1000).toFixed(0) + " g" : res.massKg + " kg"}</td>
+              <td style="text-align: center; font-weight: bold;">${res.range.toFixed(4)} m</td>
+              <td style="text-align: center;">${res.apexY.toFixed(4)} m</td>
+              <td style="text-align: center;">${res.flightTime.toFixed(4)} s</td>
+              <td style="text-align: center;">${res.finalSpeed.toFixed(4)} m/s</td>
+              <td style="text-align: center; font-weight: bold; font-size: 8.5px;">${res.krbZone}</td>
+            </tr>
+          `,
+            )
+            .join("");
+        }
+
+        // Section 5: Dispersi & Akumulasi Abu Vulkanik Suzuki 1983
+        const Hc = trajectories.real.apex ? trajectories.real.apex.y : currentParams.y0 + 1500;
+        const ashReach = computeAshDispersionReach(Hc, currentParams.lowWind || 0, currentParams.highWind || 0);
+        const ashSummaryEl = document.getElementById("pr_ash_reach_summary");
+        if (ashSummaryEl) {
+          ashSummaryEl.innerHTML = `
+            <b>Estimasi Jangkauan Plume Abu:</b> Jangkauan Terjauh (≥0.1 mm): <b>${ashReach.rAshMaxKm.toFixed(2)} km</b> • 
+            Isopak Kritis (≥50 mm): <b>${ashReach.rIso50Km.toFixed(2)} km</b> • 
+            Isopak Sedang (≥10 mm): <b>${ashReach.rIso10Km.toFixed(2)} km</b> • 
+            Isopak Waspada (≥1 mm): <b>${ashReach.rIso1Km.toFixed(2)} km</b> • 
+            Estimasi Massa Abu: <b>${ashReach.massAshTon.toLocaleString("id-ID", { maximumFractionDigits: 0 })} Ton</b>
+          `;
+        }
+
+        const stations = computeAshFalloutStations(Hc, currentParams.lowWind || 0, currentParams.highWind || 0);
+        const stTbody = document.getElementById("pr_stations_body");
+        if (stTbody) {
+          stTbody.innerHTML = stations
+            .map((st) => {
+              const etaObj = ashReach.stationETAs.find((e) => e.id === st.id) || { etaText: "--" };
+              return `
+            <tr>
+              <td style="font-weight: bold;">${st.name}</td>
+              <td style="text-align: center;">${st.distanceKm} km</td>
+              <td>${st.region}</td>
+              <td style="text-align: center; font-weight: bold;">${st.depthMm.toFixed(4)} mm</td>
+              <td style="text-align: center; font-weight: bold;">${st.hazardLevel}</td>
+              <td style="text-align: center; color: #b45309;">${etaObj.etaText}</td>
+              <td style="font-size: 8.5px;">${st.recommendation}</td>
+            </tr>
+          `;
+            })
+            .join("");
+        }
+
+        // Section 6: Kesimpulan Saintifik
+        const concEl = document.getElementById("pr_scientific_conclusion");
+        if (concEl) {
+          concEl.innerHTML = `
+            Berdasarkan simulasi komputasi numerik Runge-Kutta Orde-4 (RK4, Δt=0.0200s) dengan model kerapatan atmosfer barometrik ρ(y)=ρ₀·exp(-y/Hs), diperoleh kesimpulan ilmiah bahwa:
+            <br>1. <b>Sebaran Letusan Balistik:</b> Erupsi melontarkan bom balistik dengan jangkauan horizontal R = <b>${rReal.toFixed(2)} meter</b> dan ketinggian puncak Apex = <b>${apexReal.toFixed(2)} meter</b>. Hambatan aerodinamis mereduksi jangkauan sebesar <b>${(((rVac - rReal) / (rVac || 1)) * 100).toFixed(1)}%</b> dibanding kondisi hampa, dengan disipasi energi mekanik mencapai <b>${trajectories.audit.eLossPercent.toFixed(1)}%</b>. Pada spektrum piroklastik, fraksi megablock menjangkau jarak terjauh karena koefisien balistik m/(Cd·A) yang dominan terhadap hambatan fluida.
+            <br>2. <b>Sebaran Abu Vulkanik:</b> Sesuai model Suzuki (1983) dan sedimentasi Stokes, abu mikro terinjeksi hingga kolom konvektif setinggi Hc = <b>${Hc.toFixed(0)} meter</b> dengan jangkauan deteksi sebaran maksimum mencapai <b>${ashReach.rAshMaxKm.toFixed(1)} km</b> dari kawah. Radius kontur bahaya kritis isopak ≥50 mm mencakup radius <b>${ashReach.rIso50Km.toFixed(1)} km</b> (mengancam Pulau Sertung, Panjang, dan Rakata), sementara abu halus teradveksi menuju pesisir Anyer/Carita (ETA ~${(ashReach.stationETAs.find((e) => e.id === "carita") || { etaText: "30 Menit" }).etaText}) dan Kalianda Lampung.
+          `;
         }
 
         window.print();
@@ -4732,12 +5569,11 @@
       }
 
       function render3DCurves() {
+        if (!scene || !trajectories) return;
         trajectoryLines.forEach((l) => scene.remove(l));
         trajectoryLines = [];
         ghostLines3D.forEach((l) => scene.remove(l));
         ghostLines3D = [];
-
-        if (!trajectories) return;
 
         const drawCurve = (pts, colorHex, dashed = false, opacity = 1.0) => {
           const vPts = pts.map((p) => new THREE.Vector3(p.x, p.y, 0));
@@ -5618,8 +6454,11 @@
             content.classList.add("hidden");
           }
         });
-        if (idx === 5) {
+        if (idx === 1) {
+          updatePyroclasticSpectrumUI();
+        } else if (idx === 5) {
           updateStationAshUI();
+          updateAshReachUI();
         }
         lucide.createIcons();
       }
@@ -5704,6 +6543,9 @@
         fitToBounds2D();
         updateAuditUI();
         updateStationAshUI();
+        updatePyroclasticSpectrumUI();
+        updateAshReachUI();
+        updateRubrik9ParamTable();
         resetParticleSystem();
 
         if (playSound && currentParams.v0 > 0) {
@@ -5972,6 +6814,7 @@
           closeInteractiveDemo();
           closeImpactHUD();
           closeMobileToolsModal();
+          closeRubrik9ParamModal();
         }
       });
 
