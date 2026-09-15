@@ -437,11 +437,7 @@
     <!-- ==================================================================== -->
     <!-- MOBILE NAVIGATION DRAWER (HAMBURGER MENU SLIDE-OVER)                 -->
     <!-- ==================================================================== -->
-    <div
-      id="mobileNavBackdrop"
-      onclick="toggleMobileNavDrawer(false)"
-      class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden transition-opacity duration-300 md:hidden"
-    ></div>
+    <div id="mobileNavBackdrop" onclick="toggleMobileNavDrawer(false)" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden transition-opacity duration-300 md:hidden"></div>
 
     <aside
       id="mobileNavDrawer"
@@ -451,7 +447,15 @@
       <div class="p-4 border-b border-[#2e3544] bg-[#14161d] flex items-center justify-between flex-shrink-0">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-[#252b37] border border-[#3d4659] flex items-center justify-center p-1 text-[#e2b083] shadow-inner">
-            <img src="assets/logo-uns.png" alt="Logo UNS" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+            <img
+              src="assets/logo-uns.png"
+              alt="Logo UNS"
+              class="w-full h-full object-contain"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.classList.remove('hidden');
+              "
+            />
             <i data-lucide="volcano" class="w-4 h-4 text-[#e2b083] hidden"></i>
           </div>
           <div>
@@ -462,11 +466,7 @@
             <p class="text-[9px] text-[#8e9bb0] font-mono">Fisika Komputasi Erupsi Krakatau</p>
           </div>
         </div>
-        <button
-          onclick="toggleMobileNavDrawer(false)"
-          class="p-2 text-[#8e9bb0] hover:text-white rounded-xl hover:bg-[#252b37] transition-all"
-          title="Tutup Menu"
-        >
+        <button onclick="toggleMobileNavDrawer(false)" class="p-2 text-[#8e9bb0] hover:text-white rounded-xl hover:bg-[#252b37] transition-all" title="Tutup Menu">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
