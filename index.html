@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Krakatau Ballistics & Ash Dispersion Monitor - FATISDA UNS</title>
 
+    <!-- Favicon & Touch Icons: Identitas Visual Resmi Universitas Sebelas Maret (UNS) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/logo-uns.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/logo-uns.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/logo-uns.png" />
+    <meta name="theme-color" content="#14161d" />
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons CDN -->
@@ -172,29 +178,77 @@
   </head>
   <body class="h-[100dvh] w-full overflow-hidden flex flex-col select-none relative">
     <!-- ==================================================================== -->
-    <!-- LOADING OVERLAY                                                      -->
+    <!-- LOADING OVERLAY / PRELOADER RESMI FATISDA UNIVERSITAS SEBELAS MARET    -->
     <!-- ==================================================================== -->
-    <div id="loadingOverlay" class="fixed inset-0 z-50 bg-[#16181f] flex flex-col items-center justify-center p-6 select-none">
+    <div id="loadingOverlay" class="fixed inset-0 z-[100] bg-[#14161d] flex flex-col items-center justify-center p-6 select-none transition-opacity duration-500">
+      <!-- Glow ambient background effect -->
+      <div class="absolute w-96 h-96 rounded-full bg-[#d4a373]/10 blur-3xl pointer-events-none -z-10 animate-pulse"></div>
+
+      <!-- UNS Crest & Halo Container -->
       <div class="relative flex items-center justify-center mb-6">
-        <div class="w-20 h-20 rounded-full border-2 border-[#d4a373]/20 border-t-[#e2b083] animate-spin"></div>
-        <div class="absolute w-28 h-28 rounded-full border border-[#d4a373]/20 warm-pulse"></div>
-        <i data-lucide="compass" class="w-8 h-8 text-[#e2b083] animate-pulse"></i>
-      </div>
-
-      <div class="text-center space-y-2 max-w-sm">
-        <span class="text-[10px] px-3 py-1 rounded-full bg-[#252b37] border border-[#343c4e] text-[#e2b083] font-mono font-bold tracking-widest uppercase inline-block"> FATISDA UNS • FISIKA KOMPUTASI </span>
-        <h2 class="text-xl font-black bg-gradient-to-r from-[#e2b083] via-[#d4a373] to-[#8e9bb0] bg-clip-text text-transparent">Krakatau Ballistics &amp; Ash Map</h2>
-        <p id="loadingStatusText" class="text-xs font-mono text-[#8e9bb0]">Menyiapkan Model Kinematika, Drag &amp; Partikel Geospasial...</p>
-
-        <div class="w-64 h-1.5 bg-[#1e222b] rounded-full overflow-hidden border border-[#343c4e] mx-auto mt-4">
-          <div id="loadingProgressBar" class="h-full bg-gradient-to-r from-[#d4a373] to-[#e2b083] w-0 transition-all duration-300 ease-out"></div>
+        <!-- Outer spinning orbital ring with gradient -->
+        <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-dashed border-[#d4a373]/35 border-t-[#e2b083] animate-spin"></div>
+        <!-- Inner pulsating ring -->
+        <div class="absolute w-36 h-36 sm:w-40 sm:h-40 rounded-full border border-[#d4a373]/20 animate-ping opacity-25"></div>
+        <!-- Soft circular emblem background -->
+        <div class="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#1e222b] border border-[#3d4659] shadow-[0_0_25px_rgba(212,163,115,0.25)] flex items-center justify-center p-2.5 overflow-hidden">
+          <img
+            src="assets/logo-uns.png"
+            alt="Logo Universitas Sebelas Maret"
+            class="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] transition-transform duration-700 hover:scale-110"
+            onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+          />
+          <i data-lucide="volcano" class="w-8 h-8 text-[#e2b083] hidden"></i>
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-2.5 mt-8 w-72 max-w-full">
-        <div class="h-11 rounded-xl skeleton-shimmer border border-[#343c4e]/80"></div>
-        <div class="h-11 rounded-xl skeleton-shimmer border border-[#343c4e]/80"></div>
-        <div class="h-11 rounded-xl skeleton-shimmer border border-[#343c4e]/80"></div>
+      <!-- Typography Branding UNS -->
+      <div class="text-center space-y-2.5 max-w-md px-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1e222b] border border-[#343c4e] shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-[#81b29a] animate-pulse"></span>
+          <span class="text-[10px] sm:text-[11px] font-mono font-bold tracking-wider text-[#e2b083] uppercase">Universitas Sebelas Maret</span>
+          <span class="text-[9px] text-[#606d82]">•</span>
+          <span class="text-[10px] sm:text-[11px] font-mono font-bold text-[#f4ede4]">FATISDA</span>
+        </div>
+
+        <div>
+          <h2 class="text-lg sm:text-2xl font-black tracking-tight text-[#f4ede4]">
+            Simulasi Erupsi Krakatau
+          </h2>
+          <p class="text-[11px] sm:text-xs text-[#d4a373] font-medium mt-0.5">
+            Trajektori Balistik &amp; Model Dispersi Abu Selat Sunda
+          </p>
+          <p class="text-[10px] text-[#8e9bb0] font-mono mt-1">
+            Laboratorium Fisika Komputasi • FATISDA UNS • Dosen Pengampu: Pak BL
+          </p>
+        </div>
+
+        <!-- Status and Percentage Counter -->
+        <div class="flex items-center justify-between text-[11px] font-mono text-[#8e9bb0] pt-2 px-1">
+          <span id="loadingStatusText" class="truncate pr-2">Memuat Sistem Komputasi Saintifik...</span>
+          <span id="loadingPercentText" class="text-[#e2b083] font-bold">0%</span>
+        </div>
+
+        <!-- Progress Bar Track -->
+        <div class="w-64 sm:w-80 h-2 bg-[#1b1e26] rounded-full overflow-hidden border border-[#343c4e] p-0.5 shadow-inner mx-auto">
+          <div id="loadingProgressBar" class="h-full bg-gradient-to-r from-[#d4a373] via-[#e2b083] to-[#81b29a] rounded-full w-0 transition-all duration-300 ease-out shadow-[0_0_10px_rgba(226,176,131,0.5)]"></div>
+        </div>
+      </div>
+
+      <!-- Feature Pill Badges -->
+      <div class="grid grid-cols-3 gap-2 mt-7 w-80 max-w-full text-center">
+        <div class="px-2 py-2 rounded-xl bg-[#1e222b]/80 border border-[#2e3544] flex flex-col items-center justify-center gap-1 shadow-sm">
+          <span class="text-xs">⚛️</span>
+          <span class="text-[9px] font-mono text-[#8e9bb0] leading-tight">Solver RK4 Orde-4</span>
+        </div>
+        <div class="px-2 py-2 rounded-xl bg-[#1e222b]/80 border border-[#2e3544] flex flex-col items-center justify-center gap-1 shadow-sm">
+          <span class="text-xs">💥</span>
+          <span class="text-[9px] font-mono text-[#8e9bb0] leading-tight">Dampak &amp; KRB</span>
+        </div>
+        <div class="px-2 py-2 rounded-xl bg-[#1e222b]/80 border border-[#2e3544] flex flex-col items-center justify-center gap-1 shadow-sm">
+          <span class="text-xs">🌋</span>
+          <span class="text-[9px] font-mono text-[#8e9bb0] leading-tight">Abu Suzuki 1983</span>
+        </div>
       </div>
     </div>
 
@@ -202,27 +256,43 @@
     <!-- NAVBAR UTAMA                                                         -->
     <!-- ==================================================================== -->
     <nav class="h-12 sm:h-14 bg-[#1b1e26]/95 border-b border-[#2e3544] flex items-center justify-between px-2.5 sm:px-5 z-30 flex-shrink-0 shadow-md">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-xl bg-[#252b37] border border-[#3d4659] flex items-center justify-center text-[#e2b083] shadow-inner flex-shrink-0">
-          <i data-lucide="volcano" class="w-4 h-4"></i>
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#252b37] border border-[#3d4659] flex items-center justify-center p-1 text-[#e2b083] shadow-inner flex-shrink-0 relative overflow-hidden group" title="Universitas Sebelas Maret - FATISDA">
+          <img
+            src="assets/logo-uns.png"
+            alt="Logo UNS"
+            class="w-full h-full object-contain filter drop-shadow group-hover:scale-105 transition-transform"
+            onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+          />
+          <i data-lucide="volcano" class="w-4 h-4 text-[#e2b083] hidden"></i>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="text-xs sm:text-sm font-bold text-[#f4ede4] tracking-tight">GeoLab UNS</h1>
             <span class="text-[8px] px-1.5 py-0.2 rounded bg-[#252b37] text-[#d4a373] border border-[#343c4e] font-mono font-bold hidden sm:inline">FATISDA</span>
           </div>
-          <p class="text-[9px] text-[#8e9bb0] font-mono hidden sm:block">Kinematika &amp; Mitigasi Geospasial</p>
+          <p class="text-[9px] text-[#8e9bb0] font-mono hidden sm:block">Fisika Komputasi Erupsi Krakatau</p>
         </div>
       </div>
 
       <!-- Switcher Halaman Utama -->
       <div class="flex items-center p-0.5 bg-[#222733] rounded-xl border border-[#343c4e]">
-        <button id="navBtnSim" onclick="switchPage('simulator')" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 bg-[#d4a373] text-[#16181f] shadow-sm whitespace-nowrap" title="Simulator Kinematika 3D/2D">
+        <button
+          id="navBtnSim"
+          onclick="switchPage('simulator')"
+          class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 bg-[#d4a373] text-[#16181f] shadow-sm whitespace-nowrap"
+          title="Simulator Kinematika 3D/2D"
+        >
           <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Simulator Balistik</span>
           <span class="sm:hidden">Simulator</span>
         </button>
-        <button id="navBtnAsh" onclick="switchPage('ashmap')" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4] whitespace-nowrap" title="Peta Geospasial 2D: Dampak Ledakan &amp; Sebaran Abu">
+        <button
+          id="navBtnAsh"
+          onclick="switchPage('ashmap')"
+          class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4] whitespace-nowrap"
+          title="Peta Geospasial 2D: Dampak Ledakan &amp; Sebaran Abu"
+        >
           <i data-lucide="map" class="w-3.5 h-3.5 text-[#e2b083]"></i>
           <span class="hidden sm:inline">Peta Dampak &amp; Abu</span>
           <span class="sm:hidden">Peta 2D</span>
@@ -1348,9 +1418,7 @@
             <div class="flex items-center justify-between">
               <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-[#252b37] border border-[#343c4e] text-[#e2b083] font-mono font-bold tracking-wider uppercase"> PETA GEOSPASIAL 2D </span>
               <div class="flex items-center gap-1.5">
-                <span id="liveApiStatusBadge" class="text-[10px] font-mono text-[#81b29a] flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-[#81b29a] animate-pulse"></span> LIVE SYNC
-                </span>
+                <span id="liveApiStatusBadge" class="text-[10px] font-mono text-[#81b29a] flex items-center gap-1"> <span class="w-1.5 h-1.5 rounded-full bg-[#81b29a] animate-pulse"></span> LIVE SYNC </span>
                 <button onclick="toggleMobileMapDrawer(false)" class="md:hidden p-1 rounded-lg text-[#8e9bb0] hover:text-[#f4ede4] hover:bg-[#252b37] transition-all ml-1" title="Tutup Panel">
                   <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
@@ -1398,18 +1466,12 @@
                     <i data-lucide="sliders" class="w-3.5 h-3.5 text-[#d4a373]"></i>
                     Parameter Lontaran Aktif
                   </span>
-                  <button
-                    onclick="switchPage('simulator')"
-                    class="text-[10px] font-mono text-[#d4a373] hover:text-[#f4ede4] hover:underline flex items-center gap-1"
-                    title="Ubah Parameter di Simulator 3D/2D"
-                  >
+                  <button onclick="switchPage('simulator')" class="text-[10px] font-mono text-[#d4a373] hover:text-[#f4ede4] hover:underline flex items-center gap-1" title="Ubah Parameter di Simulator 3D/2D">
                     <span>Edit di Simulator</span>
                     <i data-lucide="external-link" class="w-3 h-3"></i>
                   </button>
                 </div>
-                <div class="text-[11px] text-[#f4ede4] font-medium truncate" id="mapImpactScenarioTitle">
-                  Bom Vulkanik Anak Krakatau (Studi Kasus 2018)
-                </div>
+                <div class="text-[11px] text-[#f4ede4] font-medium truncate" id="mapImpactScenarioTitle">Bom Vulkanik Anak Krakatau (Studi Kasus 2018)</div>
                 <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-[10px]">
                   <div class="p-1.5 bg-[#222733] rounded-xl border border-[#343c4e]">
                     <span class="text-[8px] text-[#8e9bb0] block">v₀</span>
@@ -1437,9 +1499,7 @@
                     <i data-lucide="target" class="w-4 h-4 text-[#e07a5f]"></i>
                     Konsekuensi Ground Zero
                   </span>
-                  <span id="mapImpactKrbBadge" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#e07a5f] text-[#16181f] font-bold">
-                    KRB III
-                  </span>
+                  <span id="mapImpactKrbBadge" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#e07a5f] text-[#16181f] font-bold"> KRB III </span>
                 </div>
 
                 <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] space-y-1">
@@ -1520,13 +1580,9 @@
                     <i data-lucide="layers" class="w-3.5 h-3.5 text-[#dda15e]"></i>
                     Jangkauan Sebaran Ejekta
                   </span>
-                  <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#252b37] text-[#dda15e] border border-[#343c4e]">
-                    Tugas Pak BL
-                  </span>
+                  <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#252b37] text-[#dda15e] border border-[#343c4e]"> Tugas Pak BL </span>
                 </div>
-                <p class="text-[10px] text-[#8e9bb0] leading-tight">
-                  Perbandingan fisis seberapa jauh lontaran material piroklastik kaldera menurut skala butir Wentworth:
-                </p>
+                <p class="text-[10px] text-[#8e9bb0] leading-tight">Perbandingan fisis seberapa jauh lontaran material piroklastik kaldera menurut skala butir Wentworth:</p>
                 <div class="space-y-1.5 font-mono text-[11px]">
                   <div class="p-2 rounded-xl bg-[#222733] border border-[#343c4e] flex items-center justify-between">
                     <div>
@@ -1593,11 +1649,7 @@
             <div id="mapSidebarAshSection" class="space-y-4 hidden">
               <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-[#8e9bb0] uppercase tracking-wider block">Pilih Gunung Berapi</label>
-                <select
-                  id="volcanoSelect"
-                  onchange="onSelectVolcano(this.value)"
-                  class="w-full bg-[#16181f] border border-[#343c4e] rounded-xl p-2.5 text-xs text-[#e2b083] focus:outline-none focus:border-[#d4a373] font-medium"
-                >
+                <select id="volcanoSelect" onchange="onSelectVolcano(this.value)" class="w-full bg-[#16181f] border border-[#343c4e] rounded-xl p-2.5 text-xs text-[#e2b083] focus:outline-none focus:border-[#d4a373] font-medium">
                   <option value="krakatau" selected>Gunung Anak Krakatau (Selat Sunda) - Siaga Lvl III</option>
                   <option value="merapi">Gunung Merapi (Yogyakarta/Jateng) - Siaga Lvl III</option>
                   <option value="semeru">Gunung Semeru (Jawa Timur) - Waspada Lvl II</option>
@@ -1612,9 +1664,7 @@
                     <i data-lucide="wind" class="w-4 h-4 text-[#81b29a]"></i>
                     Angin Kawah Real-Time:
                   </span>
-                  <span id="liveWindSource" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#8e9bb0] border border-[#343c4e]">
-                    API: Terkoneksi
-                  </span>
+                  <span id="liveWindSource" class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#252b37] text-[#8e9bb0] border border-[#343c4e]"> API: Terkoneksi </span>
                 </div>
                 <div class="grid grid-cols-3 gap-2 text-xs font-mono pt-1">
                   <div class="p-2 bg-[#222733] rounded-xl border border-[#343c4e]">
@@ -1635,9 +1685,7 @@
               <div class="p-3.5 bg-[#16181f] rounded-2xl border border-[#2e3544] space-y-2">
                 <div class="flex justify-between items-center text-xs">
                   <span class="font-bold text-[#f4ede4]">Prakiraan Waktu Sebaran:</span>
-                  <span id="forecastTimeBadge" class="font-mono text-[#e2b083] font-bold px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e]">
-                    H+6 Jam (Prediksi)
-                  </span>
+                  <span id="forecastTimeBadge" class="font-mono text-[#e2b083] font-bold px-2 py-0.5 rounded bg-[#252b37] border border-[#343c4e]"> H+6 Jam (Prediksi) </span>
                 </div>
                 <input type="range" id="ashTimeRange" min="0" max="24" step="3" value="6" oninput="updateAshForecast(+this.value)" class="w-full cursor-pointer" />
                 <div class="flex justify-between text-[10px] font-mono text-[#8e9bb0]">
@@ -1670,9 +1718,7 @@
                   <div id="cityResultCard" class="p-3 rounded-xl bg-[#252b37] border border-[#343c4e] space-y-1.5 font-mono text-xs">
                     <div class="flex justify-between items-center">
                       <span class="text-[#8e9bb0]">Status Paparan:</span>
-                      <span id="cityStatusBadge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#dda15e]/20 text-[#dda15e] border border-[#dda15e]/40">
-                        WASPADA ABU TIPIS
-                      </span>
+                      <span id="cityStatusBadge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#dda15e]/20 text-[#dda15e] border border-[#dda15e]/40"> WASPADA ABU TIPIS </span>
                     </div>
                     <div class="flex justify-between text-[11px]">
                       <span class="text-[#8e9bb0]">Jarak dari Kawah:</span>
@@ -1782,11 +1828,7 @@
             >
               <i data-lucide="crosshair" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
-            <button
-              onclick="resetMapView()"
-              class="p-2.5 sm:p-3 rounded-2xl bg-[#1b1e26]/95 border border-[#343c4e] text-[#e2b083] hover:text-white hover:border-[#d4a373] shadow-2xl transition-all"
-              title="Pusatkan Peta ke Kawah Krakatau"
-            >
+            <button onclick="resetMapView()" class="p-2.5 sm:p-3 rounded-2xl bg-[#1b1e26]/95 border border-[#343c4e] text-[#e2b083] hover:text-white hover:border-[#d4a373] shadow-2xl transition-all" title="Pusatkan Peta ke Kawah Krakatau">
               <i data-lucide="volcano" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
           </div>
@@ -1804,9 +1846,7 @@
                 <div id="mobileMapPillSubtitle" class="text-[10px] text-[#e2b083] font-mono truncate">Jarak: 1.350 m • KRB III</div>
               </div>
             </div>
-            <span class="text-[10px] text-[#d4a373] font-bold flex items-center gap-0.5 ml-1 flex-shrink-0">
-              Detail <i data-lucide="chevron-up" class="w-3 h-3"></i>
-            </span>
+            <span class="text-[10px] text-[#d4a373] font-bold flex items-center gap-0.5 ml-1 flex-shrink-0"> Detail <i data-lucide="chevron-up" class="w-3 h-3"></i> </span>
           </div>
         </div>
       </section>
@@ -2110,8 +2150,9 @@
         <!-- Header Modal -->
         <div class="p-4 sm:p-5 border-b border-[#2e3544] flex items-center justify-between bg-[#16181f]/95">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#d4a373]/20 border border-[#d4a373]/50 flex items-center justify-center text-[#e2b083] shadow-inner flex-shrink-0">
-              <i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6 text-[#e2b083]"></i>
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#252b37] border border-[#d4a373]/50 flex items-center justify-center p-1.5 text-[#e2b083] shadow-inner flex-shrink-0">
+              <img src="assets/logo-uns.png" alt="Logo UNS" class="w-full h-full object-contain filter drop-shadow" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6 text-[#e2b083] hidden"></i>
             </div>
             <div>
               <div class="flex items-center gap-2 flex-wrap">
@@ -2211,12 +2252,15 @@
     <!-- ==================================================================== -->
     <div id="printLabReportContainer" class="hidden">
       <!-- Kop Surat Resmi FATISDA UNS -->
-      <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 14px">
-        <h4 style="font-size: 12px; font-weight: normal; margin: 0; text-transform: uppercase; letter-spacing: 0.5px">Kementerian Pendidikan Tinggi, Sains, dan Teknologi</h4>
-        <h2 style="font-size: 16px; font-weight: bold; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px">Universitas Sebelas Maret (UNS)</h2>
-        <h3 style="font-size: 13px; font-weight: bold; margin: 2px 0">Fakultas Teknologi Informasi dan Sains Data (FATISDA)</h3>
-        <p style="font-size: 10px; margin: 2px 0; color: #333">Laboratorium Fisika Komputasi • Program Studi Informatika / Fisika</p>
-        <p style="font-size: 9px; margin: 0; color: #555">Dosen Pengampu: Pak BL • Jl. Ir. Sutami No. 36A, Jebres, Surakarta 57126 • Laman: krakatau.izerworks.my.id</p>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 14px">
+        <img src="assets/logo-uns.png" alt="Logo UNS" style="width: 65px; height: 65px; object-fit: contain;" />
+        <div style="text-align: center">
+          <h4 style="font-size: 11px; font-weight: normal; margin: 0; text-transform: uppercase; letter-spacing: 0.5px">Kementerian Pendidikan Tinggi, Sains, dan Teknologi</h4>
+          <h2 style="font-size: 15px; font-weight: bold; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px">Universitas Sebelas Maret (UNS)</h2>
+          <h3 style="font-size: 13px; font-weight: bold; margin: 2px 0">Fakultas Teknologi Informasi dan Sains Data (FATISDA)</h3>
+          <p style="font-size: 9.5px; margin: 2px 0; color: #333">Laboratorium Fisika Komputasi • Program Studi Informatika / Fisika</p>
+          <p style="font-size: 8.5px; margin: 0; color: #555">Dosen Pengampu: Pak BL • Jl. Ir. Sutami No. 36A, Jebres, Surakarta 57126 • Laman: krakatau.izerworks.my.id</p>
+        </div>
       </div>
 
       <div style="text-align: center; margin-bottom: 12px">
@@ -7113,15 +7157,27 @@
       function showAshMapLayers(visible) {
         if (!ashMap) return;
         if (visible) {
-          ashPlumeLayers.forEach((l) => { if (!ashMap.hasLayer(l)) ashMap.addLayer(l); });
-          cityMarkers.forEach((m) => { if (!ashMap.hasLayer(m)) ashMap.addLayer(m); });
-          airportMarkers.forEach((a) => { if (!ashMap.hasLayer(a)) ashMap.addLayer(a); });
+          ashPlumeLayers.forEach((l) => {
+            if (!ashMap.hasLayer(l)) ashMap.addLayer(l);
+          });
+          cityMarkers.forEach((m) => {
+            if (!ashMap.hasLayer(m)) ashMap.addLayer(m);
+          });
+          airportMarkers.forEach((a) => {
+            if (!ashMap.hasLayer(a)) ashMap.addLayer(a);
+          });
           const wc = document.getElementById("windParticlesCanvas");
           if (wc) wc.style.opacity = "1.0";
         } else {
-          ashPlumeLayers.forEach((l) => { if (ashMap.hasLayer(l)) ashMap.removeLayer(l); });
-          cityMarkers.forEach((m) => { if (ashMap.hasLayer(m)) ashMap.removeLayer(m); });
-          airportMarkers.forEach((a) => { if (ashMap.hasLayer(a)) ashMap.removeLayer(a); });
+          ashPlumeLayers.forEach((l) => {
+            if (ashMap.hasLayer(l)) ashMap.removeLayer(l);
+          });
+          cityMarkers.forEach((m) => {
+            if (ashMap.hasLayer(m)) ashMap.removeLayer(m);
+          });
+          airportMarkers.forEach((a) => {
+            if (ashMap.hasLayer(a)) ashMap.removeLayer(a);
+          });
         }
       }
 
@@ -7330,7 +7386,9 @@
         const deltaLng = lastImpactData.posX / (111320 * Math.cos((baseLat * Math.PI) / 180));
         ashMap.flyTo([baseLat, baseLng + deltaLng], 15, { duration: 1.0 });
         if (impactMapMarker) {
-          setTimeout(() => { impactMapMarker.openPopup(); }, 1000);
+          setTimeout(() => {
+            impactMapMarker.openPopup();
+          }, 1000);
         }
       }
 
@@ -7918,43 +7976,55 @@
         lucide.createIcons();
         const pBar = document.getElementById("loadingProgressBar");
         const pText = document.getElementById("loadingStatusText");
+        const pPercent = document.getElementById("loadingPercentText");
 
-        pBar.style.width = "40%";
-        pText.innerText = "Menyiapkan Model Kinematika & Multi-Trajectory...";
+        if (pBar) pBar.style.width = "25%";
+        if (pPercent) pPercent.innerText = "25%";
+        if (pText) pText.innerText = "Memuat Modul Komputasi FATISDA UNS...";
 
         setTimeout(() => {
           init3D();
           setup2DInteractions();
           setupDraggableHUD();
 
-          pBar.style.width = "80%";
-          pText.innerText = "Menghubungkan Engine Angin Geospasial...";
+          if (pBar) pBar.style.width = "65%";
+          if (pPercent) pPercent.innerText = "65%";
+          if (pText) pText.innerText = "Menyiapkan Solver RK4 & Viewport 3D Anak Krakatau...";
 
           setTimeout(() => {
             recalculateSimulation(false);
-            pBar.style.width = "100%";
-            pText.innerText = "Selesai!";
+            if (pBar) pBar.style.width = "90%";
+            if (pPercent) pPercent.innerText = "90%";
+            if (pText) pText.innerText = "Menghubungkan Model Sebaran Abu & Batimetri Selat Sunda...";
 
             setTimeout(() => {
-              const overlay = document.getElementById("loadingOverlay");
-              if (window.gsap) {
-                gsap.to(overlay, {
-                  opacity: 0,
-                  duration: 0.45,
-                  ease: "power2.inOut",
-                  onComplete: () => {
-                    overlay.style.display = "none";
-                  },
-                });
-              } else {
-                overlay.classList.add("opacity-0", "pointer-events-none");
-                setTimeout(() => {
-                  overlay.style.display = "none";
-                }, 500);
-              }
-            }, 200);
+              if (pBar) pBar.style.width = "100%";
+              if (pPercent) pPercent.innerText = "100%";
+              if (pText) pText.innerText = "Sistem Komputasi Siap!";
+
+              setTimeout(() => {
+                const overlay = document.getElementById("loadingOverlay");
+                if (overlay) {
+                  if (window.gsap) {
+                    gsap.to(overlay, {
+                      opacity: 0,
+                      duration: 0.5,
+                      ease: "power2.inOut",
+                      onComplete: () => {
+                        overlay.style.display = "none";
+                      },
+                    });
+                  } else {
+                    overlay.classList.add("opacity-0", "pointer-events-none");
+                    setTimeout(() => {
+                      overlay.style.display = "none";
+                    }, 500);
+                  }
+                }
+              }, 250);
+            }, 150);
           }, 150);
-        }, 100);
+        }, 120);
       });
     </script>
   </body>
