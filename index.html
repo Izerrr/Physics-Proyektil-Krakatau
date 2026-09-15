@@ -1737,20 +1737,228 @@
             <!-- SECTION 1: MODE DAMPAK LEDAKAN PROYEKTIL (PRIMARY)             -->
             <!-- ============================================================== -->
             <div id="mapSidebarImpactSection" class="space-y-4">
-              <!-- Kartu 1: Ringkasan Parameter Proyektil Terkini -->
-              <div class="p-3.5 bg-[#16181f] rounded-2xl border border-[#2e3544] space-y-2.5">
-                <div class="flex items-center justify-between border-b border-[#2e3544] pb-1.5">
-                  <span class="text-xs font-bold text-[#e2b083] uppercase tracking-wider flex items-center gap-1.5">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-[#d4a373]"></i>
-                    Parameter Lontaran Aktif
+              <!-- Kartu 1: Pemilih Sumber Data & Pengendali Lontaran Erupsi -->
+              <div class="p-3.5 bg-[#16181f] rounded-2xl border border-[#2e3544] space-y-3">
+                <!-- Header & Mode Switcher -->
+                <div class="flex items-center justify-between border-b border-[#2e3544] pb-2">
+                  <div class="flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-4 h-4 text-[#e07a5f]"></i>
+                    <span class="text-xs font-bold text-[#f4ede4] uppercase tracking-wider">Sumber Data Ledakan</span>
+                  </div>
+                  <span id="impactModeIndicatorBadge" class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40 font-bold">
+                    SIMULASI KITA
                   </span>
-                  <button onclick="switchPage('simulator')" class="text-[10px] font-mono text-[#d4a373] hover:text-[#f4ede4] hover:underline flex items-center gap-1" title="Ubah Parameter di Simulator 3D/2D">
-                    <span>Edit di Simulator</span>
-                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                </div>
+
+                <!-- Tab Segmented Switcher: Simulasi Sendiri vs Skenario Historis -->
+                <div class="p-1 bg-[#1b1e26] rounded-xl border border-[#343c4e] flex items-center gap-1 text-xs font-bold">
+                  <button
+                    id="btnImpactSourceSim"
+                    onclick="setImpactSourceMode('simulation')"
+                    class="flex-1 py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 bg-[#e07a5f] text-[#16181f] shadow-sm"
+                    title="Simulasi Mandiri: Atur variabel lontaran dan arah erupsi sesuka Anda"
+                  >
+                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                    <span>Simulasi Sendiri</span>
+                  </button>
+                  <button
+                    id="btnImpactSourceScenario"
+                    onclick="setImpactSourceMode('scenario')"
+                    class="flex-1 py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4]"
+                    title="Skenario Riil PVMBG: Data kasus nyata letusan historis Anak Krakatau"
+                  >
+                    <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                    <span>Skenario PVMBG</span>
                   </button>
                 </div>
-                <div class="text-[11px] text-[#f4ede4] font-medium truncate" id="mapImpactScenarioTitle">Bom Vulkanik Anak Krakatau (Studi Kasus 2018)</div>
-                <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-[10px]">
+
+                <!-- SUB-PANEL A: KONTROL SIMULASI MANDIRI (CUSTOM SIMULATION) -->
+                <div id="panelImpactCustomSim" class="space-y-3 pt-1">
+                  <!-- Toolbar Sinkronisasi Cepat -->
+                  <div class="flex items-center justify-between gap-1.5 text-[10px] font-mono">
+                    <button
+                      onclick="pullParamsFromSimulator()"
+                      class="flex-1 py-1 px-2 rounded-lg bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] text-[#d4a373] hover:text-[#f4ede4] flex items-center justify-center gap-1 transition-all"
+                      title="Tarik nilai parameter yang sedang aktif di Simulator 3D ke Peta 2D"
+                    >
+                      <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                      <span>Tarik dari 3D</span>
+                    </button>
+                    <button
+                      onclick="pushParamsToSimulator()"
+                      class="flex-1 py-1 px-2 rounded-lg bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] text-[#81b29a] hover:text-[#f4ede4] flex items-center justify-center gap-1 transition-all"
+                      title="Kirim parameter Peta 2D ke Simulator 3D dan jalankan animasi"
+                    >
+                      <i data-lucide="send" class="w-3 h-3"></i>
+                      <span>Kirim ke 3D</span>
+                    </button>
+                  </div>
+
+                  <!-- Slider 1: Kecepatan Awal v0 -->
+                  <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                      <label class="text-[#8e9bb0] font-medium">Kecepatan Awal (v₀)</label>
+                      <div class="flex items-center gap-1">
+                        <input
+                          type="number"
+                          id="mapInputV0"
+                          min="30"
+                          max="350"
+                          step="1"
+                          value="180"
+                          oninput="onMapParamChange('v0', this.value)"
+                          class="w-16 bg-[#222733] border border-[#343c4e] rounded px-1.5 py-0.5 text-right font-mono text-[#e2b083] font-bold text-xs"
+                        />
+                        <span class="text-[10px] text-[#8e9bb0] font-mono">m/s</span>
+                      </div>
+                    </div>
+                    <input
+                      type="range"
+                      id="mapSliderV0"
+                      min="30"
+                      max="350"
+                      step="1"
+                      value="180"
+                      oninput="onMapParamChange('v0', this.value)"
+                      class="w-full accent-[#e07a5f] cursor-pointer"
+                    />
+                  </div>
+
+                  <!-- Slider 2: Sudut Elevasi θ -->
+                  <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                      <label class="text-[#8e9bb0] font-medium">Sudut Elevasi (θ)</label>
+                      <div class="flex items-center gap-1">
+                        <input
+                          type="number"
+                          id="mapInputAngle"
+                          min="15"
+                          max="85"
+                          step="0.5"
+                          value="45"
+                          oninput="onMapParamChange('angle', this.value)"
+                          class="w-16 bg-[#222733] border border-[#343c4e] rounded px-1.5 py-0.5 text-right font-mono text-[#dda15e] font-bold text-xs"
+                        />
+                        <span class="text-[10px] text-[#8e9bb0] font-mono">°</span>
+                      </div>
+                    </div>
+                    <input
+                      type="range"
+                      id="mapSliderAngle"
+                      min="15"
+                      max="85"
+                      step="0.5"
+                      value="45"
+                      oninput="onMapParamChange('angle', this.value)"
+                      class="w-full accent-[#dda15e] cursor-pointer"
+                    />
+                  </div>
+
+                  <!-- Slider 3: Arah Erupsi (Azimuth Kompas 0 - 360°) -->
+                  <div class="space-y-1 bg-[#1b1e26] p-2 rounded-xl border border-[#2e3544]">
+                    <div class="flex justify-between items-center text-xs">
+                      <label class="text-[#f4ede4] font-bold flex items-center gap-1">
+                        <i data-lucide="compass" class="w-3.5 h-3.5 text-[#38bdf8]"></i>
+                        Arah Azimuth Lontaran (ϕ)
+                      </label>
+                      <span id="mapAzimuthLabel" class="font-mono text-xs font-bold text-[#38bdf8]">225° (Barat Daya)</span>
+                    </div>
+                    <input
+                      type="range"
+                      id="mapSliderAzimuth"
+                      min="0"
+                      max="359"
+                      step="1"
+                      value="225"
+                      oninput="onMapAzimuthChange(this.value)"
+                      class="w-full accent-[#38bdf8] cursor-pointer"
+                    />
+                    <!-- Preset Arah Pulau Kaldera -->
+                    <div class="grid grid-cols-2 gap-1 pt-1 text-[9px] font-mono">
+                      <button onclick="setMapAzimuth(225)" class="py-1 px-1.5 rounded bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-left truncate text-[#f4ede4]" title="Barat Daya (Kaldera & Sektor Longsoran 2018)">
+                        🧭 225° Barat Daya (2018)
+                      </button>
+                      <button onclick="setMapAzimuth(305)" class="py-1 px-1.5 rounded bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-left truncate text-[#f4ede4]" title="Barat Laut (Arah Pulau Sertung)">
+                        🏝️ 305° P. Sertung
+                      </button>
+                      <button onclick="setMapAzimuth(55)" class="py-1 px-1.5 rounded bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-left truncate text-[#f4ede4]" title="Timur Laut (Arah Pulau Panjang)">
+                        🏝️ 55° P. Panjang
+                      </button>
+                      <button onclick="setMapAzimuth(160)" class="py-1 px-1.5 rounded bg-[#222733] hover:bg-[#2e3544] border border-[#343c4e] text-left truncate text-[#f4ede4]" title="Selatan (Arah Pulau Rakata)">
+                        🏝️ 160° P. Rakata
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Slider 4: Massa Proyektil (m) & Pilihan Fraksi Wentworth -->
+                  <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                      <label class="text-[#8e9bb0] font-medium">Massa Bom Vulkanik (m)</label>
+                      <div class="flex items-center gap-1">
+                        <input
+                          type="number"
+                          id="mapInputMass"
+                          min="1"
+                          max="1500"
+                          step="1"
+                          value="250"
+                          oninput="onMapParamChange('m', this.value)"
+                          class="w-16 bg-[#222733] border border-[#343c4e] rounded px-1.5 py-0.5 text-right font-mono text-[#81b29a] font-bold text-xs"
+                        />
+                        <span class="text-[10px] text-[#8e9bb0] font-mono">kg</span>
+                      </div>
+                    </div>
+                    <input
+                      type="range"
+                      id="mapSliderMass"
+                      min="1"
+                      max="1500"
+                      step="1"
+                      value="250"
+                      oninput="onMapParamChange('m', this.value)"
+                      class="w-full accent-[#81b29a] cursor-pointer"
+                    />
+                    <!-- Preset Fraksi Wentworth -->
+                    <div class="grid grid-cols-4 gap-1 pt-1 text-[9px] font-mono text-center">
+                      <button onclick="setMapWentworthFraction(670, 0.8, 0.85)" class="py-1 px-0.5 rounded bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] truncate" title="Megablock d=80cm (670kg)">
+                        Mega 670kg
+                      </button>
+                      <button onclick="setMapWentworthFraction(84, 0.4, 0.47)" class="py-1 px-0.5 rounded bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] truncate" title="Bom 84kg">
+                        Bom 84kg
+                      </button>
+                      <button onclick="setMapWentworthFraction(10.5, 0.2, 0.47)" class="py-1 px-0.5 rounded bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] truncate" title="Ringan 10.5kg">
+                        Ringan 10kg
+                      </button>
+                      <button onclick="setMapWentworthFraction(0.043, 0.032, 0.47)" class="py-1 px-0.5 rounded bg-[#222733] hover:bg-[#252b37] border border-[#343c4e] truncate" title="Lapili 43g">
+                        Lapili 43g
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUB-PANEL B: PILIHAN SKENARIO RIIL HISTORIS PVMBG -->
+                <div id="panelImpactScenario" class="space-y-3 pt-1 hidden">
+                  <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-[#8e9bb0] uppercase tracking-wider block">Pilih Skenario Erupsi Nyata</label>
+                    <select
+                      id="impactHistoricalScenarioSelect"
+                      onchange="onSelectImpactScenario(this.value)"
+                      class="w-full bg-[#16181f] border border-[#343c4e] rounded-xl p-2.5 text-xs text-[#e07a5f] font-semibold focus:outline-none focus:border-[#e07a5f]"
+                    >
+                      <option value="paroxysmal_2018" selected>1. Erupsi Paroksismal 22 Des 2018 (Longsor Barat Daya)</option>
+                      <option value="megablock_sertung">2. Lontaran Megablock P. Sertung (Erupsi Kubah)</option>
+                      <option value="vulkanian_panjang">3. Hujan Bom Vulkanian P. Panjang (Erupsi 2020)</option>
+                      <option value="surtseyan_rakata">4. Lontaran Basal Kaldera Rakata (Kawah Selatan)</option>
+                    </select>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-[#222733] border border-[#343c4e] text-[10px] text-[#8e9bb0] leading-snug space-y-1">
+                    <b id="impactScenarioDescTitle" class="text-[#f4ede4] block text-xs font-bold">Studi Kasus 22 Desember 2018</b>
+                    <p id="impactScenarioDescText">Erupsi freatomagmatik hebat meruntuhkan lereng barat daya kaldera Anak Krakatau seluas 64 hektar ke laut, memicu tsunami Selat Sunda.</p>
+                  </div>
+                </div>
+
+                <!-- Parameter Ringkas Display Grid (Mempertahankan ID DOM yang Ada) -->
+                <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-[10px] pt-1 border-t border-[#2e3544]">
                   <div class="p-1.5 bg-[#222733] rounded-xl border border-[#343c4e]">
                     <span class="text-[8px] text-[#8e9bb0] block">v₀</span>
                     <b id="mapParamV0" class="text-[#e2b083]">180 m/s</b>
@@ -1767,6 +1975,9 @@
                     <span class="text-[8px] text-[#8e9bb0] block">Drag Cd</span>
                     <b id="mapParamCd" class="text-[#38bdf8]">0.47</b>
                   </div>
+                </div>
+                <div class="text-[10px] text-[#8e9bb0] font-mono truncate text-center" id="mapImpactScenarioTitle">
+                  Simulasi Mandiri Aktif
                 </div>
               </div>
 
@@ -4939,10 +5150,10 @@
       // ======================================================================
       // 2. ENGINE ANALISIS DAMPAK TUMBUKAN BALISTIK & WILAYAH TERDAMPAK (KRB)
       // ======================================================================
-      function computeImpactAssessment(posX, vFinal, mass, thetaFinal) {
-        const m = mass || currentParams.m || 250;
+      function computeImpactAssessment(posX, vFinal, mass, thetaFinal, azimuthDeg) {
+        const m = mass || (typeof currentParams !== "undefined" ? currentParams.m : 250);
         const vf = vFinal || 100;
-        const th = thetaFinal !== undefined ? thetaFinal : currentParams.angle || 45;
+        const th = thetaFinal !== undefined ? thetaFinal : (typeof currentParams !== "undefined" && currentParams.angle ? currentParams.angle : 45);
 
         // 1. Energi kinetik saat impak (Joules & MJ)
         const eJoules = 0.5 * m * vf * vf;
@@ -4967,30 +5178,48 @@
         let impactDesc = "";
         let mitigationNote = "";
 
-        if (posX < 350) {
+        const az = azimuthDeg !== undefined && azimuthDeg !== null ? ((azimuthDeg % 360) + 360) % 360 : null;
+
+        if (posX < 400) {
           sectorName = "Kubah Lava & Kawah Sentral Anak Krakatau";
           krbLevel = "KRB III (Sangat Bahaya)";
           krbBadgeClass = "bg-[#e07a5f] text-[#16181f]";
           impactDesc = "Pusat erupsi vulkanik. Tumbukan langsung menghancurkan morfologi kawah aktif dan memicu letusan sekunder freatomagmatik.";
           mitigationNote = "Zona steril mutlak (radius 2 km). Tidak boleh ada aktivitas manusia sama sekali.";
         } else if (posX < 1800) {
-          sectorName = "Lereng Kaldera Barat Daya / Tenggara Anak Krakatau";
+          if (az !== null && az >= 190 && az <= 260) {
+            sectorName = "Lereng Barat Daya Anak Krakatau (Zona Longsor 2018)";
+            impactDesc = "Sektor keruntuhan lereng kaldera 2018. Tumbukan bom vulkanik berisiko memicu gelinciran material piroklastik bawah laut.";
+          } else {
+            sectorName = "Lereng Kaldera Tubuh Anak Krakatau";
+            impactDesc = "Lereng tubuh gunung berapi yang labil. Tumbukan batuan berpotensi memicu keruntuhan lereng dan lontaran batu pijar sekunder.";
+          }
           krbLevel = "KRB III (Bahaya Tinggi)";
           krbBadgeClass = "bg-[#e07a5f] text-[#16181f]";
-          impactDesc = "Lereng tubuh gunung berapi yang labil. Tumbukan batuan berpotensi memicu keruntuhan lereng dan longsoran bawah laut (seperti pemicu tsunami 2018).";
           mitigationNote = "Zona evakuasi penuh. Risiko longsor lereng yang berpotensi memicu gelombang tsunami lokal.";
-        } else if (posX < 4200) {
-          sectorName = "Perairan Kaldera Selat Sunda (Antara Anak Krakatau & P. Sertung)";
+        } else if (posX < 3600) {
+          sectorName = "Perairan Kaldera Dalam Selat Sunda";
           krbLevel = "KRB II (Bahaya Maritim)";
           krbBadgeClass = "bg-[#dda15e] text-[#16181f]";
           impactDesc = "Perairan terbuka kaldera Krakatau. Menimbulkan gelombang kejut air laut impulsif dan semburan percikan tinggi.";
           mitigationNote = "Radius bahaya navigasi maritim 5 km. Kapal nelayan dan perahu wisata dilarang melintas.";
         } else if (posX < 6500) {
-          sectorName = "Kepulauan Pembatas (Pulau Sertung / Pulau Panjang)";
+          if (az !== null && az >= 285 && az <= 335) {
+            sectorName = "Daratan & Tebing Pulau Sertung";
+            impactDesc = "Pesisir dan tebing hutan Pulau Sertung. Tumbukan batuan piroklastik merusak vegetasi dan pos monitoring.";
+          } else if (az !== null && az >= 30 && az <= 80) {
+            sectorName = "Daratan Pulau Panjang (Pulau Rakata Kecil)";
+            impactDesc = "Dinding kaldera purba Pulau Panjang. Hujan bom vulkanik mengancam stasiun pengamatan dan jalur pelayaran timur.";
+          } else if (az !== null && az >= 140 && az <= 195) {
+            sectorName = "Tebing Terjal Kaldera Purba Pulau Rakata";
+            impactDesc = "Tebing basal masif Pulau Rakata. Tumbukan bom memicu reruntuhan batu cadas ke perairan kawah purba.";
+          } else {
+            sectorName = "Perairan Kaldera Luar Selat Sunda";
+            impactDesc = "Perairan penghubung antar-pulau kaldera. Tumbukan menghasilkan gelombang dispersif dan kolom uap freatik.";
+          }
           krbLevel = "KRB II (Lontaran Batu Pijar)";
           krbBadgeClass = "bg-[#dda15e] text-[#16181f]";
-          impactDesc = "Tebing dan daratan pulau dinding kaldera purba. Menghujani pos pemantau geofisika & stasiun seismograf PVMBG.";
-          mitigationNote = "Personel pos pantau wajib berlindung di bunker beton tahan tumbukan.";
+          mitigationNote = "Personel pos pantau wajib berlindung di bunker beton tahan tumbukan. Larangan melintas di radius 5 km.";
         } else {
           sectorName = "Koridor Maritim Selat Sunda & Jalur Penyeberangan";
           krbLevel = "KRB I (Waspada Jarak Jauh)";
@@ -7076,6 +7305,75 @@
       let impactCraterCircle = null;
       let impactTrajectoryLine = null;
 
+      // State Mode Sumber Dampak Ledakan 2D Map (Simulasi Mandiri vs Skenario PVMBG)
+      let impactSourceMode = "simulation"; // "simulation" atau "scenario"
+      let impactAzimuth = 225; // Derajat azimuth kompas (0=Utara, 90=Timur, 180=Selatan, 225=Barat Daya)
+      let mapSimParams = {
+        v0: 180,
+        angle: 45,
+        m: 250,
+        diam: 0.5,
+        cd: 0.47,
+        y0: 157,
+        g: 9.81,
+        wind: 0,
+        lowWind: 0,
+        highWind: 0,
+        useBarometric: true,
+        useWindShear: false,
+        useMagnus: false,
+        solver: "rk4",
+        dt: 0.02,
+      };
+      let lastImpactLatLng = null;
+
+      const IMPACT_SCENARIOS = {
+        paroxysmal_2018: {
+          title: "Erupsi Paroksismal 22 Des 2018",
+          subtitle: "Studi Kasus 22 Desember 2018",
+          desc: "Erupsi freatomagmatik hebat meruntuhkan lereng barat daya kaldera Anak Krakatau seluas 64 hektar ke laut, memicu tsunami Selat Sunda.",
+          v0: 180,
+          angle: 42,
+          m: 350,
+          diam: 0.65,
+          cd: 0.65,
+          azimuth: 225,
+        },
+        megablock_sertung: {
+          title: "Lontaran Megablock P. Sertung",
+          subtitle: "Lontaran Megablock P. Sertung (Erupsi Kubah)",
+          desc: "Fragmen batuan andesit raksasa terlontar akibat dekompresi eksplosif kubah lava menuju pesisir timur Pulau Sertung.",
+          v0: 220,
+          angle: 35,
+          m: 850,
+          diam: 0.95,
+          cd: 0.85,
+          azimuth: 305,
+        },
+        vulkanian_panjang: {
+          title: "Hujan Bom Vulkanian P. Panjang",
+          subtitle: "Hujan Bom Vulkanian P. Panjang (Erupsi 2020)",
+          desc: "Kolom letusan abu vulkanian setinggi 2 km melontarkan ribuan bom kerak roti (bread-crust bombs) ke arah Pulau Panjang.",
+          v0: 150,
+          angle: 55,
+          m: 75,
+          diam: 0.38,
+          cd: 0.47,
+          azimuth: 55,
+        },
+        surtseyan_rakata: {
+          title: "Lontaran Basal Kaldera Rakata",
+          subtitle: "Lontaran Basal Kaldera Rakata (Kawah Selatan)",
+          desc: "Aktivitas hidrovulkanik surtseyan dengan letusan basal ke arah dinding tebing terjal kaldera purba Pulau Rakata.",
+          v0: 195,
+          angle: 48,
+          m: 120,
+          diam: 0.45,
+          cd: 0.52,
+          azimuth: 160,
+        },
+      };
+
       let windParticles = [];
       let isWindParticlesActive = true;
       let windParticleAnimId = null;
@@ -7209,6 +7507,7 @@
         initWindParticlesSystem();
 
         // Terapkan mode aktif (default: Mode Dampak Ledakan)
+        syncMapSimInputs();
         set2DMapMode(current2DMapMode);
       }
 
@@ -7481,33 +7780,228 @@
         }
       }
 
+      function getCompassCardinalName(deg) {
+        const d = ((deg % 360) + 360) % 360;
+        if (d >= 337.5 || d < 22.5) return "Utara (N)";
+        if (d >= 22.5 && d < 67.5) return "Timur Laut (NE)";
+        if (d >= 67.5 && d < 112.5) return "Timur (E)";
+        if (d >= 112.5 && d < 157.5) return "Tenggara (SE)";
+        if (d >= 157.5 && d < 202.5) return "Selatan (S)";
+        if (d >= 202.5 && d < 247.5) return "Barat Daya (SW)";
+        if (d >= 247.5 && d < 292.5) return "Barat (W)";
+        return "Barat Laut (NW)";
+      }
+
+      function setImpactSourceMode(mode) {
+        impactSourceMode = mode;
+        const btnSim = document.getElementById("btnImpactSourceSim");
+        const btnScen = document.getElementById("btnImpactSourceScenario");
+        const panelSim = document.getElementById("panelImpactCustomSim");
+        const panelScen = document.getElementById("panelImpactScenario");
+        const badge = document.getElementById("impactModeIndicatorBadge");
+
+        if (mode === "simulation") {
+          if (btnSim) btnSim.className = "flex-1 py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 bg-[#e07a5f] text-[#16181f] shadow-sm";
+          if (btnScen) btnScen.className = "flex-1 py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4]";
+          if (panelSim) panelSim.classList.remove("hidden");
+          if (panelScen) panelScen.classList.add("hidden");
+          if (badge) {
+            badge.innerText = "SIMULASI KITA";
+            badge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#e07a5f]/20 text-[#e07a5f] border border-[#e07a5f]/40 font-bold";
+          }
+        } else {
+          if (btnScen) btnScen.className = "flex-1 py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 bg-[#dda15e] text-[#16181f] shadow-sm";
+          if (btnSim) btnSim.className = "flex-1 py-1.5 px-2 rounded-lg transition-all flex items-center justify-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4]";
+          if (panelScen) panelScen.classList.remove("hidden");
+          if (panelSim) panelSim.classList.add("hidden");
+          if (badge) {
+            badge.innerText = "SKENARIO PVMBG";
+            badge.className = "text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#dda15e]/20 text-[#dda15e] border border-[#dda15e]/40 font-bold";
+          }
+        }
+        recalculate2DMapImpact();
+      }
+
+      function onMapParamChange(key, val) {
+        const num = parseFloat(val);
+        if (isNaN(num)) return;
+        mapSimParams[key] = num;
+        if (key === "m") {
+          mapSimParams.diam = Math.max(0.01, Math.pow((num / 2600) * (6 / Math.PI), 1 / 3));
+        }
+        syncMapSimInputs();
+        recalculate2DMapImpact();
+      }
+
+      function onMapAzimuthChange(deg) {
+        const d = parseFloat(deg);
+        if (isNaN(d)) return;
+        impactAzimuth = ((d % 360) + 360) % 360;
+        syncMapAzimuthDisplay();
+        recalculate2DMapImpact();
+      }
+
+      function setMapAzimuth(deg) {
+        impactAzimuth = ((deg % 360) + 360) % 360;
+        syncMapAzimuthDisplay();
+        recalculate2DMapImpact();
+      }
+
+      function syncMapAzimuthDisplay() {
+        const slider = document.getElementById("mapSliderAzimuth");
+        const label = document.getElementById("mapAzimuthLabel");
+        if (slider) slider.value = impactAzimuth;
+        if (label) label.innerText = `${impactAzimuth}° (${getCompassCardinalName(impactAzimuth)})`;
+      }
+
+      function setMapWentworthFraction(mass, diam, cd) {
+        mapSimParams.m = mass;
+        mapSimParams.diam = diam;
+        if (cd !== undefined) mapSimParams.cd = cd;
+        syncMapSimInputs();
+        recalculate2DMapImpact();
+      }
+
+      function syncMapSimInputs() {
+        const v0In = document.getElementById("mapInputV0");
+        const v0Sl = document.getElementById("mapSliderV0");
+        const angIn = document.getElementById("mapInputAngle");
+        const angSl = document.getElementById("mapSliderAngle");
+        const massIn = document.getElementById("mapInputMass");
+        const massSl = document.getElementById("mapSliderMass");
+
+        if (v0In) v0In.value = mapSimParams.v0;
+        if (v0Sl) v0Sl.value = mapSimParams.v0;
+        if (angIn) angIn.value = mapSimParams.angle;
+        if (angSl) angSl.value = mapSimParams.angle;
+        if (massIn) massIn.value = mapSimParams.m;
+        if (massSl) massSl.value = mapSimParams.m;
+        syncMapAzimuthDisplay();
+      }
+
+      function pullParamsFromSimulator() {
+        if (typeof currentParams !== "undefined") {
+          mapSimParams.v0 = currentParams.v0;
+          mapSimParams.angle = currentParams.angle;
+          mapSimParams.m = currentParams.m;
+          mapSimParams.diam = currentParams.diam;
+          mapSimParams.cd = currentParams.cd;
+          mapSimParams.y0 = currentParams.y0 || 157;
+          mapSimParams.g = currentParams.g || 9.81;
+          syncMapSimInputs();
+          if (impactSourceMode !== "simulation") {
+            setImpactSourceMode("simulation");
+          } else {
+            recalculate2DMapImpact();
+          }
+        }
+      }
+
+      function pushParamsToSimulator() {
+        if (typeof currentParams !== "undefined") {
+          currentParams.v0 = mapSimParams.v0;
+          currentParams.angle = mapSimParams.angle;
+          currentParams.m = mapSimParams.m;
+          currentParams.diam = mapSimParams.diam;
+          currentParams.cd = mapSimParams.cd;
+          if (typeof syncUIWithParams === "function") {
+            syncUIWithParams();
+          }
+          if (typeof computeTrajectories === "function") {
+            trajectories = computeTrajectories(currentParams);
+          }
+          switchPage("simulator");
+          if (typeof resetSimulation === "function" && typeof startSimulation === "function") {
+            resetSimulation();
+            startSimulation();
+          }
+        }
+      }
+
+      function onSelectImpactScenario(scKey) {
+        const sc = IMPACT_SCENARIOS[scKey];
+        if (!sc) return;
+        const titleEl = document.getElementById("impactScenarioDescTitle");
+        const textEl = document.getElementById("impactScenarioDescText");
+        if (titleEl) titleEl.innerText = sc.subtitle;
+        if (textEl) textEl.innerText = sc.desc;
+        recalculate2DMapImpact();
+      }
+
+      function recalculate2DMapImpact() {
+        render2DBallisticImpactOnMap();
+      }
+
       function render2DBallisticImpactOnMap(inputAssessment) {
-        if (!trajectories) trajectories = computeTrajectories(currentParams);
-        const pts = trajectories.real.data;
-        const lastPt = pts[pts.length - 1];
-        const vf = lastPt ? lastPt.v : currentParams.v0;
-        const th = lastPt ? (Math.atan2(Math.abs(lastPt.vy), Math.abs(lastPt.vx)) * 180) / Math.PI : currentParams.angle;
-        const a = inputAssessment || computeImpactAssessment(lastPt ? lastPt.x : 1000, vf, currentParams.m, th);
+        // Tentukan parameter aktif berdasarkan mode sumber (Simulasi Mandiri vs Skenario PVMBG)
+        let activeParams = { ...mapSimParams };
+        let activeAzimuth = impactAzimuth;
+        let scenarioTitle = "Simulasi Mandiri Aktif";
+
+        if (impactSourceMode === "scenario") {
+          const scSelect = document.getElementById("impactHistoricalScenarioSelect");
+          const scKey = scSelect ? scSelect.value : "paroxysmal_2018";
+          const sc = IMPACT_SCENARIOS[scKey] || IMPACT_SCENARIOS.paroxysmal_2018;
+          activeParams = {
+            ...mapSimParams,
+            v0: sc.v0,
+            angle: sc.angle,
+            m: sc.m,
+            diam: sc.diam,
+            cd: sc.cd,
+          };
+          activeAzimuth = sc.azimuth;
+          scenarioTitle = `${sc.title} (ϕ = ${sc.azimuth}° ${getCompassCardinalName(sc.azimuth)})`;
+        } else {
+          scenarioTitle = `Simulasi Mandiri (ϕ = ${impactAzimuth}° ${getCompassCardinalName(impactAzimuth)})`;
+        }
+
+        activeParams.area = Math.PI * Math.pow(activeParams.diam / 2, 2);
+
+        // Hitung lintasan proyektil menggunakan RK4 physics engine
+        let vf = activeParams.v0;
+        let th = activeParams.angle;
+        let finalX = 1000;
+
+        if (typeof solveTrajectoryCustom === "function") {
+          const simRes = solveTrajectoryCustom(activeParams, true, 0.02);
+          const lastPt = simRes[simRes.length - 1];
+          if (lastPt) {
+            finalX = lastPt.x;
+            vf = lastPt.v;
+            th = (Math.atan2(Math.abs(lastPt.vy), Math.abs(lastPt.vx)) * 180) / Math.PI;
+          }
+        } else if (inputAssessment) {
+          finalX = inputAssessment.posX;
+          vf = inputAssessment.vFinal;
+          th = inputAssessment.thetaFinal;
+        }
+
+        const a = computeImpactAssessment(finalX, vf, activeParams.m, th, activeAzimuth);
         lastImpactData = a;
 
+        // Proyeksi Geodesi 360 Derajat Azimuth Kompas dari Kawah Anak Krakatau
         const baseLat = -6.102;
         const baseLng = 105.423;
-        const deltaLng = a.posX / (111320 * Math.cos((baseLat * Math.PI) / 180));
-        const impactLatLng = [baseLat, baseLng + deltaLng];
+        const rad = (activeAzimuth * Math.PI) / 180;
+        const dy = a.posX * Math.cos(rad);
+        const dx = a.posX * Math.sin(rad);
+        const impactLat = baseLat + dy / 111000;
+        const impactLng = baseLng + dx / (111320 * Math.cos((baseLat * Math.PI) / 180));
+        const impactLatLng = [impactLat, impactLng];
         const volcanoLatLng = [baseLat, baseLng];
+        lastImpactLatLng = impactLatLng;
 
         const setTxt = (id, val) => {
           const el = document.getElementById(id);
           if (el) el.innerText = val;
         };
 
-        setTxt("mapParamV0", `${currentParams.v0.toFixed(0)} m/s`);
-        setTxt("mapParamAngle", `${currentParams.angle.toFixed(1)}°`);
-        setTxt("mapParamMass", `${currentParams.m.toFixed(1)} kg`);
-        setTxt("mapParamCd", `${currentParams.cd.toFixed(2)}`);
-
-        const scSelect = document.getElementById("presetSelect");
-        if (scSelect) setTxt("mapImpactScenarioTitle", scSelect.options[scSelect.selectedIndex].text);
+        setTxt("mapParamV0", `${activeParams.v0.toFixed(0)} m/s`);
+        setTxt("mapParamAngle", `${activeParams.angle.toFixed(1)}°`);
+        setTxt("mapParamMass", `${activeParams.m.toFixed(1)} kg`);
+        setTxt("mapParamCd", `${activeParams.cd.toFixed(2)}`);
+        setTxt("mapImpactScenarioTitle", scenarioTitle);
 
         setTxt("mapImpactDist", `${formatPrecisionNumber(a.posX)} m (${(a.posX / 1000).toFixed(2)} km)`);
         setTxt("mapImpactEnergy", `${formatPrecisionNumber(a.eMJ)} MJ`);
@@ -7567,10 +8061,10 @@
           });
           impactMapMarker = L.marker(impactLatLng, { icon: impactPinIcon }).addTo(impactLayersGroup);
           impactMapMarker.bindPopup(`
-            <div style="font-family: sans-serif; font-size: 11px; min-width: 210px; line-height: 1.4;">
+            <div style="font-family: sans-serif; font-size: 11px; min-width: 220px; line-height: 1.4;">
               <div style="border-bottom: 1px solid #e07a5f; padding-bottom: 4px; margin-bottom: 5px;">
                 <b style="color: #e07a5f; font-size: 12px;">💥 Titik Tumbukan Bom Vulkanik</b><br>
-                <span style="font-size: 9.5px; color: #8e9bb0;">Ground Zero Kaldera Selat Sunda</span>
+                <span style="font-size: 9.5px; color: #8e9bb0;">Ground Zero (Azimuth: ${activeAzimuth}° ${getCompassCardinalName(activeAzimuth)})</span>
               </div>
               <b>Sektor:</b> ${a.sectorName}<br>
               <b>Jarak Impak (X):</b> ${formatPrecisionNumber(a.posX)} m<br>
@@ -7646,7 +8140,7 @@
           ];
 
           wentworthSpecs.forEach((ws) => {
-            const simRes = solveTrajectoryCustom({ ...currentParams, m: ws.mass, diam: ws.diam, cd: ws.cd });
+            const simRes = solveTrajectoryCustom({ ...activeParams, m: ws.mass, diam: ws.diam, cd: ws.cd });
             const finalW = simRes[simRes.length - 1];
             setTxt(ws.id, `${finalW.x.toFixed(1)} m`);
 
@@ -7680,11 +8174,13 @@
       function focusMapOnImpact() {
         if (!ashMap) return;
         if (!lastImpactData) render2DBallisticImpactOnMap();
-        if (!lastImpactData) return;
-        const baseLat = -6.102;
-        const baseLng = 105.423;
-        const deltaLng = lastImpactData.posX / (111320 * Math.cos((baseLat * Math.PI) / 180));
-        ashMap.flyTo([baseLat, baseLng + deltaLng], 15, { duration: 1.0 });
+        if (lastImpactLatLng) {
+          ashMap.flyTo(lastImpactLatLng, 15, { duration: 1.0 });
+        } else {
+          const baseLat = -6.102;
+          const baseLng = 105.423;
+          ashMap.flyTo([baseLat, baseLng], 15, { duration: 1.0 });
+        }
         if (impactMapMarker) {
           setTimeout(() => {
             impactMapMarker.openPopup();
@@ -7700,11 +8196,12 @@
       }
 
       function openImpactOn2DMap() {
+        pullParamsFromSimulator();
         switchPage("ashmap");
         set2DMapMode("impact");
         setTimeout(() => {
           focusMapOnImpact();
-        }, 150);
+        }, 250);
       }
 
       function switchPage(page) {
@@ -7759,6 +8256,7 @@
             initAshLeafletMap();
             if (ashMap) ashMap.invalidateSize();
             resizeWindCanvas();
+            syncMapSimInputs();
             set2DMapMode(current2DMapMode);
           }, 80);
         }
