@@ -278,56 +278,43 @@
         </div>
       </div>
 
-      <!-- Switcher Halaman Utama -->
-      <div class="flex items-center p-0.5 bg-[#222733] rounded-xl border border-[#343c4e]">
-        <button
-          id="navBtnSim"
-          onclick="switchPage('simulator')"
-          class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 bg-[#d4a373] text-[#16181f] shadow-sm whitespace-nowrap"
-          title="Simulator Kinematika 3D/2D"
-        >
-          <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Simulator Balistik</span>
-          <span class="sm:hidden">Simulator</span>
-        </button>
-        <button
-          id="navBtnAsh"
-          onclick="switchPage('ashmap')"
-          class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4] whitespace-nowrap"
-          title="Peta Geospasial 2D: Dampak Ledakan &amp; Sebaran Abu"
-        >
-          <i data-lucide="map" class="w-3.5 h-3.5 text-[#e2b083]"></i>
-          <span class="hidden sm:inline">Peta Dampak &amp; Abu</span>
-          <span class="sm:hidden">Peta 2D</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-[#e07a5f] animate-ping ml-0.5 hidden xs:inline"></span>
-        </button>
-      </div>
-
-      <!-- Action Tools -->
-      <div class="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
-        <button
-          id="btnNavInteractiveDemo"
-          onclick="startInteractiveDemo()"
-          class="px-2 sm:px-2.5 py-1 rounded-xl bg-[#e07a5f] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm flex-shrink-0"
-          title="Mode Demo Interaktif Langkah-demi-Langkah (Panduan Praktikum)"
-        >
-          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-          <span class="inline">Demo</span><span class="hidden sm:inline"> Interaktif</span>
-        </button>
-
-        <!-- Mobile More Tools Button -->
-        <button
-          id="btnMobileToolsToggle"
-          onclick="openMobileToolsModal()"
-          class="md:hidden px-2 py-1 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] text-xs font-bold flex items-center gap-1 shadow-sm flex-shrink-0"
-          title="Buka Menu Alat &amp; Modul Tambahan"
-        >
-          <i data-lucide="more-horizontal" class="w-4 h-4"></i>
-          <span class="text-[11px]">Alat</span>
-        </button>
+      <!-- Desktop Navigation & Action Controls (Tampil hanya pada md ke atas) -->
+      <div class="hidden md:flex items-center gap-2 lg:gap-3">
+        <!-- Switcher Halaman Utama Desktop -->
+        <div class="flex items-center p-0.5 bg-[#222733] rounded-xl border border-[#343c4e]">
+          <button
+            id="navBtnSim"
+            onclick="switchPage('simulator')"
+            class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 bg-[#d4a373] text-[#16181f] shadow-sm whitespace-nowrap"
+            title="Simulator Kinematika 3D/2D"
+          >
+            <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+            <span>Simulator Balistik</span>
+          </button>
+          <button
+            id="navBtnAsh"
+            onclick="switchPage('ashmap')"
+            class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4] whitespace-nowrap"
+            title="Peta Geospasial 2D: Dampak Ledakan &amp; Sebaran Abu"
+          >
+            <i data-lucide="map" class="w-3.5 h-3.5 text-[#e2b083]"></i>
+            <span>Peta Dampak &amp; Abu</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-[#e07a5f] animate-ping ml-0.5 inline"></span>
+          </button>
+        </div>
 
         <!-- Desktop Action Buttons -->
-        <div class="hidden md:flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5">
+          <button
+            id="btnNavInteractiveDemo"
+            onclick="startInteractiveDemo()"
+            class="px-2.5 py-1 rounded-xl bg-[#e07a5f] text-[#16181f] hover:bg-[#e2b083] transition-all text-xs font-bold flex items-center gap-1 shadow-sm flex-shrink-0"
+            title="Mode Demo Interaktif Langkah-demi-Langkah (Panduan Praktikum)"
+          >
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Demo Interaktif</span>
+          </button>
+
           <button
             id="btnNavRubrik9"
             onclick="openRubrik9ParamModal()"
@@ -335,8 +322,7 @@
             title="Matriks Evaluasi 9 Parameter Presisi Fisika (Tugas Pak BL)"
           >
             <span class="text-[#e2b083]">⭐</span>
-            <span class="hidden xl:inline">9 Parameter Presisi</span>
-            <span class="xl:hidden">9 Param</span>
+            <span>9 Parameter Presisi</span>
             <span class="text-[9px] px-1 py-0.2 rounded bg-[#252b37] text-[#d4a373] font-mono border border-[#343c4e]">Pak BL</span>
           </button>
 
@@ -349,8 +335,7 @@
               title="Modul Analisis, Teori, Grafik, &amp; Laporan Praktikum"
             >
               <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-[#81b29a]"></i>
-              <span class="hidden lg:inline">Modul Analisis</span>
-              <span class="lg:hidden">Modul</span>
+              <span>Modul Analisis</span>
               <i data-lucide="chevron-down" id="navModulChevron" class="w-3 h-3 text-[#8e9bb0] transition-transform duration-200"></i>
             </button>
             <div id="navModulDropdownMenu" class="hidden absolute right-0 mt-1.5 w-60 bg-[#1b1e26]/98 border border-[#343c4e] rounded-xl shadow-2xl backdrop-blur-xl p-1.5 z-50 space-y-0.5">
@@ -378,8 +363,8 @@
               >
                 <i data-lucide="cpu" class="w-4 h-4 text-[#81b29a]"></i>
                 <div>
-                  <span class="block">Uji Galat Numerik RK4</span>
-                  <span class="text-[10px] text-[#8e9bb0]">Komparasi RK4 vs Euler &amp; Vakum</span>
+                  <span class="block">Uji Galat Solver RK4</span>
+                  <span class="text-[10px] text-[#8e9bb0]">Perbandingan numerik vs Euler</span>
                 </div>
               </button>
               <button
@@ -433,7 +418,297 @@
           </button>
         </div>
       </div>
+
+      <!-- Mobile Right Container (< md): Hamburger Button Only (Anti-Clutter) -->
+      <div class="flex md:hidden items-center gap-2">
+        <button
+          id="btnMobileNavToggle"
+          onclick="toggleMobileNavDrawer(true)"
+          class="px-3 py-1.5 rounded-xl bg-[#222733] border border-[#343c4e] text-[#e2b083] hover:text-[#f4ede4] hover:border-[#d4a373] active:scale-95 transition-all flex items-center gap-1.5 shadow-sm"
+          title="Buka Menu Navigasi"
+          aria-label="Buka Menu Navigasi"
+        >
+          <i data-lucide="menu" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          <span class="text-xs font-bold text-[#f4ede4]">Menu</span>
+        </button>
+      </div>
     </nav>
+
+    <!-- ==================================================================== -->
+    <!-- MOBILE NAVIGATION DRAWER (HAMBURGER MENU SLIDE-OVER)                 -->
+    <!-- ==================================================================== -->
+    <div
+      id="mobileNavBackdrop"
+      onclick="toggleMobileNavDrawer(false)"
+      class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden transition-opacity duration-300 md:hidden"
+    ></div>
+
+    <aside
+      id="mobileNavDrawer"
+      class="fixed inset-y-0 right-0 z-50 w-[86vw] sm:w-80 max-w-[360px] bg-[#1a1d26] border-l border-[#2e3544] shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+    >
+      <!-- Header Drawer -->
+      <div class="p-4 border-b border-[#2e3544] bg-[#14161d] flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-[#252b37] border border-[#3d4659] flex items-center justify-center p-1 text-[#e2b083] shadow-inner">
+            <img src="assets/logo-uns.png" alt="Logo UNS" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+            <i data-lucide="volcano" class="w-4 h-4 text-[#e2b083] hidden"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h3 class="text-sm font-bold text-[#f4ede4]">GeoLab UNS</h3>
+              <span class="text-[8px] px-1.5 py-0.2 rounded bg-[#252b37] text-[#d4a373] border border-[#343c4e] font-mono font-bold">FATISDA</span>
+            </div>
+            <p class="text-[9px] text-[#8e9bb0] font-mono">Fisika Komputasi Erupsi Krakatau</p>
+          </div>
+        </div>
+        <button
+          onclick="toggleMobileNavDrawer(false)"
+          class="p-2 text-[#8e9bb0] hover:text-white rounded-xl hover:bg-[#252b37] transition-all"
+          title="Tutup Menu"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Drawer Content (Scrollable) -->
+      <div class="p-4 overflow-y-auto space-y-4 custom-scrollbar flex-1 text-xs">
+        <!-- Section: Pilihan Halaman Utama -->
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-wider text-[#8e9bb0] mb-2 px-1 flex items-center gap-1">
+            <i data-lucide="compass" class="w-3 h-3 text-[#d4a373]"></i>
+            <span>Halaman Utama</span>
+          </div>
+          <div class="space-y-1.5">
+            <!-- Button Simulator -->
+            <button
+              id="mobileMenuBtnSim"
+              onclick="
+                switchPage('simulator');
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#d4a373] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#d4a373]/20 border border-[#d4a373]/40 flex items-center justify-center text-[#e2b083]">
+                  <i data-lucide="crosshair" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Simulator Balistik</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Lintasan 3D WebGL &amp; Kanvas 2D</div>
+                </div>
+              </div>
+              <span id="mobileBadgeSim" class="text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold bg-[#d4a373] text-[#16181f]">Aktif</span>
+            </button>
+
+            <!-- Button Peta 2D -->
+            <button
+              id="mobileMenuBtnAsh"
+              onclick="
+                switchPage('ashmap');
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#343c4e] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#e2b083]/20 border border-[#e2b083]/40 flex items-center justify-center text-[#e2b083]">
+                  <i data-lucide="map" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Peta Geospasial 2D</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Dampak Ledakan &amp; Sebaran Abu</div>
+                </div>
+              </div>
+              <span id="mobileBadgeAsh" class="text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold bg-[#252b37] text-[#8e9bb0] hidden">Aktif</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section: Fitur Praktikum & Panduan -->
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-wider text-[#8e9bb0] mb-2 px-1 flex items-center gap-1">
+            <i data-lucide="award" class="w-3 h-3 text-[#e07a5f]"></i>
+            <span>Praktikum &amp; Panduan</span>
+          </div>
+          <div class="space-y-1.5">
+            <!-- 9 Parameter Presisi (Tugas Pak BL) -->
+            <button
+              onclick="
+                openRubrik9ParamModal();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-gradient-to-r from-[#d4a373]/20 to-[#e2b083]/15 hover:from-[#d4a373]/30 border border-[#d4a373]/50 flex items-center justify-between text-left transition-all group shadow-sm"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#d4a373]/25 border border-[#d4a373]/50 flex items-center justify-center text-[#e2b083]">
+                  <span class="text-sm">⭐</span>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4] flex items-center gap-1.5">
+                    <span>9 Parameter Presisi</span>
+                    <span class="text-[8px] px-1 py-0.2 rounded bg-[#252b37] text-[#e2b083] font-mono border border-[#343c4e]">Pak BL</span>
+                  </div>
+                  <div class="text-[10px] text-[#8e9bb0]">Rubrik evaluasi resmi &amp; ekspor CSV/MD</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-[#e2b083]"></i>
+            </button>
+
+            <!-- Demo Interaktif -->
+            <button
+              onclick="
+                startInteractiveDemo();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#343c4e] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#e07a5f]/20 border border-[#e07a5f]/40 flex items-center justify-center text-[#e07a5f]">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Demo Interaktif</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Tutorial langkah-demi-langkah</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+            </button>
+
+            <!-- Tour Erupsi Krakatau -->
+            <button
+              onclick="
+                startGuidedTour();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#343c4e] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#d4a373]/20 border border-[#d4a373]/40 flex items-center justify-center text-[#d4a373]">
+                  <i data-lucide="play-circle" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Tour Presentasi Erupsi</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Narasi fisis 5 babak letusan</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section: Laboratorium & Analisis -->
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-wider text-[#8e9bb0] mb-2 px-1 flex items-center gap-1">
+            <i data-lucide="cpu" class="w-3 h-3 text-[#81b29a]"></i>
+            <span>Laboratorium Komputasi</span>
+          </div>
+          <div class="space-y-1.5">
+            <!-- Teori KaTeX -->
+            <button
+              onclick="
+                openTheoryModal();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#343c4e] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#38bdf8]/20 border border-[#38bdf8]/40 flex items-center justify-center text-[#38bdf8]">
+                  <i data-lucide="book-open" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Buku Teori &amp; KaTeX</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Formulasi aerodinamika &amp; Suzuki</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+            </button>
+
+            <!-- Uji Galat RK4 -->
+            <button
+              onclick="
+                openNumericalAnalysisModal();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#343c4e] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#81b29a]/20 border border-[#81b29a]/40 flex items-center justify-center text-[#81b29a]">
+                  <i data-lucide="cpu" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Uji Galat RK4 vs Euler</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Kestabilan numerik &amp; analisis dt</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+            </button>
+
+            <!-- Grafik Kinematika -->
+            <button
+              onclick="
+                openKinematicModal();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#222733] hover:bg-[#2a3140] border border-[#343c4e] flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#dda15e]/20 border border-[#dda15e]/40 flex items-center justify-center text-[#dda15e]">
+                  <i data-lucide="line-chart" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Grafik Kinematika</div>
+                  <div class="text-[10px] text-[#8e9bb0]">Kurva posisi, kecepatan &amp; energi</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-[#8e9bb0] group-hover:text-[#f4ede4]"></i>
+            </button>
+
+            <!-- Cetak Lembar Praktikum PDF -->
+            <button
+              onclick="
+                printLabReport();
+                toggleMobileNavDrawer(false);
+              "
+              class="w-full p-2.5 rounded-xl bg-[#e07a5f]/15 hover:bg-[#e07a5f]/25 border border-[#e07a5f]/40 flex items-center justify-between text-left transition-all group"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#e07a5f]/20 border border-[#e07a5f]/40 flex items-center justify-center text-[#e07a5f]">
+                  <i data-lucide="printer" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#f4ede4]">Cetak Lembar Praktikum</div>
+                  <div class="text-[10px] text-[#e2b083]">Format A4 Kop Resmi FATISDA UNS</div>
+                </div>
+              </div>
+              <i data-lucide="external-link" class="w-4 h-4 text-[#e07a5f]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section: Pengaturan Cepat & Audio -->
+        <div class="pt-2 border-t border-[#2e3544] flex items-center justify-between gap-2">
+          <button
+            onclick="toggleMute()"
+            id="btnDrawerMute"
+            class="flex-1 py-2 px-3 rounded-xl bg-[#222733] border border-[#343c4e] text-xs font-semibold text-[#8e9bb0] hover:text-[#f4ede4] flex items-center justify-center gap-1.5 transition-all"
+          >
+            <i data-lucide="volume-2" class="w-4 h-4 text-[#d4a373]"></i>
+            <span id="drawerMuteText">Audio Aktif</span>
+          </button>
+          <button
+            onclick="
+              toggleZenMode();
+              toggleMobileNavDrawer(false);
+            "
+            class="py-2 px-3 rounded-xl bg-[#222733] border border-[#343c4e] text-xs font-semibold text-[#8e9bb0] hover:text-[#e2b083] flex items-center justify-center gap-1.5 transition-all"
+            title="Mode Zen Sinematik"
+          >
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            <span>Zen</span>
+          </button>
+        </div>
+      </div>
+    </aside>
 
     <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden transition-opacity"></div>
 
@@ -4401,11 +4676,11 @@
         },
         {
           step: 8,
-          target: () => (window.innerWidth < 768 ? "#btnMobileToolsToggle" : "#btnNavPrintLab"),
+          target: () => (window.innerWidth < 768 ? "#btnMobileNavToggle" : "#btnNavPrintLab"),
           title: "8. Eksplorasi Alat & Cetak Laporan Lembar Kerja",
           action: () =>
             window.innerWidth < 768
-              ? "Pencet tombol 'Alat ⋯' di navbar untuk membuka Laporan PDF, Uji Galat RK4, dan modul laboratorium lainnya!"
+              ? "Pencet tombol 'Menu' di navbar untuk membuka Laporan PDF, Uji Galat RK4, dan modul laboratorium lainnya!"
               : "Terakhir, klik tombol 'Laporan PDF' di navbar untuk mencetak lembar kerja praktikum resmi FATISDA UNS!",
           desc: "Dokumen resmi siap cetak format A4 mencakup tabel telemetri kinematika, komparasi galat RK4, dan sebaran abu stasiun.",
           setup: () => {
@@ -4798,17 +5073,31 @@
         }
       }
 
-      function openMobileToolsModal() {
-        const modal = document.getElementById("mobileToolsModal");
-        if (!modal) return;
-        modal.classList.remove("hidden");
-        updateMobileAudioBtn();
+      function toggleMobileNavDrawer(forceOpen) {
+        const drawer = document.getElementById("mobileNavDrawer");
+        const backdrop = document.getElementById("mobileNavBackdrop");
+        if (!drawer || !backdrop) return;
+        const isOpen = !drawer.classList.contains("translate-x-full");
+        const targetOpen = forceOpen !== undefined ? forceOpen : !isOpen;
+        if (targetOpen) {
+          backdrop.classList.remove("hidden");
+          drawer.classList.remove("translate-x-full");
+          // Sync audio mute text in drawer
+          const txt = document.getElementById("drawerMuteText");
+          if (txt) txt.innerText = isMuted ? "Audio Bisu" : "Audio Aktif";
+        } else {
+          drawer.classList.add("translate-x-full");
+          backdrop.classList.add("hidden");
+        }
         lucide.createIcons();
       }
 
+      function openMobileToolsModal() {
+        toggleMobileNavDrawer(true);
+      }
+
       function closeMobileToolsModal() {
-        const modal = document.getElementById("mobileToolsModal");
-        if (modal) modal.classList.add("hidden");
+        toggleMobileNavDrawer(false);
       }
 
       function updateMobileAudioBtn() {
@@ -7424,18 +7713,48 @@
         const ashPage = document.getElementById("pageAshMap");
         const btnSim = document.getElementById("navBtnSim");
         const btnAsh = document.getElementById("navBtnAsh");
+        const badgeSim = document.getElementById("mobileBadgeSim");
+        const badgeAsh = document.getElementById("mobileBadgeAsh");
+        const btnMobSim = document.getElementById("mobileMenuBtnSim");
+        const btnMobAsh = document.getElementById("mobileMenuBtnAsh");
 
         if (page === "simulator") {
           simPage.classList.remove("hidden");
           ashPage.classList.add("hidden");
           btnSim.className = "px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 bg-[#d4a373] text-[#16181f] shadow-sm whitespace-nowrap";
           btnAsh.className = "px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4] whitespace-nowrap";
+          if (badgeSim) {
+            badgeSim.classList.remove("hidden");
+            badgeSim.className = "text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold bg-[#d4a373] text-[#16181f]";
+          }
+          if (badgeAsh) badgeAsh.classList.add("hidden");
+          if (btnMobSim) {
+            btnMobSim.classList.add("border-[#d4a373]");
+            btnMobSim.classList.remove("border-[#343c4e]");
+          }
+          if (btnMobAsh) {
+            btnMobAsh.classList.remove("border-[#d4a373]");
+            btnMobAsh.classList.add("border-[#343c4e]");
+          }
           onResize();
         } else {
           simPage.classList.add("hidden");
           ashPage.classList.remove("hidden");
           btnAsh.className = "px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 bg-[#d4a373] text-[#16181f] shadow-sm whitespace-nowrap";
           btnSim.className = "px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 text-[#8e9bb0] hover:text-[#f4ede4] whitespace-nowrap";
+          if (badgeAsh) {
+            badgeAsh.classList.remove("hidden");
+            badgeAsh.className = "text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold bg-[#d4a373] text-[#16181f]";
+          }
+          if (badgeSim) badgeSim.classList.add("hidden");
+          if (btnMobAsh) {
+            btnMobAsh.classList.add("border-[#d4a373]");
+            btnMobAsh.classList.remove("border-[#343c4e]");
+          }
+          if (btnMobSim) {
+            btnMobSim.classList.remove("border-[#d4a373]");
+            btnMobSim.classList.add("border-[#343c4e]");
+          }
           setTimeout(() => {
             initAshLeafletMap();
             if (ashMap) ashMap.invalidateSize();
@@ -7815,6 +8134,8 @@
         if (b) {
           b.innerHTML = `<i data-lucide="${isMuted ? "volume-x" : "volume-2"}" class="w-4 h-4 ${isMuted ? "text-[#e07a5f]" : "text-[#e2b083]"}"></i>`;
         }
+        const drawerTxt = document.getElementById("drawerMuteText");
+        if (drawerTxt) drawerTxt.innerText = isMuted ? "Audio Bisu" : "Audio Aktif";
         updateMobileAudioBtn();
         lucide.createIcons();
       }
@@ -7933,6 +8254,9 @@
         draw2DCanvas();
         resizeWindCanvas();
         if (ashMap) ashMap.invalidateSize();
+        if (window.innerWidth >= 768 && typeof toggleMobileNavDrawer === "function") {
+          toggleMobileNavDrawer(false);
+        }
       }
 
       window.addEventListener("keydown", (e) => {
